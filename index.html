@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0b" />
+  <meta name="color-scheme" content="dark" />
+
+  <title>Loomia｜AI × 既存スキルで事業の断片を、ひとつの光に</title>
+  <meta name="description" content="中小企業・個人事業主のためのAIフリーランス。Webサイト制作、SEO記事執筆、SNS運用、業務自動化、AIエージェント構築を一人の窓口で完結。Claude Max で織り上げる、次世代の制作代行。" />
+  <meta name="keywords" content="AIフリーランス,AI活用,業務自動化,Webサイト制作,SEO記事,AI導入代行,ChatBot,フリーランス,制作代行,Loomia" />
+  <meta name="author" content="Loomia" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://weichuimengu-bit.github.io/loomia/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Loomia｜Weave your ideas into light." />
+  <meta property="og:description" content="AIで、事業の断片を、ひとつの光に。中小企業・個人事業主向けAIフリーランス。" />
+  <meta property="og:url" content="https://weichuimengu-bit.github.io/loomia/" />
+  <meta property="og:site_name" content="Loomia" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta property="og:image" content="https://weichuimengu-bit.github.io/loomia/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Loomia｜Weave your ideas into light." />
+  <meta name="twitter:description" content="AIで、事業の断片を、ひとつの光に。" />
+  <meta name="twitter:image" content="https://weichuimengu-bit.github.io/loomia/og-image.png" />
+
+  <!-- Favicon: inline SVG data URL (luminous gradient circle) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><radialGradient id='g' cx='50%25' cy='40%25' r='60%25'><stop offset='0%25' stop-color='%23e0f2fe'/><stop offset='45%25' stop-color='%237dd3fc'/><stop offset='100%25' stop-color='%230a0a0b'/></radialGradient></defs><rect width='64' height='64' rx='14' fill='%230a0a0b'/><circle cx='32' cy='32' r='20' fill='url(%23g)'/></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-primary': '#0a0a0b',
+            'bg-secondary': '#111113',
+            'bg-tertiary': '#1a1a1d',
+            'text-primary': '#f5f5f7',
+            'text-secondary': '#a1a1aa',
+            'text-muted': '#8b8b93',
+            'accent': '#7dd3fc',
+            'accent-hover': '#38bdf8',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans JP', 'system-ui', 'sans-serif'],
+            jp: ['"Noto Sans JP"', 'Inter', 'sans-serif'],
+            serif: ['Fraunces', 'Georgia', 'serif'],
+          },
+          maxWidth: {
+            container: '1200px',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Design tokens & base styles -->
+  <style>
+    :root {
+      --bg-primary: #0a0a0b;
+      --bg-secondary: #111113;
+      --bg-tertiary: #1a1a1d;
+      --text-primary: #f5f5f7;
+      --text-secondary: #a1a1aa;
+      --text-muted: #8b8b93;
+      --accent: #7dd3fc;
+      --accent-hover: #38bdf8;
+      --accent-glow: rgba(125, 211, 252, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+    }
+
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      font-feature-settings: 'ss01', 'cv11';
+    }
+
+    ::selection { background: var(--accent); color: var(--bg-primary); }
+
+    /* Screen-reader only */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+
+    /* ────────────────────────────────────────────────
+       HERO
+       ──────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-bg-top {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 1000px 620px at 50% -8%,
+          rgba(125, 211, 252, 0.22) 0%,
+          rgba(125, 211, 252, 0.08) 28%,
+          transparent 62%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.35;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 80%);
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: -1;
+      will-change: transform;
+    }
+    .orb-1 {
+      top: 8%;
+      left: -120px;
+      width: 300px;
+      height: 300px;
+      background: rgba(125, 211, 252, 0.08);
+      filter: blur(80px);
+      animation: orbFloat1 20s ease-in-out infinite;
+    }
+    .orb-2 {
+      bottom: -80px;
+      right: -120px;
+      width: 400px;
+      height: 400px;
+      background: rgba(125, 211, 252, 0.05);
+      filter: blur(100px);
+      animation: orbFloat2 25s ease-in-out infinite;
+    }
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translate(0, 0); }
+      33%     { transform: translate(40px, 60px); }
+      66%     { transform: translate(-20px, 30px); }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translate(0, 0); }
+      50%      { transform: translate(-80px, -50px); }
+    }
+
+    .hero-brand {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+    .hero-brand::after {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 9999px;
+      background: var(--accent);
+      margin-left: 8px;
+      vertical-align: middle;
+      transform: translateY(-6px);
+      box-shadow: 0 0 12px rgba(125, 211, 252, 0.8);
+    }
+
+    /* Tagline typography */
+    .hero-tagline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-size: 40px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 480px) { .hero-tagline { font-size: 48px; } }
+    @media (min-width: 640px) { .hero-tagline { font-size: 56px; } }
+    @media (min-width: 768px) { .hero-tagline { font-size: 72px; } }
+    @media (min-width: 1024px) { .hero-tagline { font-size: 88px; } }
+    @media (min-width: 1280px) { .hero-tagline { font-size: 96px; } }
+
+    .hero-tagline .word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .hero-tagline .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: charReveal 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    .hero-tagline .char-accent {
+      color: var(--accent);
+      text-shadow:
+        0 0 24px rgba(125, 211, 252, 0.45),
+        0 0 56px rgba(125, 211, 252, 0.22);
+    }
+    @keyframes charReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Subcopy & body */
+    .hero-sub {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 20px;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+    }
+    @media (min-width: 640px) { .hero-sub { font-size: 22px; } }
+    @media (min-width: 768px) { .hero-sub { font-size: 26px; } }
+    @media (min-width: 1024px) { .hero-sub { font-size: 28px; } }
+
+    .hero-desc {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.8;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (min-width: 768px) { .hero-desc { font-size: 17px; } }
+
+    /* CTA */
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: var(--bg-primary);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.01em;
+      padding: 16px 36px;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(125, 211, 252, 0.18);
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-cta:hover {
+      background: var(--accent-hover);
+      transform: scale(1.03);
+      box-shadow: 0 14px 44px rgba(125, 211, 252, 0.38);
+    }
+    .hero-cta:active { transform: scale(0.99); }
+    .hero-cta:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+    .hero-cta .arrow {
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    /* Status pill */
+    .hero-status {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      z-index: 2;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(125, 211, 252, 0.7);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* ────────────────────────────────────────────────
+       LAYOUT PRIMITIVES
+       ──────────────────────────────────────────────── */
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (min-width: 768px) { .section-inner { padding: 0 48px; } }
+
+    .section-hairline {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(125, 211, 252, 0.18) 25%,
+        rgba(125, 211, 252, 0.18) 75%,
+        transparent 100%
+      );
+    }
+
+    .section-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .section-eyebrow .num { color: var(--text-secondary); margin-right: 4px; }
+
+    /* ────────────────────────────────────────────────
+       ABOUT
+       ──────────────────────────────────────────────── */
+    .about {
+      position: relative;
+      background: var(--bg-secondary);
+      padding: 80px 0 88px;
+    }
+    @media (min-width: 768px) { .about { padding: 120px 0; } }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 56px;
+      margin-top: 56px;
+    }
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: 5fr 7fr;
+        gap: 80px;
+        margin-top: 64px;
+      }
+    }
+
+    .about-left {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      position: relative;
+    }
+
+    .about-headline-wrap {
+      position: relative;
+      padding-left: 28px;
+    }
+    .about-accent-bar {
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom,
+        rgba(125, 211, 252, 0.7) 0%,
+        rgba(125, 211, 252, 0.25) 60%,
+        transparent 100%);
+      border-radius: 2px;
+    }
+
+    .about-headline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      font-size: 38px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .about-headline { font-size: 46px; } }
+    @media (min-width: 1024px) { .about-headline { font-size: 54px; } }
+
+    .about-headline .line { display: block; }
+    .about-headline .accent-line { color: var(--accent); font-style: italic; }
+    .about-headline .accent-underline {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 8px;
+      text-decoration-thickness: 2px;
+    }
+
+    .about-location {
+      margin-top: auto;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+
+    .about-right { display: flex; flex-direction: column; }
+
+    .about-p {
+      position: relative;
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 2;
+      color: var(--text-secondary);
+      padding-left: 20px;
+    }
+    @media (min-width: 768px) { .about-p { font-size: 17px; } }
+    .about-p + .about-p { margin-top: 32px; }
+    .about-p::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 2px;
+      height: 24px;
+      background: var(--accent);
+      opacity: 0.35;
+      border-radius: 2px;
+    }
+    .about-key {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .skills-block { margin-top: 64px; }
+    .skills-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.15em;
+      margin-bottom: 20px;
+    }
+    .skills-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 100px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                  color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+    }
+    .skill-tag:hover {
+      border-color: var(--accent);
+      background: rgba(125, 211, 252, 0.08);
+      color: var(--accent);
+      transform: scale(1.05);
+    }
+    .skill-tag .glyph {
+      display: inline-block;
+      font-size: 12px;
+      line-height: 1;
+      opacity: 0.85;
+      font-family: 'Inter', 'Apple Symbols', 'Segoe UI Symbol', sans-serif;
+    }
+
+    /* Scroll reveal */
+    .reveal-left, .reveal-up, .reveal-pop {
+      opacity: 0;
+      transition: opacity 500ms cubic-bezier(0, 0, 0.2, 1),
+                  transform 500ms cubic-bezier(0, 0, 0.2, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal-left { transform: translateX(-20px); }
+    .reveal-up   { transform: translateY(20px); }
+    .reveal-pop  { transform: scale(0.95); }
+
+    .in-view .reveal-left,
+    .in-view .reveal-up,
+    .in-view .reveal-pop {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ────────────────────────────────────────────────
+       SERVICES
+       ──────────────────────────────────────────────── */
+    .services {
+      position: relative;
+      background: var(--bg-primary);
+      padding: 100px 0;
+    }
+    @media (min-width: 768px) { .services { padding: 160px 0; } }
+
+    .services-header { text-align: center; }
+    .services-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-top: 24px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .services-title { font-size: 56px; } }
+    @media (min-width: 1024px) { .services-title { font-size: 64px; } }
+    .services-title .line { display: block; }
+    .services-title .accent { color: var(--accent); font-style: italic; }
+
+    .services-subcopy {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin: 28px auto 0;
+      max-width: 560px;
+    }
+    @media (min-width: 768px) { .services-subcopy { font-size: 18px; } }
+
+    .services-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+      margin-top: 80px;
+    }
+    @media (min-width: 768px) {
+      .services-layers { gap: 120px; margin-top: 96px; }
+    }
+
+    /* Layer */
+    .layer { position: relative; }
+
+    .layer-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .layer-head-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+    .layer-num {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.32;
+      letter-spacing: -0.04em;
+      flex-shrink: 0;
+    }
+    @media (min-width: 768px) { .layer-num { font-size: 72px; } }
+
+    .layer-title-block { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+    .layer-title {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+    }
+    @media (min-width: 768px) { .layer-title { font-size: 26px; } }
+    @media (min-width: 1024px) { .layer-title { font-size: 28px; } }
+    .layer-title .sep {
+      color: var(--text-muted);
+      font-weight: 400;
+      margin: 0 6px;
+    }
+
+    .layer-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+    @media (min-width: 768px) { .layer-en { font-size: 15px; } }
+
+    .layer-count {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    @media (min-width: 768px) { .layer-count { font-size: 14px; } }
+
+    .layer-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin-top: 28px;
+    }
+
+    .layer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    @media (min-width: 768px) {
+      .layer-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    }
+    @media (min-width: 1024px) {
+      .layer-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    }
+
+    /* Service card */
+    .service-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition:
+        transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .service-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: rgba(125, 211, 252, 0.28);
+      box-shadow:
+        0 20px 48px rgba(125, 211, 252, 0.08),
+        0 0 0 1px rgba(125, 211, 252, 0.06) inset;
+    }
+    .service-card:hover .card-icon { color: var(--accent-hover); }
+
+    .card-layer-dots {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 4px;
+    }
+    .card-layer-dots span {
+      width: 4px; height: 4px;
+      border-radius: 9999px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+
+    .card-icon-wrap {
+      display: inline-flex;
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(125, 211, 252, 0.08);
+      border: 1px solid rgba(125, 211, 252, 0.12);
+      align-items: center;
+      justify-content: center;
+    }
+    .card-icon {
+      width: 22px; height: 22px;
+      color: var(--accent);
+      transition: color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+      stroke-width: 1.75;
+    }
+
+    .card-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+
+    .card-title {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 10px;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { .card-title { font-size: 20px; } }
+
+    .card-desc {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-top: 14px;
+    }
+
+    .card-hr {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin-top: 24px;
+    }
+
+    .card-price-block { margin-top: 18px; }
+    .card-price {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    @media (min-width: 768px) { .card-price { font-size: 24px; } }
+    .card-price .price-prefix {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .card-price .price-unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+    .card-price-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+    }
+    .card-price.quote {
+      font-size: 20px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .card-price.quote { font-size: 22px; } }
+
+    .card-features {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .card-features li {
+      position: relative;
+      padding-left: 16px;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .card-features li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 4px; height: 4px;
+      border-radius: 9999px;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+
+    /* Push the lower block toward the bottom so card feet align */
+    .service-card .card-hr { margin-top: auto; }
+
+    /* ────────────────────────────────────────────────
+       WHY LOOMIA
+       ──────────────────────────────────────────────── */
+    .why {
+      background: var(--bg-primary);
+      padding: 100px 0;
+    }
+    @media (min-width: 768px) { .why { padding: 160px 0; } }
+
+    .why-header { text-align: center; }
+    .why-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-top: 24px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .why-title { font-size: 56px; } }
+    @media (min-width: 1024px) { .why-title { font-size: 64px; } }
+    .why-title .line { display: block; }
+    .why-title .accent { color: var(--accent); font-style: italic; }
+
+    .why-subcopy {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin: 28px auto 0;
+      max-width: 560px;
+    }
+    @media (min-width: 768px) { .why-subcopy { font-size: 18px; } }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 64px;
+    }
+    @media (min-width: 768px) {
+      .why-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 80px; }
+    }
+    @media (min-width: 1024px) {
+      .why-grid { gap: 32px; }
+    }
+
+    .why-card {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 72px 32px 40px;
+      overflow: hidden;
+      transition:
+        transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .why-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(125, 211, 252, 0.28);
+      box-shadow: 0 24px 56px rgba(125, 211, 252, 0.1);
+    }
+    .why-card:hover .why-card-num { opacity: 0.35; }
+
+    .why-card-num {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 48px;
+      color: var(--accent);
+      opacity: 0.2;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .why-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--accent);
+      stroke-width: 1.75;
+      margin-bottom: 24px;
+    }
+
+    .why-card-title {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { .why-card-title { font-size: 22px; } }
+    .why-card-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 0.01em;
+    }
+    .why-card-body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--text-secondary);
+      margin-top: 20px;
+    }
+
+    /* ────────────────────────────────────────────────
+       WORKS
+       ──────────────────────────────────────────────── */
+    .works {
+      background: var(--bg-secondary);
+      padding: 90px 0;
+    }
+    @media (min-width: 768px) { .works { padding: 140px 0; } }
+
+    .works-header { text-align: center; }
+    .works-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-top: 24px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .works-title { font-size: 56px; } }
+    @media (min-width: 1024px) { .works-title { font-size: 64px; } }
+    .works-title .line { display: block; }
+
+    .works-subcopy {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin: 28px auto 0;
+      max-width: 600px;
+    }
+    @media (min-width: 768px) { .works-subcopy { font-size: 18px; } }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 56px;
+    }
+    @media (min-width: 768px) { .works-grid { grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 64px; } }
+    @media (min-width: 1024px) { .works-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .work-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      transition:
+        transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .work-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(125, 211, 252, 0.2);
+    }
+    .work-cover {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, #1f1f24 100%);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .work-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 28% 22%, rgba(125, 211, 252, 0.12), transparent 55%),
+        radial-gradient(circle at 75% 80%, rgba(125, 211, 252, 0.06), transparent 55%);
+      pointer-events: none;
+    }
+    .work-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    .work-cover-icon {
+      position: relative;
+      width: 40px; height: 40px;
+      color: var(--text-secondary);
+      opacity: 0.4;
+      stroke-width: 1.5;
+    }
+    .work-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .work-status-dot {
+      width: 6px; height: 6px;
+      border-radius: 9999px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(125, 211, 252, 0.65);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    .work-title {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 12px;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+    }
+    .work-desc {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+    .work-tag {
+      align-self: flex-start;
+      margin-top: 16px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(125, 211, 252, 0.08);
+      border: 1px solid rgba(125, 211, 252, 0.16);
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .works-footnote {
+      margin-top: 48px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+    @media (min-width: 768px) { .works-footnote { font-size: 15px; margin-top: 56px; } }
+
+    /* ────────────────────────────────────────────────
+       CONTACT
+       ──────────────────────────────────────────────── */
+    .contact {
+      position: relative;
+      background: var(--bg-primary);
+      padding: 100px 0;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    @media (min-width: 768px) { .contact { padding: 160px 0; } }
+
+    .contact-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 900px 520px at 50% -4%,
+        rgba(125, 211, 252, 0.18) 0%,
+        rgba(125, 211, 252, 0.06) 32%,
+        transparent 62%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .contact-header { text-align: center; }
+    .contact-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 44px;
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-top: 24px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .contact-title { font-size: 60px; } }
+    @media (min-width: 1024px) { .contact-title { font-size: 72px; } }
+    .contact-title .line { display: block; }
+    .contact-title .accent { color: var(--accent); font-style: italic; }
+
+    .contact-subcopy {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin: 28px auto 0;
+      max-width: 560px;
+    }
+    @media (min-width: 768px) { .contact-subcopy { font-size: 18px; } }
+
+    .contact-card {
+      max-width: 640px;
+      margin: 48px auto 0;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    @media (min-width: 768px) {
+      .contact-card { padding: 48px 40px; margin-top: 64px; }
+    }
+
+    .contact-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 18px 24px;
+      border-radius: 12px;
+      text-align: center;
+      transition:
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .contact-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    @media (min-width: 768px) {
+      .contact-btn { padding: 20px 32px; }
+    }
+    .contact-btn-main {
+      background: var(--accent);
+      color: var(--bg-primary);
+      box-shadow: 0 10px 28px rgba(125, 211, 252, 0.2);
+    }
+    .contact-btn-main:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(125, 211, 252, 0.35);
+    }
+    .contact-btn-sub {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .contact-btn-sub:hover {
+      border-color: var(--accent);
+      background: rgba(125, 211, 252, 0.05);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .contact-btn-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .contact-btn-sub .contact-btn-row { font-weight: 500; }
+    .contact-btn-row svg {
+      width: 18px; height: 18px;
+      stroke-width: 2;
+    }
+    .contact-btn-row .arrow {
+      display: inline-block;
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .contact-btn:hover .contact-btn-row .arrow { transform: translateX(4px); }
+    .contact-btn-hint {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      opacity: 0.78;
+    }
+    .contact-btn-main .contact-btn-hint { color: rgba(10, 10, 11, 0.72); }
+
+    .contact-foot {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .contact-foot-line {
+      width: 120px;
+      height: 1px;
+      background: var(--border);
+    }
+    .contact-foot-text {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+    @media (min-width: 768px) { .contact-foot-text { font-size: 14px; } }
+
+    /* ────────────────────────────────────────────────
+       FOOTER
+       ──────────────────────────────────────────────── */
+    .footer {
+      background: var(--bg-primary);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 60px 0 48px;
+    }
+    @media (min-width: 768px) { .footer { padding: 80px 0 56px; } }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    @media (min-width: 768px) {
+      .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 48px; }
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-logo {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.01em;
+    }
+    .footer-logo::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(125, 211, 252, 0.7);
+    }
+    .footer-tagline {
+      font-family: 'Inter', sans-serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+    .footer-meta {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-heading {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .footer-nav, .footer-connect {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-nav a, .footer-connect a {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+    }
+    .footer-nav a:hover, .footer-connect a:hover { color: var(--accent); }
+    .footer-connect svg {
+      width: 16px; height: 16px;
+      stroke-width: 1.75;
+      color: var(--text-muted);
+      transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .footer-connect a:hover svg { color: var(--accent); }
+
+    .footer-bottom {
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+    .footer-bottom .built-with .claude {
+      color: var(--accent);
+      opacity: 0.78;
+    }
+
+    /* Fade-only reveal (for Footer) */
+    .reveal-fade {
+      opacity: 0;
+      transition: opacity 600ms cubic-bezier(0, 0, 0.2, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .in-view .reveal-fade { opacity: 1; }
+
+    /* ────────────────────────────────────────────────
+       FIXED NAVIGATION
+       ──────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      z-index: 50;
+      background: rgba(10, 10, 11, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
+      transition:
+        opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 100%;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (min-width: 768px) {
+      .nav-inner { padding: 0 48px; }
+    }
+
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .nav-logo::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(125, 211, 252, 0.7);
+    }
+
+    .nav-links {
+      display: none;
+      gap: 32px;
+      list-style: none;
+      padding: 0; margin: 0;
+    }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
+
+    .nav-link {
+      position: relative;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+      padding: 6px 0;
+      transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link:hover::after { width: 100%; }
+
+    .nav-burger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-burger:hover { background: rgba(255, 255, 255, 0.05); }
+    .nav-burger svg { width: 22px; height: 22px; stroke-width: 1.75; }
+    @media (min-width: 768px) { .nav-burger { display: none; } }
+
+    /* Full-screen overlay menu (mobile) */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(10, 10, 11, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition:
+        opacity 350ms cubic-bezier(0.4, 0, 0.2, 1),
+        transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-overlay.is-open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .nav-overlay-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: border-color 200ms cubic-bezier(0.4, 0, 0.2, 1), color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-overlay-close:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-overlay-close svg { width: 20px; height: 20px; stroke-width: 1.75; }
+
+    .nav-overlay-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-overlay-link {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-overlay-link:hover { color: var(--accent); }
+
+    body.nav-open { overflow: hidden; }
+
+    /* ────────────────────────────────────────────────
+       SCROLL PROGRESS BAR
+       ──────────────────────────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent);
+      box-shadow: 2px 0 12px rgba(125, 211, 252, 0.6);
+      z-index: 51;
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* Respect reduced motion — blanket override for every animation/transition */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto !important; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.001ms !important;
+        transition-delay: 0ms !important;
+      }
+      .hero-tagline .char { opacity: 1 !important; transform: none !important; }
+      .reveal-left, .reveal-up, .reveal-pop, .reveal-fade {
+        opacity: 1 !important; transform: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-bg-primary text-text-primary">
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" role="presentation" aria-hidden="true"></div>
+
+  <!-- Fixed top navigation -->
+  <nav class="nav" aria-label="グローバルナビゲーション">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo" aria-label="Loomia — ホームへ">Loomia</a>
+      <ul class="nav-links" role="list">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#why" class="nav-link">Why</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <button type="button" class="nav-burger" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-overlay">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile fullscreen overlay menu -->
+  <div id="nav-overlay" class="nav-overlay" role="dialog" aria-modal="true" aria-label="メニュー" aria-hidden="true">
+    <button type="button" class="nav-overlay-close" aria-label="メニューを閉じる">
+      <i data-lucide="x" aria-hidden="true"></i>
+    </button>
+    <ul class="nav-overlay-links" role="list">
+      <li><a href="#about" class="nav-overlay-link">About</a></li>
+      <li><a href="#services" class="nav-overlay-link">Services</a></li>
+      <li><a href="#why" class="nav-overlay-link">Why</a></li>
+      <li><a href="#contact" class="nav-overlay-link">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- 1. Hero -->
+  <section id="hero" aria-label="ヒーロー" class="hero flex flex-col">
+    <!-- Background layers -->
+    <div class="hero-bg-top" aria-hidden="true"></div>
+    <div class="hero-grain" aria-hidden="true"></div>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+
+    <!-- Top-left brand mark -->
+    <header class="relative mx-auto w-full max-w-container px-6 pt-8 md:px-12 md:pt-10">
+      <a href="#hero" class="hero-brand inline-block" aria-label="Loomia — ホームへ">
+        Loomia
+      </a>
+    </header>
+
+    <!-- Center stage -->
+    <div class="relative flex flex-1 items-center justify-center px-6 py-16 md:px-12 md:py-24">
+      <div class="mx-auto w-full max-w-container text-center">
+
+        <h1 class="hero-tagline" role="heading" aria-level="1">
+          <span class="sr-only">Weave your ideas into light.</span>
+          <span class="hero-tagline-visual" aria-hidden="true">Weave your ideas into light.</span>
+        </h1>
+
+        <p class="hero-sub mt-7 md:mt-8" lang="ja">
+          AIで、事業の断片を、ひとつの光に。
+        </p>
+
+        <p class="hero-desc mt-10 md:mt-12" lang="ja">
+          AI × 既存スキルで、中小企業・個人事業主の制作・運用・自動化を、ひとりの窓口で完結させます。
+        </p>
+
+        <div class="mt-14 md:mt-16">
+          <a href="#contact" class="hero-cta" data-smooth-scroll>
+            <span>Start a conversation</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="hero-status" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>Available for new projects</span>
+    </div>
+  </section>
+
+  <!-- 2. About -->
+  <section id="about" class="about" aria-label="About Loomia">
+    <div class="section-hairline" aria-hidden="true"></div>
+
+    <div class="section-inner">
+      <div class="section-eyebrow reveal-up">
+        <span class="num">(01)</span> ABOUT
+      </div>
+
+      <div class="about-grid">
+        <!-- Left column -->
+        <aside class="about-left reveal-left">
+          <div class="about-headline-wrap">
+            <span class="about-accent-bar" aria-hidden="true"></span>
+            <h2 class="about-headline">
+              <span class="line">One freelancer,</span>
+              <span class="line">seven skills,</span>
+              <span class="line"><span class="accent-line"><span class="accent-underline">infinite weaves</span></span>.</span>
+            </h2>
+          </div>
+          <p class="about-location">— Based in Japan, Serving globally.</p>
+        </aside>
+
+        <!-- Right column -->
+        <div class="about-right">
+          <p class="about-p reveal-up" style="--reveal-delay: 0ms" lang="ja">
+            ひとつの事業を立ち上げるとき、必要なものはバラバラに存在しています。言葉、デザイン、データ、仕組み、そして時間。Loomiaはそれらを、<strong class="about-key">AIという新しい糸</strong>で織り上げ、ひとつの光として届ける場所です。
+          </p>
+          <p class="about-p reveal-up" style="--reveal-delay: 100ms" lang="ja">
+            Webサイト制作、SNS運用、業務自動化、データ分析、動画編集——これまで複数の外注先に頼んでいた仕事を、<strong class="about-key">ひとりの窓口</strong>で完結させます。AIを使いこなす個人だからこそ、大手制作会社と同等の品質を、フリーランス単価で提供できます。
+          </p>
+          <p class="about-p reveal-up" style="--reveal-delay: 200ms" lang="ja">
+            AIを取り入れたいが、何から始めるべきか分からない事業者の方。人手不足に悩む中小企業や個人事業主の方。新しい仕組みで一歩先に進みたいスタートアップの方。そんなあなたの<strong class="about-key">「はじめの一歩」</strong>を、一緒に織り上げていきます。
+          </p>
+
+          <div class="skills-block">
+            <div class="skills-eyebrow reveal-up" style="--reveal-delay: 300ms">— Skills I weave with</div>
+            <ul class="skills-list" role="list">
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 360ms"><span class="glyph" aria-hidden="true">✎</span>Writing</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 440ms"><span class="glyph" aria-hidden="true">◇</span>Design</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 520ms"><span class="glyph" aria-hidden="true">✦</span>Sales</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 600ms"><span class="glyph" aria-hidden="true">▤</span>Data</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 680ms"><span class="glyph" aria-hidden="true">⟨⟩</span>Code</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 760ms"><span class="glyph" aria-hidden="true">▶</span>Video</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 840ms"><span class="glyph" aria-hidden="true">✣</span>SNS</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Services -->
+  <section id="services" class="services" aria-label="サービス一覧">
+    <div class="section-inner">
+
+      <!-- Section header -->
+      <div class="services-header">
+        <div class="section-eyebrow reveal-up">
+          <span class="num">(02)</span> SERVICES
+        </div>
+        <h2 class="services-title reveal-up" style="--reveal-delay: 80ms">
+          <span class="line">Three layers of value,</span>
+          <span class="line"><span class="accent">one weaver</span>.</span>
+        </h2>
+        <p class="services-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
+          制作、運用、自動化。入口から自律まで、ひとりの織り手が伴走します。
+        </p>
+      </div>
+
+      <div class="services-layers">
+
+        <!-- ============ Layer 01 — Create ============ -->
+        <div class="layer" data-layer="1">
+          <header class="layer-head reveal-left">
+            <div class="layer-head-left">
+              <div class="layer-num" aria-hidden="true">01</div>
+              <div class="layer-title-block">
+                <div class="layer-title">
+                  Create <span class="sep" aria-hidden="true">｜</span> <span lang="ja">今すぐ依頼できる制作代行</span>
+                </div>
+                <div class="layer-en">The foundation. Fast, quality production at freelance rates.</div>
+              </div>
+            </div>
+            <div class="layer-count" aria-hidden="true">3 services →</div>
+          </header>
+          <div class="layer-divider" aria-hidden="true"></div>
+
+          <div class="layer-grid">
+
+            <!-- Card 1 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
+              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="layout-dashboard" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Website Design</div>
+              <h3 class="card-title" lang="ja">LP・ポートフォリオサイト制作</h3>
+              <p class="card-desc" lang="ja">ダーク基調のモダンなサイトを、AIで高速に。構成設計から実装、レスポンシブ対応まで一貫して対応します。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥50,000
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>ヒアリング・構成設計</li>
+                <li>デザイン・実装（レスポンシブ）</li>
+                <li>初回公開まで</li>
+              </ul>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
+              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="pen-tool" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Content Writing</div>
+              <h3 class="card-title" lang="ja">ブログ・SEO記事執筆</h3>
+              <p class="card-desc" lang="ja">検索意図を捉えた、読まれる記事を量産。キーワード設計から納品まで対応。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥5,000<span class="price-unit">/ 記事</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>キーワード調査</li>
+                <li>構成案提出</li>
+                <li>3,000〜5,000字本文</li>
+              </ul>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
+              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="instagram" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Social Content</div>
+              <h3 class="card-title" lang="ja">SNS投稿コンテンツ作成</h3>
+              <p class="card-desc" lang="ja">X・Instagram向けの画像付き投稿セット。発信の継続を仕組みで支えます。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥20,000<span class="price-unit">/ 月10投稿</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>投稿テキスト</li>
+                <li>画像制作（10枚）</li>
+                <li>投稿カレンダー</li>
+              </ul>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- ============ Layer 02 — Amplify ============ -->
+        <div class="layer" data-layer="2">
+          <header class="layer-head reveal-left">
+            <div class="layer-head-left">
+              <div class="layer-num" aria-hidden="true">02</div>
+              <div class="layer-title-block">
+                <div class="layer-title">
+                  Amplify <span class="sep" aria-hidden="true">｜</span> <span lang="ja">AI活用で差別化する運用支援</span>
+                </div>
+                <div class="layer-en">The multiplier. Existing skills, amplified by AI.</div>
+              </div>
+            </div>
+            <div class="layer-count" aria-hidden="true">3 services →</div>
+          </header>
+          <div class="layer-divider" aria-hidden="true"></div>
+
+          <div class="layer-grid">
+
+            <!-- Card 1 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
+              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="video" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Video Production</div>
+              <h3 class="card-title" lang="ja">動画編集 + AIサムネ・台本</h3>
+              <p class="card-desc" lang="ja">編集だけでなく、再生される仕掛けまで。AI台本生成＋サムネABテスト対応。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥8,000<span class="price-unit">/ 本</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>動画編集（10分まで）</li>
+                <li>AIサムネイル3案</li>
+                <li>台本・テロップ</li>
+              </ul>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
+              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="bar-chart-3" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Data &amp; Automation</div>
+              <h3 class="card-title" lang="ja">Excel業務効率化・データ分析</h3>
+              <p class="card-desc" lang="ja">面倒な集計を自動化し、洞察まで届ける。マクロ・関数・レポート設計。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥30,000<span class="price-unit">/ 案件</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>現状フロー分析</li>
+                <li>自動化実装</li>
+                <li>運用マニュアル</li>
+              </ul>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
+              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="users" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Training &amp; Consulting</div>
+              <h3 class="card-title" lang="ja">AI活用セミナー・社員研修</h3>
+              <p class="card-desc" lang="ja">現場で使えるAI活用を、実演形式で。業種別カスタマイズ可能。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥30,000<span class="price-unit">/ 1h</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>事前ヒアリング</li>
+                <li>1時間の実演研修</li>
+                <li>実践ワーク＋Q&amp;A</li>
+              </ul>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- ============ Layer 03 — Automate ============ -->
+        <div class="layer" data-layer="3">
+          <header class="layer-head reveal-left">
+            <div class="layer-head-left">
+              <div class="layer-num" aria-hidden="true">03</div>
+              <div class="layer-title-block">
+                <div class="layer-title">
+                  Automate <span class="sep" aria-hidden="true">｜</span> <span lang="ja">業務自動化・エージェント構築</span>
+                </div>
+                <div class="layer-en">The future. Systems that weave themselves.</div>
+              </div>
+            </div>
+            <div class="layer-count" aria-hidden="true">3 services →</div>
+          </header>
+          <div class="layer-divider" aria-hidden="true"></div>
+
+          <div class="layer-grid">
+
+            <!-- Card 1 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
+              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="bot" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Agent Development</div>
+              <h3 class="card-title" lang="ja">ChatBot・業務フロー自動化</h3>
+              <p class="card-desc" lang="ja">問い合わせ対応・社内業務を24時間稼働。Claude / GPT / n8n 連携対応。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">初期</span>¥300,000<span class="price-unit">〜</span>
+                </div>
+                <div class="card-price-sub">月額 ¥50,000〜</div>
+              </div>
+              <ul class="card-features">
+                <li>要件定義・設計</li>
+                <li>実装・テスト</li>
+                <li>1ヶ月の運用保守</li>
+              </ul>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
+              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="zap" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Agent Setup</div>
+              <h3 class="card-title" lang="ja">AIエージェント導入代行</h3>
+              <p class="card-desc" lang="ja">ロリポップAIエージェントクラウド等の設定と運用。導入後の伴走まで。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥50,000
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>ツール選定</li>
+                <li>初期セットアップ</li>
+                <li>30日サポート</li>
+              </ul>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
+              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="code-2" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Custom Development</div>
+              <h3 class="card-title" lang="ja">カスタムAIツール開発</h3>
+              <p class="card-desc" lang="ja">業界特化ツールをゼロから、あなたの現場に。ヒアリング重視で伴走。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price quote">要見積</div>
+              </div>
+              <ul class="card-features">
+                <li>業務ヒアリング</li>
+                <li>プロトタイプ</li>
+                <li>本実装・納品</li>
+              </ul>
+            </article>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Why Loomia -->
+  <section id="why" class="why" aria-label="Why Loomia">
+    <div class="section-inner">
+
+      <div class="why-header">
+        <div class="section-eyebrow reveal-up">
+          <span class="num">(03)</span> WHY LOOMIA
+        </div>
+        <h2 class="why-title reveal-up" style="--reveal-delay: 80ms">
+          <span class="line">Why choose a</span>
+          <span class="line"><span class="accent">single weaver</span>?</span>
+        </h2>
+        <p class="why-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
+          複数の外注先に頼む時代は、もう終わりました。ひとりの窓口が、最速で最高品質を織り上げます。
+        </p>
+      </div>
+
+      <div class="why-grid">
+
+        <article class="why-card reveal-up" style="--reveal-delay: 0ms">
+          <div class="why-card-num" aria-hidden="true">01</div>
+          <i data-lucide="sparkles" class="why-icon" aria-hidden="true"></i>
+          <h3 class="why-card-title" lang="ja">常に最前線の知見で</h3>
+          <div class="why-card-en">Frontier AI, every morning.</div>
+          <p class="why-card-body" lang="ja">
+            毎朝4時、AI業界の最新情報を自動収集。提案は常に最新手法で。半年前の知識で提案する制作会社とは違います。
+          </p>
+        </article>
+
+        <article class="why-card reveal-up" style="--reveal-delay: 120ms">
+          <div class="why-card-num" aria-hidden="true">02</div>
+          <i data-lucide="user-check" class="why-icon" aria-hidden="true"></i>
+          <h3 class="why-card-title" lang="ja">ひとつの窓口で完結</h3>
+          <div class="why-card-en">From brief to launch, in one thread.</div>
+          <p class="why-card-body" lang="ja">
+            ライティングから開発まで、ひとりで完結。担当者間の伝言ゲームも、認識ズレもありません。窓口がひとつだから、決定も実装も早い。
+          </p>
+        </article>
+
+        <article class="why-card reveal-up" style="--reveal-delay: 240ms">
+          <div class="why-card-num" aria-hidden="true">03</div>
+          <i data-lucide="gem" class="why-icon" aria-hidden="true"></i>
+          <h3 class="why-card-title" lang="ja">最上位AIをフル活用</h3>
+          <div class="why-card-en">Enterprise-grade AI, freelance pricing.</div>
+          <p class="why-card-body" lang="ja">
+            月額200ドルクラスの最上位AI環境で作業。大手制作会社と同等の品質を、フリーランス単価で提供できる構造的な優位があります。
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Works -->
+  <section id="works" class="works" aria-label="実績・募集中プロジェクト">
+    <div class="section-inner">
+
+      <div class="works-header">
+        <div class="section-eyebrow reveal-up">
+          <span class="num">(04)</span> WORKS
+        </div>
+        <h2 class="works-title reveal-up" style="--reveal-delay: 80ms">
+          <span class="line">Currently weaving</span>
+          <span class="line">new threads.</span>
+        </h2>
+        <p class="works-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
+          最初のクライアント様を募集中。初期ローンチ価格で、長期パートナーシップを結びませんか。
+        </p>
+      </div>
+
+      <div class="works-grid">
+
+        <article class="work-card reveal-up" style="--reveal-delay: 0ms">
+          <div class="work-cover" aria-hidden="true">
+            <i data-lucide="layout" class="work-cover-icon"></i>
+          </div>
+          <div class="work-status">
+            <span class="work-status-dot" aria-hidden="true"></span>
+            <span>Available slot</span>
+          </div>
+          <h3 class="work-title">Website redesign project</h3>
+          <p class="work-desc" lang="ja">中小企業向けLPリニューアル / 2026 Q2 開始予定</p>
+          <span class="work-tag">Web Design</span>
+        </article>
+
+        <article class="work-card reveal-up" style="--reveal-delay: 100ms">
+          <div class="work-cover" aria-hidden="true">
+            <i data-lucide="workflow" class="work-cover-icon"></i>
+          </div>
+          <div class="work-status">
+            <span class="work-status-dot" aria-hidden="true"></span>
+            <span>Available slot</span>
+          </div>
+          <h3 class="work-title">Business automation flow</h3>
+          <p class="work-desc" lang="ja">業務自動化パッケージ / 2026 Q2-Q3 募集中</p>
+          <span class="work-tag">Automation</span>
+        </article>
+
+        <article class="work-card reveal-up" style="--reveal-delay: 200ms">
+          <div class="work-cover" aria-hidden="true">
+            <i data-lucide="video" class="work-cover-icon"></i>
+          </div>
+          <div class="work-status">
+            <span class="work-status-dot" aria-hidden="true"></span>
+            <span>Available slot</span>
+          </div>
+          <h3 class="work-title">SNS content production</h3>
+          <p class="work-desc" lang="ja">動画＋投稿連動パッケージ / 2026 Q2 開始予定</p>
+          <span class="work-tag">Content</span>
+        </article>
+
+      </div>
+
+      <p class="works-footnote reveal-up" style="--reveal-delay: 320ms">
+        — New projects opening for 2026 Q2. Be among the first to weave.
+      </p>
+    </div>
+  </section>
+
+  <!-- 6. Contact -->
+  <section id="contact" class="contact" aria-label="お問い合わせ">
+    <div class="contact-bg" aria-hidden="true"></div>
+    <div class="section-inner">
+
+      <div class="contact-header">
+        <div class="section-eyebrow reveal-up">
+          <span class="num">(05)</span> CONTACT
+        </div>
+        <h2 class="contact-title reveal-up" style="--reveal-delay: 80ms">
+          <span class="line">Let's weave</span>
+          <span class="line"><span class="accent">something together</span>.</span>
+        </h2>
+        <p class="contact-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
+          はじめてのAI活用相談も、具体的な見積もり相談も。24時間以内にお返事します。
+        </p>
+      </div>
+
+      <div class="contact-card reveal-up" style="--reveal-delay: 220ms">
+
+        <a href="mailto:hello@loomia.jp" class="contact-btn contact-btn-main" aria-label="メールで相談する">
+          <span class="contact-btn-row">
+            <i data-lucide="mail" aria-hidden="true"></i>
+            <span lang="ja">メールで相談する</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </span>
+          <span class="contact-btn-hint">hello@loomia.jp</span>
+        </a>
+
+        <a href="https://x.com/loomia_ai" target="_blank" rel="noopener noreferrer" class="contact-btn contact-btn-sub" aria-label="XのDMで相談する">
+          <span class="contact-btn-row">
+            <i data-lucide="message-circle" aria-hidden="true"></i>
+            <span lang="ja">XのDMで相談する</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </span>
+          <span class="contact-btn-hint">@loomia_ai</span>
+        </a>
+
+        <div class="contact-foot">
+          <span class="contact-foot-line" aria-hidden="true"></span>
+          <p class="contact-foot-text" lang="ja">初回相談は無料 / オンライン・対面どちらでも</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Footer -->
+  <footer id="footer" class="footer" aria-label="フッター">
+    <div class="section-inner">
+      <div class="footer-grid reveal-fade">
+
+        <div class="footer-brand">
+          <span class="footer-logo">Loomia</span>
+          <p class="footer-tagline">Weave your ideas into light.</p>
+          <p class="footer-meta" lang="ja">AIフリーランス / based in Japan</p>
+        </div>
+
+        <nav aria-label="フッターナビゲーション">
+          <h2 class="footer-heading">Navigation</h2>
+          <ul class="footer-nav" role="list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#why">Why Loomia</a></li>
+            <li><a href="#works">Works</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div>
+          <h2 class="footer-heading">Connect</h2>
+          <ul class="footer-connect" role="list">
+            <li>
+              <a href="mailto:hello@loomia.jp">
+                <i data-lucide="mail" aria-hidden="true"></i>
+                <span>hello@loomia.jp</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://x.com/loomia_ai" target="_blank" rel="noopener noreferrer">
+                <i data-lucide="twitter" aria-hidden="true"></i>
+                <span>@loomia_ai</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://loomia.jp" target="_blank" rel="noopener noreferrer">
+                <i data-lucide="globe" aria-hidden="true"></i>
+                <span>loomia.jp</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Loomia. All rights reserved.</span>
+        <span class="built-with">Built with <span class="claude">Claude Code</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Initialize Lucide icons if any <i data-lucide> is present
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        try { window.lucide.createIcons(); } catch (e) { /* noop */ }
+      }
+
+      // Hero tagline: split into words/chars with staggered reveal
+      const visual = document.querySelector('.hero-tagline-visual');
+      if (visual) {
+        const text = visual.textContent.trim();
+        const words = text.split(' ');
+        visual.textContent = '';
+        let charIdx = 0;
+        words.forEach((word, wIdx) => {
+          const wSpan = document.createElement('span');
+          wSpan.className = 'word';
+          const stripped = word.toLowerCase().replace(/[^a-z]/g, '');
+          const isAccent = stripped === 'light';
+          for (const ch of word) {
+            const c = document.createElement('span');
+            c.className = 'char' + (isAccent && /[a-z]/i.test(ch) ? ' char-accent' : '');
+            c.style.animationDelay = (charIdx * 50) + 'ms';
+            c.textContent = ch;
+            wSpan.appendChild(c);
+            charIdx++;
+          }
+          visual.appendChild(wSpan);
+          if (wIdx < words.length - 1) {
+            visual.appendChild(document.createTextNode(' '));
+            charIdx++;
+          }
+        });
+      }
+
+      // Scroll reveal: add .in-view to sections/layers when ~15% has entered
+      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.works, section.contact, .layer, footer.footer');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        revealTargets.forEach((el) => io.observe(el));
+      } else {
+        revealTargets.forEach((el) => el.classList.add('in-view'));
+      }
+
+      // Fixed nav visibility + scroll progress bar — single rAF-throttled handler
+      const nav = document.querySelector('.nav');
+      const progress = document.querySelector('.scroll-progress');
+      const progressReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (progress) {
+        progress.style.transition = progressReduced ? 'none' : 'transform 80ms linear';
+      }
+      if (nav || progress) {
+        let lastY = window.scrollY;
+        let scrollTicking = false;
+        const NAV_THRESHOLD = 80;
+        const onScroll = () => {
+          const y = window.scrollY;
+          if (nav) {
+            if (y < NAV_THRESHOLD) {
+              nav.classList.remove('is-visible');
+            } else if (y < lastY) {
+              nav.classList.add('is-visible');
+            } else if (y > lastY) {
+              nav.classList.remove('is-visible');
+            }
+          }
+          if (progress) {
+            const max = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+            const pct = Math.min(1, Math.max(0, y / max));
+            progress.style.transform = 'scaleX(' + pct + ')';
+          }
+          lastY = y;
+          scrollTicking = false;
+        };
+        window.addEventListener('scroll', () => {
+          if (!scrollTicking) {
+            window.requestAnimationFrame(onScroll);
+            scrollTicking = true;
+          }
+        }, { passive: true });
+        window.addEventListener('resize', () => {
+          if (!scrollTicking) {
+            window.requestAnimationFrame(onScroll);
+            scrollTicking = true;
+          }
+        }, { passive: true });
+        onScroll();
+      }
+
+      // Mobile overlay menu
+      const burger = document.querySelector('.nav-burger');
+      const overlay = document.getElementById('nav-overlay');
+      const overlayClose = document.querySelector('.nav-overlay-close');
+      if (burger && overlay && overlayClose) {
+        const openOverlay = () => {
+          overlay.classList.add('is-open');
+          overlay.setAttribute('aria-hidden', 'false');
+          burger.setAttribute('aria-expanded', 'true');
+          document.body.classList.add('nav-open');
+        };
+        const closeOverlay = () => {
+          overlay.classList.remove('is-open');
+          overlay.setAttribute('aria-hidden', 'true');
+          burger.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+        };
+        burger.addEventListener('click', openOverlay);
+        overlayClose.addEventListener('click', closeOverlay);
+        overlay.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeOverlay));
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeOverlay();
+        });
+      }
+
+      // Smooth scroll for in-page anchor links (honor reduced-motion)
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('href');
+          if (!id || id === '#') return;
+          const target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
