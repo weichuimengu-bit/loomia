@@ -91,13 +91,282 @@
     }
 
     ::selection { background: var(--accent); color: var(--bg-primary); }
+
+    /* Screen-reader only */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+
+    /* ────────────────────────────────────────────────
+       HERO
+       ──────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-bg-top {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 1000px 620px at 50% -8%,
+          rgba(125, 211, 252, 0.22) 0%,
+          rgba(125, 211, 252, 0.08) 28%,
+          transparent 62%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.35;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 80%);
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: -1;
+      will-change: transform;
+    }
+    .orb-1 {
+      top: 8%;
+      left: -120px;
+      width: 300px;
+      height: 300px;
+      background: rgba(125, 211, 252, 0.08);
+      filter: blur(80px);
+      animation: orbFloat1 20s ease-in-out infinite;
+    }
+    .orb-2 {
+      bottom: -80px;
+      right: -120px;
+      width: 400px;
+      height: 400px;
+      background: rgba(125, 211, 252, 0.05);
+      filter: blur(100px);
+      animation: orbFloat2 25s ease-in-out infinite;
+    }
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translate(0, 0); }
+      33%     { transform: translate(40px, 60px); }
+      66%     { transform: translate(-20px, 30px); }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translate(0, 0); }
+      50%      { transform: translate(-80px, -50px); }
+    }
+
+    .hero-brand {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+    .hero-brand::after {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 9999px;
+      background: var(--accent);
+      margin-left: 8px;
+      vertical-align: middle;
+      transform: translateY(-6px);
+      box-shadow: 0 0 12px rgba(125, 211, 252, 0.8);
+    }
+
+    /* Tagline typography */
+    .hero-tagline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-size: 40px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 480px) { .hero-tagline { font-size: 48px; } }
+    @media (min-width: 640px) { .hero-tagline { font-size: 56px; } }
+    @media (min-width: 768px) { .hero-tagline { font-size: 72px; } }
+    @media (min-width: 1024px) { .hero-tagline { font-size: 88px; } }
+    @media (min-width: 1280px) { .hero-tagline { font-size: 96px; } }
+
+    .hero-tagline .word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .hero-tagline .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: charReveal 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    .hero-tagline .char-accent {
+      color: var(--accent);
+      text-shadow:
+        0 0 24px rgba(125, 211, 252, 0.45),
+        0 0 56px rgba(125, 211, 252, 0.22);
+    }
+    @keyframes charReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Subcopy & body */
+    .hero-sub {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 20px;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+    }
+    @media (min-width: 640px) { .hero-sub { font-size: 22px; } }
+    @media (min-width: 768px) { .hero-sub { font-size: 26px; } }
+    @media (min-width: 1024px) { .hero-sub { font-size: 28px; } }
+
+    .hero-desc {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.8;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (min-width: 768px) { .hero-desc { font-size: 17px; } }
+
+    /* CTA */
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: var(--bg-primary);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.01em;
+      padding: 16px 36px;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(125, 211, 252, 0.18);
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-cta:hover {
+      background: var(--accent-hover);
+      transform: scale(1.03);
+      box-shadow: 0 14px 44px rgba(125, 211, 252, 0.38);
+    }
+    .hero-cta:active { transform: scale(0.99); }
+    .hero-cta:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+    .hero-cta .arrow {
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    /* Status pill */
+    .hero-status {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      z-index: 2;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(125, 211, 252, 0.7);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .orb, .status-dot, .hero-cta, .hero-cta .arrow { animation: none !important; transition: none !important; }
+      .hero-tagline .char { animation: none !important; opacity: 1 !important; transform: none !important; }
+    }
   </style>
 </head>
 
 <body class="bg-bg-primary text-text-primary">
 
   <!-- 1. Hero -->
-  <section id="hero" aria-label="ヒーロー"></section>
+  <section id="hero" aria-label="ヒーロー" class="hero flex flex-col">
+    <!-- Background layers -->
+    <div class="hero-bg-top" aria-hidden="true"></div>
+    <div class="hero-grain" aria-hidden="true"></div>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+
+    <!-- Top-left brand mark -->
+    <header class="relative mx-auto w-full max-w-container px-6 pt-8 md:px-12 md:pt-10">
+      <a href="#hero" class="hero-brand inline-block" aria-label="Loomia — ホームへ">
+        Loomia
+      </a>
+    </header>
+
+    <!-- Center stage -->
+    <div class="relative flex flex-1 items-center justify-center px-6 py-16 md:px-12 md:py-24">
+      <div class="mx-auto w-full max-w-container text-center">
+
+        <h1 class="hero-tagline" role="heading" aria-level="1">
+          <span class="sr-only">Weave your ideas into light.</span>
+          <span class="hero-tagline-visual" aria-hidden="true">Weave your ideas into light.</span>
+        </h1>
+
+        <p class="hero-sub mt-7 md:mt-8" lang="ja">
+          AIで、事業の断片を、ひとつの光に。
+        </p>
+
+        <p class="hero-desc mt-10 md:mt-12" lang="ja">
+          AI × 既存スキルで、中小企業・個人事業主の制作・運用・自動化を、ひとりの窓口で完結させます。
+        </p>
+
+        <div class="mt-14 md:mt-16">
+          <a href="#contact" class="hero-cta" data-smooth-scroll>
+            <span>Start a conversation</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="hero-status" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>Available for new projects</span>
+    </div>
+  </section>
 
   <!-- 2. About -->
   <section id="about" aria-label="About Loomia"></section>
@@ -116,6 +385,56 @@
 
   <!-- 7. Footer -->
   <footer id="footer" aria-label="フッター"></footer>
+
+  <script>
+    (function () {
+      // Initialize Lucide icons if any <i data-lucide> is present
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        try { window.lucide.createIcons(); } catch (e) { /* noop */ }
+      }
+
+      // Hero tagline: split into words/chars with staggered reveal
+      const visual = document.querySelector('.hero-tagline-visual');
+      if (visual) {
+        const text = visual.textContent.trim();
+        const words = text.split(' ');
+        visual.textContent = '';
+        let charIdx = 0;
+        words.forEach((word, wIdx) => {
+          const wSpan = document.createElement('span');
+          wSpan.className = 'word';
+          const stripped = word.toLowerCase().replace(/[^a-z]/g, '');
+          const isAccent = stripped === 'light';
+          for (const ch of word) {
+            const c = document.createElement('span');
+            c.className = 'char' + (isAccent && /[a-z]/i.test(ch) ? ' char-accent' : '');
+            c.style.animationDelay = (charIdx * 50) + 'ms';
+            c.textContent = ch;
+            wSpan.appendChild(c);
+            charIdx++;
+          }
+          visual.appendChild(wSpan);
+          if (wIdx < words.length - 1) {
+            visual.appendChild(document.createTextNode(' '));
+            charIdx++;
+          }
+        });
+      }
+
+      // Smooth scroll for in-page anchor links (honor reduced-motion)
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('href');
+          if (!id || id === '#') return;
+          const target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
