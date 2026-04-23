@@ -1120,6 +1120,182 @@
     }
     @media (min-width: 768px) { .contact-subcopy { font-size: 18px; } }
 
+    /* Free diagnosis promotion block */
+    .diag-block {
+      max-width: 720px;
+      margin: 48px auto 48px;
+      padding: 36px 24px;
+      background: linear-gradient(135deg,
+        rgba(125, 211, 252, 0.06) 0%,
+        rgba(125, 211, 252, 0.02) 100%);
+      border: 1px solid rgba(125, 211, 252, 0.25);
+      border-radius: 24px;
+      text-align: center;
+    }
+    @media (min-width: 768px) {
+      .diag-block { margin: 64px auto 48px; padding: 48px 40px; }
+    }
+
+    .diag-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 100px;
+      background: rgba(125, 211, 252, 0.1);
+      border: 1px solid rgba(125, 211, 252, 0.4);
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .diag-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-top: 20px;
+    }
+    @media (min-width: 640px) { .diag-title { font-size: 32px; } }
+    @media (min-width: 768px) { .diag-title { font-size: 38px; } }
+    @media (min-width: 1024px) { .diag-title { font-size: 42px; } }
+
+    .diag-subtitle {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      letter-spacing: 0.005em;
+    }
+    @media (min-width: 768px) { .diag-subtitle { font-size: 18px; } }
+
+    .diag-desc {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--text-secondary);
+      margin: 20px auto 0;
+      max-width: 560px;
+    }
+    @media (min-width: 768px) { .diag-desc { font-size: 15px; } }
+
+    .diag-features {
+      list-style: none;
+      padding: 0;
+      margin: 32px 0 0 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 768px) {
+      .diag-features { grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 36px; }
+    }
+    .diag-features li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.015);
+    }
+    .diag-features svg {
+      width: 22px;
+      height: 22px;
+      color: var(--accent);
+      stroke-width: 1.75;
+    }
+    .diag-features strong {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .diag-spec {
+      list-style: none;
+      padding: 0;
+      margin: 28px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+    }
+    @media (min-width: 768px) {
+      .diag-spec {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0;
+        margin-top: 32px;
+      }
+      .diag-spec li {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 16px;
+        border-right: 1px solid rgba(255, 255, 255, 0.16);
+      }
+      .diag-spec li:last-child { border-right: 0; }
+    }
+    .diag-spec .key { color: var(--text-muted); margin-right: 6px; }
+    .diag-spec .val { color: var(--text-secondary); font-weight: 500; }
+
+    .diag-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin: 32px auto 0;
+      padding: 18px 28px;
+      background: var(--accent);
+      color: var(--bg-primary);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(125, 211, 252, 0.22);
+      transition:
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (min-width: 768px) {
+      .diag-cta { padding: 20px 32px; margin-top: 36px; }
+    }
+    .diag-cta:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 44px rgba(125, 211, 252, 0.38);
+    }
+    .diag-cta:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .diag-cta svg { width: 18px; height: 18px; stroke-width: 2; }
+    .diag-cta .arrow {
+      display: inline-block;
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .diag-cta:hover .arrow { transform: translateX(4px); }
+
+    .diag-foot {
+      margin-top: 14px;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+
     .contact-card {
       max-width: 640px;
       margin: 48px auto 0;
@@ -2105,7 +2281,45 @@
         </p>
       </div>
 
-      <div class="contact-card reveal-up" style="--reveal-delay: 220ms">
+      <!-- Free AI diagnosis promotion (hero CTA of this section) -->
+      <div class="diag-block reveal-up" style="--reveal-delay: 220ms" role="region" aria-label="無料AI活用度診断">
+        <span class="diag-badge">🎁 FREE OFFER</span>
+        <h3 class="diag-title" lang="ja">あなたの事業、AIでどこまで変えられますか？</h3>
+        <p class="diag-subtitle" lang="ja">AI活用度診断レポートを、無料で作成します</p>
+        <p class="diag-desc" lang="ja">業種・現状の業務課題・予算感から、あなたの事業で今すぐAIで自動化・効率化できるポイントを洗い出した個別レポート（PDF約5ページ）を無料でお渡しします。</p>
+
+        <ul class="diag-features" role="list">
+          <li>
+            <i data-lucide="inspect" aria-hidden="true"></i>
+            <strong lang="ja">業種別のAI活用チャンス5選</strong>
+          </li>
+          <li>
+            <i data-lucide="trending-up" aria-hidden="true"></i>
+            <strong lang="ja">費用対効果のランキング</strong>
+          </li>
+          <li>
+            <i data-lucide="arrow-right-circle" aria-hidden="true"></i>
+            <strong lang="ja">次のアクション提案</strong>
+          </li>
+        </ul>
+
+        <ul class="diag-spec" role="list" lang="ja">
+          <li><span class="key">料金</span><span class="val">無料</span></li>
+          <li><span class="key">所要時間</span><span class="val">約24時間</span></li>
+          <li><span class="key">納品形式</span><span class="val">PDFメール</span></li>
+          <li><span class="key">対象</span><span class="val">中小企業・個人事業主</span></li>
+        </ul>
+
+        <a href="mailto:loomia.jp@gmail.com?subject=%E8%A8%BA%E6%96%AD%E5%B8%8C%E6%9C%9B" class="diag-cta" aria-label="無料AI活用度診断を申し込む（loomia.jp@gmail.com 宛、件名: 診断希望）">
+          <i data-lucide="gift" aria-hidden="true"></i>
+          <span lang="ja">無料診断を申し込む</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+
+        <p class="diag-foot" lang="ja">または <a href="https://twitter.com/loomia_ai" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">X（@loomia_ai）</a> のDMで「診断希望」とお送りください</p>
+      </div>
+
+      <div class="contact-card reveal-up" style="--reveal-delay: 320ms">
 
         <a href="mailto:loomia.jp@gmail.com" class="contact-btn contact-btn-main" aria-label="メールで相談する（loomia.jp@gmail.com）">
           <span class="contact-btn-row">
