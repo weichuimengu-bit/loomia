@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0b" />
+  <meta name="color-scheme" content="dark" />
+
+  <title>Loomia — AIで、事業の断片を、ひとつの光に。</title>
+  <meta name="description" content="Loomia（ルーミア）は、AI × 既存スキルで中小企業・個人事業主の制作・運用・自動化をひとりの窓口で完結させるAIフリーランスです。Weave your ideas into light." />
+  <meta name="author" content="Loomia" />
+  <meta name="keywords" content="Loomia, ルーミア, AIフリーランス, AI活用, LP制作, SEO記事, 業務自動化, AIエージェント, 中小企業DX" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Loomia" />
+  <meta property="og:title" content="Loomia — Weave your ideas into light." />
+  <meta property="og:description" content="AIで、事業の断片を、ひとつの光に。制作・運用・自動化をひとりの窓口で完結させるAIフリーランス。" />
+  <meta property="og:locale" content="ja_JP" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Loomia — Weave your ideas into light." />
+  <meta name="twitter:description" content="AIで、事業の断片を、ひとつの光に。" />
+
+  <!-- Favicon: inline SVG data URL (luminous gradient circle) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><radialGradient id='g' cx='50%25' cy='40%25' r='60%25'><stop offset='0%25' stop-color='%23e0f2fe'/><stop offset='45%25' stop-color='%237dd3fc'/><stop offset='100%25' stop-color='%230a0a0b'/></radialGradient></defs><rect width='64' height='64' rx='14' fill='%230a0a0b'/><circle cx='32' cy='32' r='20' fill='url(%23g)'/></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-primary': '#0a0a0b',
+            'bg-secondary': '#111113',
+            'bg-tertiary': '#1a1a1d',
+            'text-primary': '#f5f5f7',
+            'text-secondary': '#a1a1aa',
+            'text-muted': '#71717a',
+            'accent': '#7dd3fc',
+            'accent-hover': '#38bdf8',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans JP', 'system-ui', 'sans-serif'],
+            jp: ['"Noto Sans JP"', 'Inter', 'sans-serif'],
+            serif: ['Fraunces', 'Georgia', 'serif'],
+          },
+          maxWidth: {
+            container: '1200px',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Design tokens & base styles -->
+  <style>
+    :root {
+      --bg-primary: #0a0a0b;
+      --bg-secondary: #111113;
+      --bg-tertiary: #1a1a1d;
+      --text-primary: #f5f5f7;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #7dd3fc;
+      --accent-hover: #38bdf8;
+      --accent-glow: rgba(125, 211, 252, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+    }
+
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      font-feature-settings: 'ss01', 'cv11';
+    }
+
+    ::selection { background: var(--accent); color: var(--bg-primary); }
+  </style>
+</head>
+
+<body class="bg-bg-primary text-text-primary">
+
+  <!-- 1. Hero -->
+  <section id="hero" aria-label="ヒーロー"></section>
+
+  <!-- 2. About -->
+  <section id="about" aria-label="About Loomia"></section>
+
+  <!-- 3. Services -->
+  <section id="services" aria-label="サービス一覧"></section>
+
+  <!-- 4. Why Loomia -->
+  <section id="why" aria-label="Why Loomia"></section>
+
+  <!-- 5. Works -->
+  <section id="works" aria-label="実績"></section>
+
+  <!-- 6. Contact -->
+  <section id="contact" aria-label="お問い合わせ"></section>
+
+  <!-- 7. Footer -->
+  <footer id="footer" aria-label="フッター"></footer>
+
+</body>
+</html>
