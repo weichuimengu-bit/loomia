@@ -43,7 +43,7 @@
             'bg-tertiary': '#1a1a1d',
             'text-primary': '#f5f5f7',
             'text-secondary': '#a1a1aa',
-            'text-muted': '#71717a',
+            'text-muted': '#8b8b93',
             'accent': '#7dd3fc',
             'accent-hover': '#38bdf8',
           },
@@ -71,7 +71,7 @@
       --bg-tertiary: #1a1a1d;
       --text-primary: #f5f5f7;
       --text-secondary: #a1a1aa;
-      --text-muted: #71717a;
+      --text-muted: #8b8b93;
       --accent: #7dd3fc;
       --accent-hover: #38bdf8;
       --accent-glow: rgba(125, 211, 252, 0.15);
@@ -1341,12 +1341,20 @@
     }
     .in-view .reveal-fade { opacity: 1; }
 
-    /* Respect reduced motion */
+    /* Respect reduced motion — blanket override for every animation/transition */
     @media (prefers-reduced-motion: reduce) {
-      .orb, .status-dot, .hero-cta, .hero-cta .arrow,
-      .service-card, .card-icon { animation: none !important; transition: none !important; }
-      .hero-tagline .char { animation: none !important; opacity: 1 !important; transform: none !important; }
-      .reveal-left, .reveal-up, .reveal-pop { opacity: 1 !important; transform: none !important; transition: none !important; }
+      html { scroll-behavior: auto !important; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.001ms !important;
+        transition-delay: 0ms !important;
+      }
+      .hero-tagline .char { opacity: 1 !important; transform: none !important; }
+      .reveal-left, .reveal-up, .reveal-pop, .reveal-fade {
+        opacity: 1 !important; transform: none !important;
+      }
     }
   </style>
 </head>
