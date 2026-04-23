@@ -513,9 +513,298 @@
       transform: none;
     }
 
+    /* ────────────────────────────────────────────────
+       SERVICES
+       ──────────────────────────────────────────────── */
+    .services {
+      position: relative;
+      background: var(--bg-primary);
+      padding: 100px 0;
+    }
+    @media (min-width: 768px) { .services { padding: 160px 0; } }
+
+    .services-header { text-align: center; }
+    .services-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-top: 24px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .services-title { font-size: 56px; } }
+    @media (min-width: 1024px) { .services-title { font-size: 64px; } }
+    .services-title .line { display: block; }
+    .services-title .accent { color: var(--accent); font-style: italic; }
+
+    .services-subcopy {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin: 28px auto 0;
+      max-width: 560px;
+    }
+    @media (min-width: 768px) { .services-subcopy { font-size: 18px; } }
+
+    .services-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+      margin-top: 80px;
+    }
+    @media (min-width: 768px) {
+      .services-layers { gap: 120px; margin-top: 96px; }
+    }
+
+    /* Layer */
+    .layer { position: relative; }
+
+    .layer-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .layer-head-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+    .layer-num {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.32;
+      letter-spacing: -0.04em;
+      flex-shrink: 0;
+    }
+    @media (min-width: 768px) { .layer-num { font-size: 72px; } }
+
+    .layer-title-block { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+    .layer-title {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+    }
+    @media (min-width: 768px) { .layer-title { font-size: 26px; } }
+    @media (min-width: 1024px) { .layer-title { font-size: 28px; } }
+    .layer-title .sep {
+      color: var(--text-muted);
+      font-weight: 400;
+      margin: 0 6px;
+    }
+
+    .layer-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+    @media (min-width: 768px) { .layer-en { font-size: 15px; } }
+
+    .layer-count {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    @media (min-width: 768px) { .layer-count { font-size: 14px; } }
+
+    .layer-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin-top: 28px;
+    }
+
+    .layer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    @media (min-width: 768px) {
+      .layer-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    }
+    @media (min-width: 1024px) {
+      .layer-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    }
+
+    /* Service card */
+    .service-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition:
+        transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .service-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: rgba(125, 211, 252, 0.28);
+      box-shadow:
+        0 20px 48px rgba(125, 211, 252, 0.08),
+        0 0 0 1px rgba(125, 211, 252, 0.06) inset;
+    }
+    .service-card:hover .card-icon { color: var(--accent-hover); }
+
+    .card-layer-dots {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 4px;
+    }
+    .card-layer-dots span {
+      width: 4px; height: 4px;
+      border-radius: 9999px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+
+    .card-icon-wrap {
+      display: inline-flex;
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(125, 211, 252, 0.08);
+      border: 1px solid rgba(125, 211, 252, 0.12);
+      align-items: center;
+      justify-content: center;
+    }
+    .card-icon {
+      width: 22px; height: 22px;
+      color: var(--accent);
+      transition: color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+      stroke-width: 1.75;
+    }
+
+    .card-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+
+    .card-title {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 10px;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { .card-title { font-size: 20px; } }
+
+    .card-desc {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-top: 14px;
+    }
+
+    .card-hr {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin-top: 24px;
+    }
+
+    .card-price-block { margin-top: 18px; }
+    .card-price {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    @media (min-width: 768px) { .card-price { font-size: 24px; } }
+    .card-price .price-prefix {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .card-price .price-unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+    .card-price-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+    }
+    .card-price.quote {
+      font-size: 20px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .card-price.quote { font-size: 22px; } }
+
+    .card-features {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .card-features li {
+      position: relative;
+      padding-left: 16px;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .card-features li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 4px; height: 4px;
+      border-radius: 9999px;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+
+    /* Push the lower block toward the bottom so card feet align */
+    .service-card .card-hr { margin-top: auto; }
+
     /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
-      .orb, .status-dot, .hero-cta, .hero-cta .arrow { animation: none !important; transition: none !important; }
+      .orb, .status-dot, .hero-cta, .hero-cta .arrow,
+      .service-card, .card-icon { animation: none !important; transition: none !important; }
       .hero-tagline .char { animation: none !important; opacity: 1 !important; transform: none !important; }
       .reveal-left, .reveal-up, .reveal-pop { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
@@ -626,7 +915,288 @@
   </section>
 
   <!-- 3. Services -->
-  <section id="services" aria-label="サービス一覧"></section>
+  <section id="services" class="services" aria-label="サービス一覧">
+    <div class="section-inner">
+
+      <!-- Section header -->
+      <div class="services-header">
+        <div class="section-eyebrow reveal-up">
+          <span class="num">(02)</span> SERVICES
+        </div>
+        <h2 class="services-title reveal-up" style="--reveal-delay: 80ms">
+          <span class="line">Three layers of value,</span>
+          <span class="line"><span class="accent">one weaver</span>.</span>
+        </h2>
+        <p class="services-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
+          制作、運用、自動化。入口から自律まで、ひとりの織り手が伴走します。
+        </p>
+      </div>
+
+      <div class="services-layers">
+
+        <!-- ============ Layer 01 — Create ============ -->
+        <div class="layer" data-layer="1">
+          <header class="layer-head reveal-left">
+            <div class="layer-head-left">
+              <div class="layer-num" aria-hidden="true">01</div>
+              <div class="layer-title-block">
+                <div class="layer-title">
+                  Create <span class="sep" aria-hidden="true">｜</span> <span lang="ja">今すぐ依頼できる制作代行</span>
+                </div>
+                <div class="layer-en">The foundation. Fast, quality production at freelance rates.</div>
+              </div>
+            </div>
+            <div class="layer-count" aria-hidden="true">3 services →</div>
+          </header>
+          <div class="layer-divider" aria-hidden="true"></div>
+
+          <div class="layer-grid">
+
+            <!-- Card 1 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
+              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="layout-dashboard" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Website Design</div>
+              <h3 class="card-title" lang="ja">LP・ポートフォリオサイト制作</h3>
+              <p class="card-desc" lang="ja">ダーク基調のモダンなサイトを、AIで高速に。構成設計から実装、レスポンシブ対応まで一貫して対応します。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥50,000
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>ヒアリング・構成設計</li>
+                <li>デザイン・実装（レスポンシブ）</li>
+                <li>初回公開まで</li>
+              </ul>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
+              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="pen-tool" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Content Writing</div>
+              <h3 class="card-title" lang="ja">ブログ・SEO記事執筆</h3>
+              <p class="card-desc" lang="ja">検索意図を捉えた、読まれる記事を量産。キーワード設計から納品まで対応。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥5,000<span class="price-unit">/ 記事</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>キーワード調査</li>
+                <li>構成案提出</li>
+                <li>3,000〜5,000字本文</li>
+              </ul>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
+              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="instagram" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Social Content</div>
+              <h3 class="card-title" lang="ja">SNS投稿コンテンツ作成</h3>
+              <p class="card-desc" lang="ja">X・Instagram向けの画像付き投稿セット。発信の継続を仕組みで支えます。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥20,000<span class="price-unit">/ 月10投稿</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>投稿テキスト</li>
+                <li>画像制作（10枚）</li>
+                <li>投稿カレンダー</li>
+              </ul>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- ============ Layer 02 — Amplify ============ -->
+        <div class="layer" data-layer="2">
+          <header class="layer-head reveal-left">
+            <div class="layer-head-left">
+              <div class="layer-num" aria-hidden="true">02</div>
+              <div class="layer-title-block">
+                <div class="layer-title">
+                  Amplify <span class="sep" aria-hidden="true">｜</span> <span lang="ja">AI活用で差別化する運用支援</span>
+                </div>
+                <div class="layer-en">The multiplier. Existing skills, amplified by AI.</div>
+              </div>
+            </div>
+            <div class="layer-count" aria-hidden="true">3 services →</div>
+          </header>
+          <div class="layer-divider" aria-hidden="true"></div>
+
+          <div class="layer-grid">
+
+            <!-- Card 1 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
+              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="video" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Video Production</div>
+              <h3 class="card-title" lang="ja">動画編集 + AIサムネ・台本</h3>
+              <p class="card-desc" lang="ja">編集だけでなく、再生される仕掛けまで。AI台本生成＋サムネABテスト対応。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥8,000<span class="price-unit">/ 本</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>動画編集（10分まで）</li>
+                <li>AIサムネイル3案</li>
+                <li>台本・テロップ</li>
+              </ul>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
+              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="bar-chart-3" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Data &amp; Automation</div>
+              <h3 class="card-title" lang="ja">Excel業務効率化・データ分析</h3>
+              <p class="card-desc" lang="ja">面倒な集計を自動化し、洞察まで届ける。マクロ・関数・レポート設計。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥30,000<span class="price-unit">/ 案件</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>現状フロー分析</li>
+                <li>自動化実装</li>
+                <li>運用マニュアル</li>
+              </ul>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
+              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="users" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Training &amp; Consulting</div>
+              <h3 class="card-title" lang="ja">AI活用セミナー・社員研修</h3>
+              <p class="card-desc" lang="ja">現場で使えるAI活用を、実演形式で。業種別カスタマイズ可能。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥30,000<span class="price-unit">/ 1h</span>
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>事前ヒアリング</li>
+                <li>1時間の実演研修</li>
+                <li>実践ワーク＋Q&amp;A</li>
+              </ul>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- ============ Layer 03 — Automate ============ -->
+        <div class="layer" data-layer="3">
+          <header class="layer-head reveal-left">
+            <div class="layer-head-left">
+              <div class="layer-num" aria-hidden="true">03</div>
+              <div class="layer-title-block">
+                <div class="layer-title">
+                  Automate <span class="sep" aria-hidden="true">｜</span> <span lang="ja">業務自動化・エージェント構築</span>
+                </div>
+                <div class="layer-en">The future. Systems that weave themselves.</div>
+              </div>
+            </div>
+            <div class="layer-count" aria-hidden="true">3 services →</div>
+          </header>
+          <div class="layer-divider" aria-hidden="true"></div>
+
+          <div class="layer-grid">
+
+            <!-- Card 1 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
+              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="bot" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Agent Development</div>
+              <h3 class="card-title" lang="ja">ChatBot・業務フロー自動化</h3>
+              <p class="card-desc" lang="ja">問い合わせ対応・社内業務を24時間稼働。Claude / GPT / n8n 連携対応。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">初期</span>¥300,000<span class="price-unit">〜</span>
+                </div>
+                <div class="card-price-sub">月額 ¥50,000〜</div>
+              </div>
+              <ul class="card-features">
+                <li>要件定義・設計</li>
+                <li>実装・テスト</li>
+                <li>1ヶ月の運用保守</li>
+              </ul>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
+              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="zap" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Agent Setup</div>
+              <h3 class="card-title" lang="ja">AIエージェント導入代行</h3>
+              <p class="card-desc" lang="ja">ロリポップAIエージェントクラウド等の設定と運用。導入後の伴走まで。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price">
+                  <span class="price-prefix">from</span>¥50,000
+                </div>
+              </div>
+              <ul class="card-features">
+                <li>ツール選定</li>
+                <li>初期セットアップ</li>
+                <li>30日サポート</li>
+              </ul>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
+              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
+              <div class="card-icon-wrap">
+                <i data-lucide="code-2" class="card-icon" aria-hidden="true"></i>
+              </div>
+              <div class="card-subtitle">Custom Development</div>
+              <h3 class="card-title" lang="ja">カスタムAIツール開発</h3>
+              <p class="card-desc" lang="ja">業界特化ツールをゼロから、あなたの現場に。ヒアリング重視で伴走。</p>
+              <div class="card-hr" aria-hidden="true"></div>
+              <div class="card-price-block">
+                <div class="card-price quote">要見積</div>
+              </div>
+              <ul class="card-features">
+                <li>業務ヒアリング</li>
+                <li>プロトタイプ</li>
+                <li>本実装・納品</li>
+              </ul>
+            </article>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
 
   <!-- 4. Why Loomia -->
   <section id="why" aria-label="Why Loomia"></section>
@@ -675,8 +1245,8 @@
         });
       }
 
-      // Scroll reveal: add .in-view to sections when ~15% has entered
-      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.works, section.contact');
+      // Scroll reveal: add .in-view to sections/layers when ~15% has entered
+      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.works, section.contact, .layer');
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
