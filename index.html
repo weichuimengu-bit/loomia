@@ -81,7 +81,7 @@
 
     * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 
     body {
       background: var(--bg-primary);
@@ -1341,6 +1341,174 @@
     }
     .in-view .reveal-fade { opacity: 1; }
 
+    /* ────────────────────────────────────────────────
+       FIXED NAVIGATION
+       ──────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      z-index: 50;
+      background: rgba(10, 10, 11, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
+      transition:
+        opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 100%;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (min-width: 768px) {
+      .nav-inner { padding: 0 48px; }
+    }
+
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .nav-logo::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(125, 211, 252, 0.7);
+    }
+
+    .nav-links {
+      display: none;
+      gap: 32px;
+      list-style: none;
+      padding: 0; margin: 0;
+    }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
+
+    .nav-link {
+      position: relative;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+      padding: 6px 0;
+      transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link:hover::after { width: 100%; }
+
+    .nav-burger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-burger:hover { background: rgba(255, 255, 255, 0.05); }
+    .nav-burger svg { width: 22px; height: 22px; stroke-width: 1.75; }
+    @media (min-width: 768px) { .nav-burger { display: none; } }
+
+    /* Full-screen overlay menu (mobile) */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(10, 10, 11, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition:
+        opacity 350ms cubic-bezier(0.4, 0, 0.2, 1),
+        transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-overlay.is-open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .nav-overlay-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: border-color 200ms cubic-bezier(0.4, 0, 0.2, 1), color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-overlay-close:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-overlay-close svg { width: 20px; height: 20px; stroke-width: 1.75; }
+
+    .nav-overlay-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-overlay-link {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-overlay-link:hover { color: var(--accent); }
+
+    body.nav-open { overflow: hidden; }
+
     /* Respect reduced motion — blanket override for every animation/transition */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto !important; }
@@ -1360,6 +1528,35 @@
 </head>
 
 <body class="bg-bg-primary text-text-primary">
+
+  <!-- Fixed top navigation -->
+  <nav class="nav" aria-label="グローバルナビゲーション">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo" aria-label="Loomia — ホームへ">Loomia</a>
+      <ul class="nav-links" role="list">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#why" class="nav-link">Why</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <button type="button" class="nav-burger" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-overlay">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile fullscreen overlay menu -->
+  <div id="nav-overlay" class="nav-overlay" role="dialog" aria-modal="true" aria-label="メニュー" aria-hidden="true">
+    <button type="button" class="nav-overlay-close" aria-label="メニューを閉じる">
+      <i data-lucide="x" aria-hidden="true"></i>
+    </button>
+    <ul class="nav-overlay-links" role="list">
+      <li><a href="#about" class="nav-overlay-link">About</a></li>
+      <li><a href="#services" class="nav-overlay-link">Services</a></li>
+      <li><a href="#why" class="nav-overlay-link">Why</a></li>
+      <li><a href="#contact" class="nav-overlay-link">Contact</a></li>
+    </ul>
+  </div>
 
   <!-- 1. Hero -->
   <section id="hero" aria-label="ヒーロー" class="hero flex flex-col">
@@ -2016,6 +2213,57 @@
         revealTargets.forEach((el) => io.observe(el));
       } else {
         revealTargets.forEach((el) => el.classList.add('in-view'));
+      }
+
+      // Fixed nav: scroll-direction visibility
+      const nav = document.querySelector('.nav');
+      if (nav) {
+        let lastY = window.scrollY;
+        let navTicking = false;
+        const NAV_THRESHOLD = 80;
+        const updateNav = () => {
+          const y = window.scrollY;
+          if (y < NAV_THRESHOLD) {
+            nav.classList.remove('is-visible');
+          } else if (y < lastY) {
+            nav.classList.add('is-visible');
+          } else if (y > lastY) {
+            nav.classList.remove('is-visible');
+          }
+          lastY = y;
+          navTicking = false;
+        };
+        window.addEventListener('scroll', () => {
+          if (!navTicking) {
+            window.requestAnimationFrame(updateNav);
+            navTicking = true;
+          }
+        }, { passive: true });
+      }
+
+      // Mobile overlay menu
+      const burger = document.querySelector('.nav-burger');
+      const overlay = document.getElementById('nav-overlay');
+      const overlayClose = document.querySelector('.nav-overlay-close');
+      if (burger && overlay && overlayClose) {
+        const openOverlay = () => {
+          overlay.classList.add('is-open');
+          overlay.setAttribute('aria-hidden', 'false');
+          burger.setAttribute('aria-expanded', 'true');
+          document.body.classList.add('nav-open');
+        };
+        const closeOverlay = () => {
+          overlay.classList.remove('is-open');
+          overlay.setAttribute('aria-hidden', 'true');
+          burger.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+        };
+        burger.addEventListener('click', openOverlay);
+        overlayClose.addEventListener('click', closeOverlay);
+        overlay.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeOverlay));
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeOverlay();
+        });
       }
 
       // Smooth scroll for in-page anchor links (honor reduced-motion)
