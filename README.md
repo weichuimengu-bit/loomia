@@ -28,8 +28,8 @@ https://weichuimengu-bit.github.io/loomia/
 - カスタムAIツール開発（要見積）
 
 ## Contact
-- Email: hello@loomia.jp
-- X: [@loomia_ai](https://twitter.com/loomia_ai)
+- Email: loomia.jp@gmail.com
+- X (Twitter): [@loomia_ai](https://twitter.com/loomia_ai)
 
 ## Built with
 - HTML / CSS / Vanilla JavaScript
