@@ -1509,6 +1509,23 @@
 
     body.nav-open { overflow: hidden; }
 
+    /* ────────────────────────────────────────────────
+       SCROLL PROGRESS BAR
+       ──────────────────────────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent);
+      box-shadow: 2px 0 12px rgba(125, 211, 252, 0.6);
+      z-index: 51;
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      pointer-events: none;
+      will-change: transform;
+    }
+
     /* Respect reduced motion — blanket override for every animation/transition */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto !important; }
@@ -1528,6 +1545,9 @@
 </head>
 
 <body class="bg-bg-primary text-text-primary">
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" role="presentation" aria-hidden="true"></div>
 
   <!-- Fixed top navigation -->
   <nav class="nav" aria-label="グローバルナビゲーション">
@@ -2215,30 +2235,49 @@
         revealTargets.forEach((el) => el.classList.add('in-view'));
       }
 
-      // Fixed nav: scroll-direction visibility
+      // Fixed nav visibility + scroll progress bar — single rAF-throttled handler
       const nav = document.querySelector('.nav');
-      if (nav) {
+      const progress = document.querySelector('.scroll-progress');
+      const progressReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (progress) {
+        progress.style.transition = progressReduced ? 'none' : 'transform 80ms linear';
+      }
+      if (nav || progress) {
         let lastY = window.scrollY;
-        let navTicking = false;
+        let scrollTicking = false;
         const NAV_THRESHOLD = 80;
-        const updateNav = () => {
+        const onScroll = () => {
           const y = window.scrollY;
-          if (y < NAV_THRESHOLD) {
-            nav.classList.remove('is-visible');
-          } else if (y < lastY) {
-            nav.classList.add('is-visible');
-          } else if (y > lastY) {
-            nav.classList.remove('is-visible');
+          if (nav) {
+            if (y < NAV_THRESHOLD) {
+              nav.classList.remove('is-visible');
+            } else if (y < lastY) {
+              nav.classList.add('is-visible');
+            } else if (y > lastY) {
+              nav.classList.remove('is-visible');
+            }
+          }
+          if (progress) {
+            const max = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+            const pct = Math.min(1, Math.max(0, y / max));
+            progress.style.transform = 'scaleX(' + pct + ')';
           }
           lastY = y;
-          navTicking = false;
+          scrollTicking = false;
         };
         window.addEventListener('scroll', () => {
-          if (!navTicking) {
-            window.requestAnimationFrame(updateNav);
-            navTicking = true;
+          if (!scrollTicking) {
+            window.requestAnimationFrame(onScroll);
+            scrollTicking = true;
           }
         }, { passive: true });
+        window.addEventListener('resize', () => {
+          if (!scrollTicking) {
+            window.requestAnimationFrame(onScroll);
+            scrollTicking = true;
+          }
+        }, { passive: true });
+        onScroll();
       }
 
       // Mobile overlay menu
