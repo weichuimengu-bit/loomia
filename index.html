@@ -309,10 +309,215 @@
       50%      { opacity: 0.4; transform: scale(0.85); }
     }
 
+    /* ────────────────────────────────────────────────
+       LAYOUT PRIMITIVES
+       ──────────────────────────────────────────────── */
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (min-width: 768px) { .section-inner { padding: 0 48px; } }
+
+    .section-hairline {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(125, 211, 252, 0.18) 25%,
+        rgba(125, 211, 252, 0.18) 75%,
+        transparent 100%
+      );
+    }
+
+    .section-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .section-eyebrow .num { color: var(--text-secondary); margin-right: 4px; }
+
+    /* ────────────────────────────────────────────────
+       ABOUT
+       ──────────────────────────────────────────────── */
+    .about {
+      position: relative;
+      background: var(--bg-secondary);
+      padding: 80px 0 88px;
+    }
+    @media (min-width: 768px) { .about { padding: 120px 0; } }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 56px;
+      margin-top: 56px;
+    }
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: 5fr 7fr;
+        gap: 80px;
+        margin-top: 64px;
+      }
+    }
+
+    .about-left {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      position: relative;
+    }
+
+    .about-headline-wrap {
+      position: relative;
+      padding-left: 28px;
+    }
+    .about-accent-bar {
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom,
+        rgba(125, 211, 252, 0.7) 0%,
+        rgba(125, 211, 252, 0.25) 60%,
+        transparent 100%);
+      border-radius: 2px;
+    }
+
+    .about-headline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600;
+      font-size: 38px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .about-headline { font-size: 46px; } }
+    @media (min-width: 1024px) { .about-headline { font-size: 54px; } }
+
+    .about-headline .line { display: block; }
+    .about-headline .accent-line { color: var(--accent); font-style: italic; }
+    .about-headline .accent-underline {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 8px;
+      text-decoration-thickness: 2px;
+    }
+
+    .about-location {
+      margin-top: auto;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+
+    .about-right { display: flex; flex-direction: column; }
+
+    .about-p {
+      position: relative;
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 2;
+      color: var(--text-secondary);
+      padding-left: 20px;
+    }
+    @media (min-width: 768px) { .about-p { font-size: 17px; } }
+    .about-p + .about-p { margin-top: 32px; }
+    .about-p::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 2px;
+      height: 24px;
+      background: var(--accent);
+      opacity: 0.35;
+      border-radius: 2px;
+    }
+    .about-key {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .skills-block { margin-top: 64px; }
+    .skills-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.15em;
+      margin-bottom: 20px;
+    }
+    .skills-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 100px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                  color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+    }
+    .skill-tag:hover {
+      border-color: var(--accent);
+      background: rgba(125, 211, 252, 0.08);
+      color: var(--accent);
+      transform: scale(1.05);
+    }
+    .skill-tag .glyph {
+      display: inline-block;
+      font-size: 12px;
+      line-height: 1;
+      opacity: 0.85;
+      font-family: 'Inter', 'Apple Symbols', 'Segoe UI Symbol', sans-serif;
+    }
+
+    /* Scroll reveal */
+    .reveal-left, .reveal-up, .reveal-pop {
+      opacity: 0;
+      transition: opacity 500ms cubic-bezier(0, 0, 0.2, 1),
+                  transform 500ms cubic-bezier(0, 0, 0.2, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal-left { transform: translateX(-20px); }
+    .reveal-up   { transform: translateY(20px); }
+    .reveal-pop  { transform: scale(0.95); }
+
+    .in-view .reveal-left,
+    .in-view .reveal-up,
+    .in-view .reveal-pop {
+      opacity: 1;
+      transform: none;
+    }
+
     /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .orb, .status-dot, .hero-cta, .hero-cta .arrow { animation: none !important; transition: none !important; }
       .hero-tagline .char { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .reveal-left, .reveal-up, .reveal-pop { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -369,7 +574,56 @@
   </section>
 
   <!-- 2. About -->
-  <section id="about" aria-label="About Loomia"></section>
+  <section id="about" class="about" aria-label="About Loomia">
+    <div class="section-hairline" aria-hidden="true"></div>
+
+    <div class="section-inner">
+      <div class="section-eyebrow reveal-up">
+        <span class="num">(01)</span> ABOUT
+      </div>
+
+      <div class="about-grid">
+        <!-- Left column -->
+        <aside class="about-left reveal-left">
+          <div class="about-headline-wrap">
+            <span class="about-accent-bar" aria-hidden="true"></span>
+            <h2 class="about-headline">
+              <span class="line">One freelancer,</span>
+              <span class="line">seven skills,</span>
+              <span class="line"><span class="accent-line"><span class="accent-underline">infinite weaves</span></span>.</span>
+            </h2>
+          </div>
+          <p class="about-location">— Based in Japan, Serving globally.</p>
+        </aside>
+
+        <!-- Right column -->
+        <div class="about-right">
+          <p class="about-p reveal-up" style="--reveal-delay: 0ms" lang="ja">
+            ひとつの事業を立ち上げるとき、必要なものはバラバラに存在しています。言葉、デザイン、データ、仕組み、そして時間。Loomiaはそれらを、<strong class="about-key">AIという新しい糸</strong>で織り上げ、ひとつの光として届ける場所です。
+          </p>
+          <p class="about-p reveal-up" style="--reveal-delay: 100ms" lang="ja">
+            Webサイト制作、SNS運用、業務自動化、データ分析、動画編集——これまで複数の外注先に頼んでいた仕事を、<strong class="about-key">ひとりの窓口</strong>で完結させます。AIを使いこなす個人だからこそ、大手制作会社と同等の品質を、フリーランス単価で提供できます。
+          </p>
+          <p class="about-p reveal-up" style="--reveal-delay: 200ms" lang="ja">
+            AIを取り入れたいが、何から始めるべきか分からない事業者の方。人手不足に悩む中小企業や個人事業主の方。新しい仕組みで一歩先に進みたいスタートアップの方。そんなあなたの<strong class="about-key">「はじめの一歩」</strong>を、一緒に織り上げていきます。
+          </p>
+
+          <div class="skills-block">
+            <div class="skills-eyebrow reveal-up" style="--reveal-delay: 300ms">— Skills I weave with</div>
+            <ul class="skills-list" role="list">
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 360ms"><span class="glyph" aria-hidden="true">✎</span>Writing</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 440ms"><span class="glyph" aria-hidden="true">◇</span>Design</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 520ms"><span class="glyph" aria-hidden="true">✦</span>Sales</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 600ms"><span class="glyph" aria-hidden="true">▤</span>Data</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 680ms"><span class="glyph" aria-hidden="true">⟨⟩</span>Code</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 760ms"><span class="glyph" aria-hidden="true">▶</span>Video</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 840ms"><span class="glyph" aria-hidden="true">✣</span>SNS</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- 3. Services -->
   <section id="services" aria-label="サービス一覧"></section>
@@ -419,6 +673,22 @@
             charIdx++;
           }
         });
+      }
+
+      // Scroll reveal: add .in-view to sections when ~15% has entered
+      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.works, section.contact');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        revealTargets.forEach((el) => io.observe(el));
+      } else {
+        revealTargets.forEach((el) => el.classList.add('in-view'));
       }
 
       // Smooth scroll for in-page anchor links (honor reduced-motion)
