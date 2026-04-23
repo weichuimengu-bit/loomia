@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500" role="img" aria-label="Loomia — Weave your ideas into light.">
+  <defs>
+    <radialGradient id="topLight" cx="750" cy="150" r="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7dd3fc" stop-opacity="0.25"/>
+      <stop offset="55%" stop-color="#7dd3fc" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#7dd3fc" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="g12" x="-50%" y="-100%" width="200%" height="300%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <filter id="g28" x="-50%" y="-100%" width="200%" height="300%">
+      <feGaussianBlur stdDeviation="28"/>
+    </filter>
+  </defs>
+
+  <!-- Base black canvas -->
+  <rect width="1500" height="500" fill="#0a0a0b"/>
+
+  <!-- Top-center radial light (source at 750, 150) -->
+  <rect width="1500" height="500" fill="url(#topLight)"/>
+
+  <!-- Outer "light" glow (blur 28) -->
+  <text x="750" y="260" text-anchor="middle"
+        font-family="Fraunces, 'Playfair Display', Georgia, serif"
+        font-size="64" font-weight="600" filter="url(#g28)">
+    <tspan fill-opacity="0">Weave your ideas into </tspan>
+    <tspan fill="#7dd3fc">light</tspan>
+    <tspan fill-opacity="0">.</tspan>
+  </text>
+
+  <!-- Inner "light" glow (blur 12) -->
+  <text x="750" y="260" text-anchor="middle"
+        font-family="Fraunces, 'Playfair Display', Georgia, serif"
+        font-size="64" font-weight="600" filter="url(#g12)">
+    <tspan fill-opacity="0">Weave your ideas into </tspan>
+    <tspan fill="#7dd3fc">light</tspan>
+    <tspan fill-opacity="0">.</tspan>
+  </text>
+
+  <!-- Crisp main tagline -->
+  <text x="750" y="260" text-anchor="middle"
+        font-family="Fraunces, 'Playfair Display', Georgia, serif"
+        font-size="64" font-weight="600">
+    <tspan fill="#f5f5f7">Weave your ideas into </tspan>
+    <tspan fill="#7dd3fc">light</tspan>
+    <tspan fill="#f5f5f7">.</tspan>
+  </text>
+
+  <!-- Sub text -->
+  <text x="750" y="320" text-anchor="middle"
+        font-family="Inter, system-ui, sans-serif"
+        font-size="18" font-weight="400"
+        fill="#a1a1aa">Loomia ｜ AI Freelance</text>
+</svg>
