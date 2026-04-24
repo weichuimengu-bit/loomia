@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>AI活用度診断 | Loomia</title>
+<meta name="description" content="あなたの事業、AIでどこまで変えられますか？ Loomia AI活用度診断フォーム。無料で個別診断レポートをお届けします。">
+
+<!-- OG / Twitter -->
+<meta property="og:title" content="AI活用度診断 | Loomia">
+<meta property="og:description" content="AIで、事業の断片を、ひとつの光に。">
+<meta property="og:image" content="https://weichuimengu-bit.github.io/loomia/assets/x-header.svg">
+<meta property="og:url" content="https://weichuimengu-bit.github.io/loomia/form.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- hCaptcha -->
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
+<style>
+:root {
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #111113;
+  --bg-elevated: #18181b;
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --accent: #7dd3fc;
+  --accent-glow: rgba(125, 211, 252, 0.3);
+  --accent-soft: rgba(125, 211, 252, 0.1);
+  --accent-border: rgba(125, 211, 252, 0.25);
+  --danger: #f87171;
+  --success: #86efac;
+  --border: rgba(255, 255, 255, 0.1);
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-jp: 'Noto Sans JP', system-ui, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-jp), var(--font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(125, 211, 252, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(125, 211, 252, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 800ms var(--transition-slow) forwards;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  margin-bottom: 32px;
+  transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.back-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+.brand-mark {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  margin-bottom: 40px;
+}
+
+.page-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 6vw, 48px);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.01em;
+}
+
+.page-title .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 24px 0;
+  line-height: 1.8;
+}
+
+.meta-bar {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.meta-item-value {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.form-container {
+  background: rgba(24, 24, 27, 0.4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 48px 40px;
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 800ms 200ms var(--transition-slow) forwards;
+}
+
+.form-group {
+  margin-bottom: 32px;
+}
+
+.form-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.form-label .required {
+  color: var(--accent);
+  margin-left: 4px;
+}
+
+.form-label .optional {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-left: 8px;
+  font-weight: 400;
+}
+
+.form-help {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(125, 211, 252, 0.04);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.radio-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.radio-option:hover {
+  background: rgba(125, 211, 252, 0.04);
+  border-color: rgba(125, 211, 252, 0.2);
+}
+
+.radio-option input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: border-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.radio-option input[type="radio"]:checked {
+  border-color: var(--accent);
+}
+
+.radio-option input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+  background: rgba(125, 211, 252, 0.06);
+  border-color: var(--accent);
+}
+
+.radio-option-label {
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.captcha-container {
+  margin: 32px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 18px 32px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #a5e3fc;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit-button.loading {
+  pointer-events: none;
+}
+
+.submit-button.loading .button-text {
+  opacity: 0;
+}
+
+.submit-button .spinner {
+  display: none;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(10, 10, 11, 0.3);
+  border-top-color: var(--bg-primary);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+.submit-button.loading .spinner {
+  display: block;
+}
+
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 64px 32px;
+  animation: fadeInUp 600ms var(--transition-slow);
+}
+
+.success-screen.active {
+  display: block;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 32px auto;
+  background: var(--accent-soft);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.success-icon svg {
+  width: 40px;
+  height: 40px;
+  color: var(--accent);
+}
+
+.success-title {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+}
+
+.success-message {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 32px 0;
+  line-height: 1.8;
+}
+
+.success-tagline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent);
+  font-size: 18px;
+  margin-top: 32px;
+}
+
+.error-message {
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  color: var(--danger);
+  font-size: 14px;
+  line-height: 1.6;
+  display: none;
+}
+
+.error-message.active {
+  display: block;
+}
+
+.error-message a {
+  color: var(--danger);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 6px;
+  display: none;
+}
+
+.field-error.active {
+  display: block;
+}
+
+.form-input.error,
+.form-textarea.error {
+  border-color: var(--danger);
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.form-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+  50% {
+    box-shadow: 0 0 0 16px rgba(125, 211, 252, 0);
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 32px 16px;
+  }
+
+  .form-container {
+    padding: 32px 24px;
+  }
+
+  .radio-group {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-bar {
+    gap: 16px;
+  }
+
+  .meta-item {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <a href="./" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Loomia トップへ戻る
+    </a>
+
+    <div class="brand-mark">Loomia</div>
+
+    <h1 class="page-title">
+      あなたの事業、<br>
+      AIでどこまで<span class="accent">変えられますか？</span>
+    </h1>
+
+    <p class="page-subtitle">
+      AI活用度診断レポートを、無料で作成します。<br>
+      業種・現状の業務課題・予算感をお聞かせください。
+    </p>
+
+    <div class="meta-bar">
+      <div class="meta-item">
+        <span>料金:</span>
+        <span class="meta-item-value">無料</span>
+      </div>
+      <div class="meta-item">
+        <span>所要時間:</span>
+        <span class="meta-item-value">約2分</span>
+      </div>
+      <div class="meta-item">
+        <span>納品:</span>
+        <span class="meta-item-value">24時間以内</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="form-container" id="formContainer">
+
+    <div class="error-message" id="errorMessage"></div>
+
+    <form id="diagnosisForm" novalidate>
+
+      <div class="form-group">
+        <label class="form-label" for="email">
+          メールアドレス<span class="required">*</span>
+        </label>
+        <p class="form-help">診断レポートのお届け先になります</p>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-input"
+          placeholder="you@example.com"
+          required
+          aria-required="true">
+        <div class="field-error" id="emailError"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="industry">
+          業種<span class="required">*</span>
+        </label>
+        <p class="form-help">例: 個人経営の美容室、中小企業の士業、ECサイト運営、飲食店など</p>
+        <input
+          type="text"
+          id="industry"
+          name="industry"
+          class="form-input"
+          placeholder="例: 個人経営の美容室"
+          required
+          aria-required="true">
+        <div class="field-error" id="industryError"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="concern1">
+          業務上の悩み 1つ目<span class="required">*</span>
+        </label>
+        <p class="form-help">具体的にストレスや時間を使っている内容を教えてください</p>
+        <textarea
+          id="concern1"
+          name="concern1"
+          class="form-textarea"
+          placeholder="例: 予約管理が大変で、LINE・電話・インスタDMがバラバラに来る"
+          required
+          aria-required="true"></textarea>
+        <div class="field-error" id="concern1Error"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="concern2">
+          業務上の悩み 2つ目<span class="optional">(任意)</span>
+        </label>
+        <textarea
+          id="concern2"
+          name="concern2"
+          class="form-textarea"
+          placeholder="例: SNSの投稿を続ける時間がない"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="concern3">
+          業務上の悩み 3つ目<span class="optional">(任意)</span>
+        </label>
+        <textarea
+          id="concern3"
+          name="concern3"
+          class="form-textarea"
+          placeholder="例: 顧客カルテが紙ベースで検索できない"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          AI導入の予算感<span class="required">*</span>
+        </label>
+        <p class="form-help">月額でAI活用にかけられる予算の目安</p>
+        <div class="radio-group" role="radiogroup" aria-required="true">
+          <label class="radio-option">
+            <input type="radio" name="budget" value="月3万円以下" required>
+            <span class="radio-option-label">月3万円以下</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="budget" value="月3〜10万円">
+            <span class="radio-option-label">月3〜10万円</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="budget" value="月10万円以上">
+            <span class="radio-option-label">月10万円以上</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="budget" value="未定・相談したい">
+            <span class="radio-option-label">未定・相談したい</span>
+          </label>
+        </div>
+        <div class="field-error" id="budgetError"></div>
+      </div>
+
+      <div class="captcha-container">
+        <div class="h-captcha" data-sitekey="c1d66612-5d1a-4be6-bdda-dfdee3420bba" data-theme="dark"></div>
+      </div>
+
+      <button type="submit" class="submit-button" id="submitButton">
+        <span class="button-text">無料診断を申し込む</span>
+        <div class="spinner"></div>
+      </button>
+
+    </form>
+
+    <div class="form-footer">
+      送信いただいた情報は、診断レポートの作成にのみ使用します。<br>
+      第三者への提供は一切行いません。<br><br>
+      お問い合わせ: <a href="mailto:loomia.jp@gmail.com">loomia.jp@gmail.com</a>
+    </div>
+
+  </main>
+
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h2 class="success-title">ありがとうございます</h2>
+    <p class="success-message">
+      診断申込を受け付けました。<br>
+      24時間以内に、AI活用度診断レポートを<br>
+      ご入力いただいたメールアドレスにお送りします。<br><br>
+      もしメールが届かない場合は、<br>
+      迷惑メールフォルダをご確認ください。
+    </p>
+    <p class="success-tagline">AIで、事業の断片を、ひとつの光に。</p>
+  </div>
+
+</div>
+
+<script>
+// Apps Script の Web App URL
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxdOZIbfi6oRZK6UX-pOo1FDZ_iC3NjcgSe7rN9vwHwEIISa6gISqSH1kIkmpHfPkuw/exec";
+
+const form = document.getElementById('diagnosisForm');
+const submitButton = document.getElementById('submitButton');
+const errorMessage = document.getElementById('errorMessage');
+const formContainer = document.getElementById('formContainer');
+const successScreen = document.getElementById('successScreen');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  clearErrors();
+
+  if (!validateForm()) {
+    return;
+  }
+
+  const captchaToken = typeof hcaptcha !== 'undefined' ? hcaptcha.getResponse() : null;
+  if (!captchaToken) {
+    showError("セキュリティチェック(CAPTCHA)を完了してください。");
+    return;
+  }
+
+  const formData = {
+    email: document.getElementById('email').value.trim(),
+    industry: document.getElementById('industry').value.trim(),
+    concern1: document.getElementById('concern1').value.trim(),
+    concern2: document.getElementById('concern2').value.trim(),
+    concern3: document.getElementById('concern3').value.trim(),
+    budget: document.querySelector('input[name="budget"]:checked')?.value || "",
+    captchaToken: captchaToken
+  };
+
+  submitButton.classList.add('loading');
+  submitButton.disabled = true;
+
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    showSuccessScreen();
+
+  } catch (error) {
+    console.error('送信エラー:', error);
+    showError(
+      'システムエラーが発生しました。お手数ですが、' +
+      '<a href="mailto:loomia.jp@gmail.com">loomia.jp@gmail.com</a>' +
+      'まで直接ご連絡ください。'
+    );
+    submitButton.classList.remove('loading');
+    submitButton.disabled = false;
+
+    if (typeof hcaptcha !== 'undefined') {
+      hcaptcha.reset();
+    }
+  }
+});
+
+function validateForm() {
+  let isValid = true;
+
+  const email = document.getElementById('email').value.trim();
+  if (!email) {
+    showFieldError('email', 'メールアドレスを入力してください');
+    isValid = false;
+  } else if (!isValidEmail(email)) {
+    showFieldError('email', 'メールアドレスの形式が正しくありません');
+    isValid = false;
+  }
+
+  const industry = document.getElementById('industry').value.trim();
+  if (!industry) {
+    showFieldError('industry', '業種を入力してください');
+    isValid = false;
+  }
+
+  const concern1 = document.getElementById('concern1').value.trim();
+  if (!concern1) {
+    showFieldError('concern1', '業務上の悩みを入力してください');
+    isValid = false;
+  }
+
+  const budget = document.querySelector('input[name="budget"]:checked');
+  if (!budget) {
+    showFieldError('budget', '予算感を選択してください');
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+function isValidEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+function showFieldError(fieldId, message) {
+  const field = document.getElementById(fieldId);
+  const errorEl = document.getElementById(fieldId + 'Error');
+
+  if (field) field.classList.add('error');
+  if (errorEl) {
+    errorEl.textContent = message;
+    errorEl.classList.add('active');
+  }
+}
+
+function clearErrors() {
+  errorMessage.classList.remove('active');
+  errorMessage.innerHTML = '';
+
+  document.querySelectorAll('.field-error').forEach(el => {
+    el.classList.remove('active');
+    el.textContent = '';
+  });
+
+  document.querySelectorAll('.error').forEach(el => {
+    el.classList.remove('error');
+  });
+}
+
+function showError(html) {
+  errorMessage.innerHTML = html;
+  errorMessage.classList.add('active');
+  errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showSuccessScreen() {
+  formContainer.style.display = 'none';
+  successScreen.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('input, textarea').forEach(input => {
+  input.addEventListener('input', () => {
+    input.classList.remove('error');
+    const errorEl = document.getElementById(input.id + 'Error');
+    if (errorEl) {
+      errorEl.classList.remove('active');
+    }
+  });
+});
+
+document.querySelectorAll('input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const errorEl = document.getElementById('budgetError');
+    if (errorEl) {
+      errorEl.classList.remove('active');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
