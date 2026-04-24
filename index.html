@@ -286,6 +286,15 @@
     }
     .hero-cta:hover .arrow { transform: translateX(4px); }
 
+    /* Hero CTA: mobile full-width treatment for thumb-friendly tap */
+    @media (max-width: 640px) {
+      .hero-cta {
+        width: 80%;
+        max-width: 320px;
+        justify-content: center;
+      }
+    }
+
     /* Status pill */
     .hero-status {
       position: absolute;
@@ -1134,7 +1143,7 @@
     /* Free diagnosis promotion block */
     .diag-block {
       max-width: 720px;
-      margin: 48px auto 48px;
+      margin: 48px auto 0;
       padding: 36px 24px;
       background: linear-gradient(135deg,
         rgba(125, 211, 252, 0.06) 0%,
@@ -1144,7 +1153,7 @@
       text-align: center;
     }
     @media (min-width: 768px) {
-      .diag-block { margin: 64px auto 48px; padding: 48px 40px; }
+      .diag-block { margin: 64px auto 0; padding: 48px 40px; }
     }
 
     .diag-badge {
@@ -1392,6 +1401,64 @@
       opacity: 0.78;
     }
     .contact-btn-main .contact-btn-hint { color: rgba(10, 10, 11, 0.72); }
+
+    /* ── Secondary contact area (ghost buttons, sits 24px below diag-block) ── */
+    .contact-secondary {
+      max-width: 640px;
+      margin: 24px auto 0;
+    }
+    .contact-secondary-row {
+      display: flex;
+      gap: 12px;
+    }
+    @media (max-width: 768px) {
+      .contact-secondary-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+    .contact-btn-ghost {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 12px 20px;
+      border: 1px solid rgba(125, 211, 252, 0.3);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .contact-btn-ghost:hover {
+      border-color: var(--accent);
+      background: rgba(125, 211, 252, 0.05);
+      color: var(--accent);
+    }
+    .contact-btn-ghost:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .contact-btn-ghost svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 1.75;
+      flex-shrink: 0;
+    }
+    .contact-btn-ghost .arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+    .contact-btn-ghost:hover .arrow { transform: translateX(3px); }
+    @media (max-width: 768px) {
+      .contact-btn-ghost { width: 100%; }
+    }
 
     .contact-foot {
       margin-top: 12px;
@@ -1803,8 +1870,8 @@
         </p>
 
         <div class="mt-14 md:mt-16">
-          <a href="#contact" class="hero-cta" data-smooth-scroll>
-            <span>Start a conversation</span>
+          <a href="./form.html" class="hero-cta" aria-label="24時間以内に無料のAI活用度診断レポートを受け取る">
+            <span lang="ja">24時間で届く無料AI診断</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -2336,25 +2403,21 @@
         <p class="diag-foot" lang="ja">または <a href="https://twitter.com/loomia_ai" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">X（@loomia_ai）</a> のDMで「診断希望」とお送りください</p>
       </div>
 
-      <div class="contact-card reveal-up" style="--reveal-delay: 320ms">
+      <div class="contact-secondary reveal-up" style="--reveal-delay: 320ms">
 
-        <a href="mailto:loomia.jp@gmail.com" class="contact-btn contact-btn-main" aria-label="メールで相談する（loomia.jp@gmail.com）">
-          <span class="contact-btn-row">
+        <div class="contact-secondary-row">
+          <a href="mailto:loomia.jp@gmail.com" class="contact-btn-ghost" aria-label="loomia.jp@gmail.com にメールで相談する">
             <i data-lucide="mail" aria-hidden="true"></i>
             <span lang="ja">メールで相談する</span>
             <span class="arrow" aria-hidden="true">→</span>
-          </span>
-          <span class="contact-btn-hint">loomia.jp@gmail.com</span>
-        </a>
+          </a>
 
-        <a href="https://twitter.com/loomia_ai" target="_blank" rel="noopener noreferrer" class="contact-btn contact-btn-sub" aria-label="X (Twitter) のDMで相談する（@loomia_ai）">
-          <span class="contact-btn-row">
+          <a href="https://twitter.com/loomia_ai" target="_blank" rel="noopener noreferrer" class="contact-btn-ghost" aria-label="X(旧Twitter)の@loomia_aiアカウントにDMで相談する">
             <i data-lucide="message-circle" aria-hidden="true"></i>
             <span lang="ja">XのDMで相談する</span>
             <span class="arrow" aria-hidden="true">→</span>
-          </span>
-          <span class="contact-btn-hint">X: @loomia_ai</span>
-        </a>
+          </a>
+        </div>
 
         <div class="contact-foot">
           <span class="contact-foot-line" aria-hidden="true"></span>
