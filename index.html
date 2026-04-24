@@ -947,16 +947,16 @@
     }
 
     /* ────────────────────────────────────────────────
-       WORKS
+       PROCESS (supersedes WORKS)
        ──────────────────────────────────────────────── */
-    .works {
+    .process {
       background: var(--bg-secondary);
       padding: 90px 0;
     }
-    @media (min-width: 768px) { .works { padding: 140px 0; } }
+    @media (min-width: 768px) { .process { padding: 140px 0; } }
 
-    .works-header { text-align: center; }
-    .works-title {
+    .process-header { text-align: center; }
+    .process-title {
       font-family: 'Fraunces', Georgia, serif;
       font-size: 40px;
       font-weight: 600;
@@ -965,139 +965,149 @@
       margin-top: 24px;
       color: var(--text-primary);
     }
-    @media (min-width: 768px) { .works-title { font-size: 56px; } }
-    @media (min-width: 1024px) { .works-title { font-size: 64px; } }
-    .works-title .line { display: block; }
+    @media (min-width: 768px) { .process-title { font-size: 56px; } }
+    @media (min-width: 1024px) { .process-title { font-size: 64px; } }
+    .process-title .line { display: block; }
+    .process-title .accent { color: var(--accent); font-style: italic; }
 
-    .works-subcopy {
+    .process-subcopy {
       font-family: 'Noto Sans JP', 'Inter', sans-serif;
       font-size: 16px;
       color: var(--text-secondary);
       line-height: 1.8;
       margin: 28px auto 0;
-      max-width: 600px;
+      max-width: 640px;
     }
-    @media (min-width: 768px) { .works-subcopy { font-size: 18px; } }
+    @media (min-width: 768px) { .process-subcopy { font-size: 18px; } }
 
-    .works-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      margin-top: 56px;
-    }
-    @media (min-width: 768px) { .works-grid { grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 64px; } }
-    @media (min-width: 1024px) { .works-grid { grid-template-columns: repeat(3, 1fr); } }
-
-    .work-card {
+    .process-timeline {
+      margin: 56px auto 0;
+      max-width: 880px;
       display: flex;
       flex-direction: column;
+    }
+    @media (min-width: 768px) { .process-timeline { margin-top: 72px; } }
+
+    .process-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 32px 24px;
       background: var(--bg-primary);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 20px;
       transition:
         transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
         border-color 400ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .work-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(125, 211, 252, 0.2);
+    .process-step + .process-step { margin-top: 32px; }
+    .process-step:hover {
+      transform: translateY(-2px);
+      border-color: rgba(125, 211, 252, 0.28);
     }
-    .work-cover {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--bg-tertiary) 0%, #1f1f24 100%);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .work-cover::before {
+    /* Timeline connector line between successive steps */
+    .process-step + .process-step::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 28% 22%, rgba(125, 211, 252, 0.12), transparent 55%),
-        radial-gradient(circle at 75% 80%, rgba(125, 211, 252, 0.06), transparent 55%);
+      top: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 32px;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(125, 211, 252, 0.25) 40%,
+        rgba(125, 211, 252, 0.25) 100%);
+      border-radius: 2px;
       pointer-events: none;
     }
-    .work-cover::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 24px 24px;
-      pointer-events: none;
+    @media (min-width: 768px) {
+      .process-step {
+        grid-template-columns: 120px 1fr;
+        gap: 28px;
+        padding: 40px 40px;
+        align-items: start;
+      }
+      .process-step + .process-step::before {
+        left: 100px; /* centers within the 120px number column (40px card pad + 60px to column-center) */
+        transform: none;
+      }
     }
-    .work-cover-icon {
-      position: relative;
-      width: 40px; height: 40px;
-      color: var(--text-secondary);
-      opacity: 0.4;
-      stroke-width: 1.5;
-    }
-    .work-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
+
+    .process-step-num {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 1;
       color: var(--accent);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      opacity: 0.32;
+      letter-spacing: -0.04em;
+      transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .work-status-dot {
-      width: 6px; height: 6px;
-      border-radius: 9999px;
-      background: var(--accent);
-      box-shadow: 0 0 8px rgba(125, 211, 252, 0.65);
-      animation: dotPulse 2s ease-in-out infinite;
+    @media (min-width: 768px) {
+      .process-step-num {
+        font-size: 72px;
+        text-align: center;
+      }
     }
-    .work-title {
-      font-family: 'Inter', 'Noto Sans JP', sans-serif;
-      font-size: 18px;
+    .process-step:hover .process-step-num { opacity: 0.5; }
+
+    .process-step-body { min-width: 0; }
+
+    .process-step-title {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 20px;
       font-weight: 600;
       color: var(--text-primary);
-      margin-top: 12px;
       line-height: 1.4;
       letter-spacing: -0.01em;
     }
-    .work-desc {
+    @media (min-width: 768px) { .process-step-title { font-size: 22px; } }
+    .process-step-title .accent { color: var(--accent); }
+
+    .process-step-text {
       font-family: 'Noto Sans JP', 'Inter', sans-serif;
-      font-size: 13px;
-      line-height: 1.7;
+      font-size: 15px;
+      line-height: 1.85;
       color: var(--text-secondary);
-      margin-top: 8px;
+      margin-top: 12px;
     }
-    .work-tag {
-      align-self: flex-start;
-      margin-top: 16px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: rgba(125, 211, 252, 0.08);
-      border: 1px solid rgba(125, 211, 252, 0.16);
-      color: var(--accent);
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .works-footnote {
-      margin-top: 48px;
-      text-align: center;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-style: italic;
-      color: var(--text-muted);
+
+    .process-step-cta-wrap { margin-top: 20px; }
+    .process-step-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: var(--accent);
+      color: var(--bg-primary);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
       letter-spacing: 0.01em;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(125, 211, 252, 0.2);
+      transition:
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-    @media (min-width: 768px) { .works-footnote { font-size: 15px; margin-top: 56px; } }
+    .process-step-cta:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(125, 211, 252, 0.32);
+    }
+    .process-step-cta:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .process-step-cta .arrow {
+      display: inline-block;
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .process-step-cta:hover .arrow { transform: translateX(4px); }
 
     /* ────────────────────────────────────────────────
        CONTACT
@@ -1849,6 +1859,42 @@
   }
   </script>
 
+  <!-- Schema.org HowTo: Loomiaへの依頼プロセス -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Loomiaへの依頼プロセス",
+    "description": "初回相談から納品後の伴走まで、4つのステップ",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "聞く - 無料AI診断レポート",
+        "text": "業種・課題・予算感をお聞きし、AI活用の優先順位を24時間以内にPDFでお届け。"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "設計 - ヒアリング & 要件定義",
+        "text": "ZoomまたはXのDMで30〜60分。現状の課題と目標を深く聞き、納品物の形を一緒に設計。"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "織る - 実装 & 途中レビュー",
+        "text": "AIを使いこなして高速実装。進捗の節目でレビューを挟み方向を調整。"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "続く - 納品 & 30日伴走",
+        "text": "納品後30日間、使い方の質問や微調整、追加要望に無料で対応。"
+      }
+    ]
+  }
+  </script>
+
   <!-- External SVG favicon (overrides the inline data-URL fallback above) -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   <link rel="alternate icon" href="./favicon.svg" />
@@ -2332,69 +2378,72 @@
     </div>
   </section>
 
-  <!-- 5. Works -->
-  <section id="works" class="works" aria-label="実績・募集中プロジェクト">
+  <!-- 5. Process -->
+  <section id="process" class="process" aria-label="Loomiaの仕事の進め方">
     <div class="section-inner">
 
-      <div class="works-header">
+      <div class="process-header">
         <div class="section-eyebrow reveal-up">
-          <span class="num">(04)</span> WORKS
+          <span class="num">(04)</span> PROCESS
         </div>
-        <h2 class="works-title reveal-up" style="--reveal-delay: 80ms">
-          <span class="line">Currently weaving</span>
-          <span class="line">new threads.</span>
+        <h2 class="process-title reveal-up" style="--reveal-delay: 80ms">
+          <span class="line">How Loomia works.</span>
+          <span class="line" lang="ja">ひとつの依頼が、光になるまで。</span>
         </h2>
-        <p class="works-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
-          最初のクライアント様を募集中。初期ローンチ価格で、長期パートナーシップを結びませんか。
+        <p class="process-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
+          制作・運用・自動化——サービスは違っても、進め方は同じ。初回のご相談から納品後の伴走まで、ひとりの織り手が一貫して対応します。
         </p>
       </div>
 
-      <div class="works-grid">
+      <div class="process-timeline">
 
-        <article class="work-card reveal-up" style="--reveal-delay: 0ms">
-          <div class="work-cover" aria-hidden="true">
-            <i data-lucide="layout" class="work-cover-icon"></i>
+        <article class="process-step reveal-up" style="--reveal-delay: 0ms">
+          <div class="process-step-num" aria-hidden="true">01</div>
+          <div class="process-step-body">
+            <h3 class="process-step-title" lang="ja"><span class="accent">聞く</span> — 無料AI診断レポート</h3>
+            <p class="process-step-text" lang="ja">
+              業種・課題・予算感をお聞きし、AI活用の優先順位を24時間以内にPDFでお届け。ここから始めて、合わなければそのまま終わっても構いません。
+            </p>
+            <div class="process-step-cta-wrap">
+              <a href="./form.html" class="process-step-cta" aria-label="無料のAI活用度診断レポートを24時間以内に受け取る">
+                <span>24時間で届く無料AI診断を申し込む</span>
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
-          <div class="work-status">
-            <span class="work-status-dot" aria-hidden="true"></span>
-            <span>Available slot</span>
-          </div>
-          <h3 class="work-title">Website redesign project</h3>
-          <p class="work-desc" lang="ja">中小企業向けLPリニューアル / 2026 Q2 開始予定</p>
-          <span class="work-tag">Web Design</span>
         </article>
 
-        <article class="work-card reveal-up" style="--reveal-delay: 100ms">
-          <div class="work-cover" aria-hidden="true">
-            <i data-lucide="workflow" class="work-cover-icon"></i>
+        <article class="process-step reveal-up" style="--reveal-delay: 100ms">
+          <div class="process-step-num" aria-hidden="true">02</div>
+          <div class="process-step-body">
+            <h3 class="process-step-title" lang="ja"><span class="accent">設計</span> — ヒアリング & 要件定義</h3>
+            <p class="process-step-text" lang="ja">
+              Zoom または X のDMで30〜60分。現状の課題と到達したいゴールを深く聞き、AIの活用ポイントと納品物の形を一緒に設計します。
+            </p>
           </div>
-          <div class="work-status">
-            <span class="work-status-dot" aria-hidden="true"></span>
-            <span>Available slot</span>
-          </div>
-          <h3 class="work-title">Business automation flow</h3>
-          <p class="work-desc" lang="ja">業務自動化パッケージ / 2026 Q2-Q3 募集中</p>
-          <span class="work-tag">Automation</span>
         </article>
 
-        <article class="work-card reveal-up" style="--reveal-delay: 200ms">
-          <div class="work-cover" aria-hidden="true">
-            <i data-lucide="video" class="work-cover-icon"></i>
+        <article class="process-step reveal-up" style="--reveal-delay: 200ms">
+          <div class="process-step-num" aria-hidden="true">03</div>
+          <div class="process-step-body">
+            <h3 class="process-step-title" lang="ja"><span class="accent">織る</span> — 実装 & 途中レビュー</h3>
+            <p class="process-step-text" lang="ja">
+              AIを使いこなして高速で実装。完成してから「違う」となるのを防ぐため、進捗の節目で必ずレビューを挟み、方向を調整します。
+            </p>
           </div>
-          <div class="work-status">
-            <span class="work-status-dot" aria-hidden="true"></span>
-            <span>Available slot</span>
+        </article>
+
+        <article class="process-step reveal-up" style="--reveal-delay: 300ms">
+          <div class="process-step-num" aria-hidden="true">04</div>
+          <div class="process-step-body">
+            <h3 class="process-step-title" lang="ja"><span class="accent">続く</span> — 納品 & 30日伴走</h3>
+            <p class="process-step-text" lang="ja">
+              納品して終わりではありません。納品後30日間は、使い方の質問や微調整、追加要望に無料で対応。現場に定着するまで伴走します。
+            </p>
           </div>
-          <h3 class="work-title">SNS content production</h3>
-          <p class="work-desc" lang="ja">動画＋投稿連動パッケージ / 2026 Q2 開始予定</p>
-          <span class="work-tag">Content</span>
         </article>
 
       </div>
-
-      <p class="works-footnote reveal-up" style="--reveal-delay: 320ms">
-        — New projects opening for 2026 Q2. Be among the first to weave.
-      </p>
     </div>
   </section>
 
@@ -2496,7 +2545,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#why">Why Loomia</a></li>
-            <li><a href="#works">Works</a></li>
+            <li><a href="#process">Process</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
@@ -2564,7 +2613,7 @@
       }
 
       // Scroll reveal: add .in-view to sections/layers when ~15% has entered
-      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.works, section.contact, .layer, footer.footer');
+      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.process, section.contact, .layer, footer.footer');
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
