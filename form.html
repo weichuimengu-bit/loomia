@@ -97,7 +97,7 @@ body::before {
   margin-bottom: 48px;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInUp 800ms var(--transition-slow) forwards;
+  animation: fadeInUp 800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .back-link {
@@ -183,7 +183,7 @@ body::before {
   backdrop-filter: blur(12px);
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeInUp 800ms 200ms var(--transition-slow) forwards;
+  animation: fadeInUp 800ms 200ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .form-group {
@@ -386,7 +386,7 @@ body::before {
   display: none;
   text-align: center;
   padding: 64px 32px;
-  animation: fadeInUp 600ms var(--transition-slow);
+  animation: fadeInUp 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .success-screen.active {
