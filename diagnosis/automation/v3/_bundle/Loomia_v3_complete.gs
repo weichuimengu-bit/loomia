@@ -2154,97 +2154,140 @@ function testNotionConnector() {
 // doGet: 診断フォームを表示
 // ─────────────────────────────────────────
 function doGet(e) {
-  return HtmlService.createTemplateFromFile('index')
-    .evaluate()
+  const tmpl = HtmlService.createTemplateFromFile('index');
+  tmpl.scriptUrl = ScriptApp.getService().getUrl();
+  return tmpl.evaluate()
     .setTitle('訪問介護AI活用度診断 | Loomia')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
-// ─────────────────────────────────────────
-// doPost: 診断申込を受領 → 業態判定 → 処理分岐
-// ─────────────────────────────────────────
-function doPost(e) {
+
+// =============================================================
+// processSubmission: フォーム送信処理の本体(google.script.run と doPost の両方から呼ばれる)
+// =============================================================
+
+function processSubmission(formData) {
   const startTime = new Date();
-  let formData = null;
 
   try {
-    // 1. JSON parse + バリデーション
+    // 1. 入力バリデーション + PII / 医療要求ガード(Validator.gs)
+    if (typeof Validator !== 'undefined' && Validator.validate) {
+      const validation = Validator.validate(formData);
+      if (!validation.valid) {
+        if (typeof Logger !== 'undefined' && Logger.logSubmission) {
+          Logger.logSubmission(formData, 'rejected', null, validation.errors.join(' | '));
+        }
+        return {
+          status: 'error',
+          message: validation.errors.join(' / '),
+          errorCode: validation.code || 'VALIDATION_FAILED'
+        };
+      }
+    }
+
+    // 2. hCaptcha 検証(formData.captchaToken が存在する場合)
+    if (formData.captchaToken && typeof Validator !== 'undefined' && Validator.verifyCaptcha) {
+      const captchaOk = Validator.verifyCaptcha(formData.captchaToken);
+      if (!captchaOk) {
+        return {
+          status: 'error',
+          message: 'セキュリティチェックに失敗しました。お手数ですが再度お試しください。'
+        };
+      }
+    }
+
+    // 3. 業態フィルタ: 訪問介護 = フル診断、それ以外 = 段階対応メール
+    const businessType = formData.q4_business_type;
+    if (!isCurrentlySupported(businessType)) {
+      if (typeof EmailSender !== 'undefined' && EmailSender.sendDeferredResponseEmail) {
+        EmailSender.sendDeferredResponseEmail(formData);
+      }
+      return {
+        status: 'deferred',
+        message: '受け付けました。訪問介護以外の業態は順次対応予定として、ロードマップをメールでお送りしました。'
+      };
+    }
+
+    // 4. フル診断処理(訪問介護のみ)
+    const reduction = calculateReduction(formData);
+    const productMatch = matchProducts(formData);
+    const subsidies = matchSubsidies(formData);
+
+    // 5. Claude API で診断アセスメント生成
+    const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
+    const aiAssessment = callClaudeAPI(claudeInput);
+
+    // 6. 診断データを統合
+    const diagnosisData = {
+      companyName: formData.q2_business_name,
+      contactName: formData.q3_contact_name,
+      contactEmail: formData.q1_email,
+      prefecture: formData.q6_prefecture,
+      serviceType: formData.q4_business_type,
+      staffCount: formData.q5_staff_count,
+      reduction: reduction,
+      recommendedProducts: productMatch,
+      recommendedSubsidies: subsidies,
+      aiAssessment: aiAssessment,
+      notes: (formData.q13_issues || '') + ' / ' + (formData.q14_free_text || '')
+    };
+
+    // 7. Sheets に書き込み
+    sendToSheets(diagnosisData);
+
+    // 8. メール送信
+    const htmlBody = formatReportToHtml(diagnosisData);
+    GmailApp.sendEmail(
+      formData.q1_email,
+      diagnosisData.companyName + ' 様 AI活用度診断レポート',
+      'HTMLメール対応のメーラーでご覧ください',
+      {
+        htmlBody: htmlBody,
+        name: 'Loomia',
+        from: Session.getActiveUser().getEmail()
+      }
+    );
+
+    // 9. ログ記録
+    if (typeof Logger !== 'undefined' && Logger.logSubmission) {
+      Logger.logSubmission(formData, 'success', new Date() - startTime, null);
+    }
+
+    return {
+      status: 'success',
+      message: '診断レポートをメールでお送りしました。'
+    };
+
+  } catch (e) {
+    console.error('processSubmission error: ' + e.message + ' / stack: ' + e.stack);
+    if (typeof Logger !== 'undefined' && Logger.logSubmission) {
+      Logger.logSubmission(formData, 'error', new Date() - startTime, e.message);
+    }
+    return {
+      status: 'error',
+      message: 'システムエラーが発生しました。loomia.jp@gmail.com まで直接ご連絡ください。'
+    };
+  }
+}
+
+
+// =============================================================
+// doPost を簡素化: JSON parse して processSubmission を呼ぶだけ
+// =============================================================
+
+function doPost(e) {
+  let formData = null;
+  try {
     if (!e || !e.postData || !e.postData.contents) {
       return jsonResponse({ status: 'error', message: '送信データが空です。' }, 400);
     }
     formData = JSON.parse(e.postData.contents);
-
-    // 2. 入力バリデーション + PII / 医療要求ガード (Validator.gs)
-    const validation = Validator.validate(formData);
-    if (!validation.valid) {
-      Logger.logSubmission(formData, 'rejected', null, validation.errors.join(' | '));
-      return jsonResponse({
-        status: 'error',
-        message: validation.errors.join(' / '),
-        errorCode: validation.code || 'VALIDATION_FAILED'
-      }, 400);
-    }
-
-    // 3. hCaptcha 検証 (formData.captchaToken が存在する場合)
-    if (formData.captchaToken) {
-      const captchaOk = Validator.verifyCaptcha(formData.captchaToken);
-      if (!captchaOk) {
-        Logger.logSubmission(formData, 'rejected', null, 'captcha_failed');
-        return jsonResponse({
-          status: 'error',
-          message: 'セキュリティチェックに失敗しました。お手数ですが再度お試しください。'
-        }, 400);
-      }
-    }
-
-    // 4. 業態フィルタ: 訪問介護 = フル診断、それ以外 = 段階対応メール
-    const businessType = formData.q2_business_type;
-    if (!isCurrentlySupported(businessType)) {
-      EmailSender.sendDeferredResponseEmail(formData);
-      Logger.logSubmission(formData, 'deferred', new Date() - startTime,
-        `business_type=${businessType}`);
-      return jsonResponse({
-        status: 'deferred',
-        message: '受け付けました。訪問介護以外の業態は順次対応予定として、ロードマップをメールでお送りしました。'
-      }, 200);
-    }
-
-    // 5. 数値根拠の事前計算 (ハルシネーション防止)
-    const reduction = ReductionCalculator.calculate(formData);
-    const productMatch = ProductMatcher.match(formData);
-    const subsidies = SubsidyMatcher.match(formData);
-
-    // 6. Claude API で診断レポート生成 (4フェーズ自己批判)
-    const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
-    const reportMarkdown = ClaudeAPI.generateReportWithSelfCritique(claudeInput);
-
-    // 7. Markdown → メール用 HTML 整形
-    const formattedReport = ReportFormatter.formatForEmail(reportMarkdown, formData);
-
-    // 8. メール送信
-    EmailSender.sendDiagnosisReport(formData, reportMarkdown, formattedReport);
-
-    // 9. Notion 連携 (webhook URL が設定されていれば)
-    NotionConnector.createCandidate(formData, reportMarkdown, reduction, productMatch, subsidies);
-
-    // 10. ログ記録
-    Logger.logSubmission(formData, 'success', new Date() - startTime,
-      `reduction=${reduction.monthly_total_hours}h/mo, top_product=${productMatch[0] && productMatch[0].id}`);
-
-    return jsonResponse({
-      status: 'success',
-      message: '診断レポートをメールでお送りしました。'
-    }, 200);
-
-  } catch (err) {
-    const ctx = formData || (e && e.postData && e.postData.contents) || '(no input)';
-    Logger.logError(err, ctx);
-    Logger.notifyAdminOfError(err, ctx);
-    return jsonResponse({
-      status: 'error',
-      message: 'システムエラーが発生しました。お手数ですが ' + Config.ADMIN_EMAIL + ' までご連絡ください。'
-    }, 500);
+  } catch (parseErr) {
+    return jsonResponse({ status: 'error', message: 'JSON parse エラー' }, 400);
   }
+
+  const result = processSubmission(formData);
+  return jsonResponse(result, result.status === 'success' || result.status === 'deferred' ? 200 : 400);
 }
 
 // ─────────────────────────────────────────
