@@ -878,25 +878,27 @@ body {
       q14_free_text: document.getElementById('q14_expectations').value.trim()
     };
 
-    // Apps Script Web App の doPost に送信
-    fetch(window.location.href, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-    .then(res => res.json())
-    .then(data => {
-      loadingScreen.classList.remove('visible');
-      successScreen.classList.add('visible');
-      successEmail.textContent = formData.q1_email;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    })
-    .catch(err => {
-      loadingScreen.classList.remove('visible');
-      form.style.display = 'block';
-      submitBtn.disabled = false;
-      alert('送信エラーが発生しました。時間をおいて再度お試しください。\n\nエラー: ' + err.message);
-    });
+    // google.script.run で processSubmission を呼ぶ
+    google.script.run
+      .withSuccessHandler(function(data) {
+        loadingScreen.classList.remove('visible');
+        if (data.status === 'success' || data.status === 'deferred') {
+          successScreen.classList.add('visible');
+          successEmail.textContent = formData.q1_email;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          form.style.display = 'block';
+          submitBtn.disabled = false;
+          alert('送信エラーが発生しました。\n\n' + (data.message || '時間をおいて再度お試しください。'));
+        }
+      })
+      .withFailureHandler(function(err) {
+        loadingScreen.classList.remove('visible');
+        form.style.display = 'block';
+        submitBtn.disabled = false;
+        alert('送信エラーが発生しました。時間をおいて再度お試しください。\n\nエラー: ' + (err.message || err));
+      })
+      .processSubmission(formData);
   });
 
   updateProgress();
