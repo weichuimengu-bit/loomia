@@ -392,7 +392,7 @@ body {
   </div>
 </div>
 
-<form id="diagnosisForm">
+<form id="diagnosisForm" method="POST" target="resultFrame" enctype="application/x-www-form-urlencoded">
 
 <!-- Q1: メールアドレス -->
 <div class="question" data-q="1">
@@ -746,6 +746,9 @@ body {
 
 </form>
 
+<!-- 隠し iframe: form POST の結果遷移先(画面遷移を防ぐ) -->
+<iframe name="resultFrame" id="resultFrame" style="display:none;"></iframe>
+
 <!-- 送信中画面 -->
 <div class="loading-screen" id="loadingScreen">
   <div class="spinner"></div>
@@ -878,27 +881,28 @@ body {
       q14_free_text: document.getElementById('q14_expectations').value.trim()
     };
 
-    // google.script.run で processSubmission を呼ぶ
-    google.script.run
-      .withSuccessHandler(function(data) {
-        loadingScreen.classList.remove('visible');
-        if (data.status === 'success' || data.status === 'deferred') {
-          successScreen.classList.add('visible');
-          successEmail.textContent = formData.q1_email;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          form.style.display = 'block';
-          submitBtn.disabled = false;
-          alert('送信エラーが発生しました。\n\n' + (data.message || '時間をおいて再度お試しください。'));
-        }
-      })
-      .withFailureHandler(function(err) {
-        loadingScreen.classList.remove('visible');
-        form.style.display = 'block';
-        submitBtn.disabled = false;
-        alert('送信エラーが発生しました。時間をおいて再度お試しください。\n\nエラー: ' + (err.message || err));
-      })
-      .processSubmission(JSON.stringify(formData));
+    // 動的に input[type=hidden] を挿入(formData を payload として送る)
+    const oldHidden = form.querySelector('input[name="payload"]');
+    if (oldHidden) oldHidden.remove();
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'payload';
+    hiddenInput.value = JSON.stringify(formData);
+    form.appendChild(hiddenInput);
+
+    // form.action を Web App URL に設定(doGet で埋め込まれた scriptUrl)
+    form.action = '<?= scriptUrl ?>';
+
+    // 通常の form submit を実行(target="resultFrame" で隠し iframe に遷移、画面は静止)
+    HTMLFormElement.prototype.submit.call(form);
+
+    // 30秒後に成功画面に遷移(Claude API は 4フェーズで30秒程度かかるため長めに設定)
+    setTimeout(function() {
+      loadingScreen.classList.remove('visible');
+      successScreen.classList.add('visible');
+      successEmail.textContent = formData.q1_email;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 30000);
   });
 
   updateProgress();

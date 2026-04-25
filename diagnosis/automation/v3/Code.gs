@@ -169,22 +169,53 @@ function processSubmission(formData) {
 
 
 // =============================================================
-// doPost を簡素化: JSON parse して processSubmission を呼ぶだけ
+// doPost: form POST(隠し iframe 方式)+ 旧 fetch 方式の両対応
 // =============================================================
 
 function doPost(e) {
   let formData = null;
+
   try {
-    if (!e || !e.postData || !e.postData.contents) {
-      return jsonResponse({ status: 'error', message: '送信データが空です。' }, 400);
+    // パターン1: form POST 方式(e.parameter.payload に JSON 文字列)
+    if (e && e.parameter && e.parameter.payload) {
+      console.log('doPost: form POST mode detected');
+      try {
+        formData = JSON.parse(e.parameter.payload);
+      } catch (parseErr) {
+        return HtmlService.createHtmlOutput('<html><body>JSON parse エラー</body></html>');
+      }
     }
-    formData = JSON.parse(e.postData.contents);
-  } catch (parseErr) {
-    return jsonResponse({ status: 'error', message: 'JSON parse エラー' }, 400);
+    // パターン2: 旧 fetch 方式(e.postData.contents に JSON 文字列)
+    else if (e && e.postData && e.postData.contents) {
+      console.log('doPost: postData.contents mode detected');
+      try {
+        formData = JSON.parse(e.postData.contents);
+      } catch (parseErr) {
+        return HtmlService.createHtmlOutput('<html><body>JSON parse エラー</body></html>');
+      }
+    }
+    else {
+      console.error('doPost: no recognizable payload');
+      return HtmlService.createHtmlOutput('<html><body>送信データが空です。</body></html>');
+    }
+  } catch (err) {
+    console.error('doPost error: ' + err.message);
+    return HtmlService.createHtmlOutput('<html><body>システムエラーが発生しました。</body></html>');
   }
 
   const result = processSubmission(formData);
-  return jsonResponse(result, result.status === 'success' || result.status === 'deferred' ? 200 : 400);
+
+  // form POST 方式の場合は HTML レスポンスを返す
+  // 結果を postMessage で親ウィンドウに通知(成功/失敗どちらでも)
+  return HtmlService.createHtmlOutput(
+    '<html><body><script>' +
+    'if (window.parent !== window) { window.parent.postMessage(' +
+      JSON.stringify({ source: 'loomia_form_submission', result: result }) +
+    ', "*"); }' +
+    '</script>' +
+    '<p>結果: ' + (result.message || '完了') + '</p>' +
+    '</body></html>'
+  );
 }
 
 // ─────────────────────────────────────────
