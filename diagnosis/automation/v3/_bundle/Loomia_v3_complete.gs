@@ -1,22 +1,6 @@
 /**
  * Loomia AI診断システム V3.0 福祉業界特化版
  * 統合バンドル(9ファイルを連結した単一スクリプト)
- *
- * Apps Script Editor に貼り付けて使用するため、複数 .gs ファイルではなく
- * 1ファイルに集約してある。元の9ファイル構成は GitHub の v3/ ディレクトリに保管。
- *
- * 連結順序:
- *   1. Config.gs
- *   2. ReductionCalculator.gs
- *   3. ProductMatcher.gs
- *   4. SubsidyMatcher.gs
- *   5. ReportFormatter.gs
- *   6. ClaudeAPI.gs
- *   7. SheetsConnector.gs
- *   8. NotionConnector.gs
- *   9. Code.gs
- *
- * 連結スクリプトで自動生成。手動編集する場合は元ファイルも合わせて更新すること。
  */
 
 
@@ -2209,13 +2193,13 @@ function processSubmission(formData) {
     }
 
     // 4. フル診断処理(訪問介護のみ)
-    const reduction = calculateReduction(formData);
-    const productMatch = matchProducts(formData);
-    const subsidies = matchSubsidies(formData);
+    const reduction = ReductionCalculator.calculate(formData);
+    const productMatch = ProductMatcher.match(formData);
+    const subsidies = SubsidyMatcher.match(formData);
 
     // 5. Claude API で診断アセスメント生成
     const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
-    const aiAssessment = callClaudeAPI(claudeInput);
+    const aiAssessment = ClaudeAPI.generateReport(claudeInput);
 
     // 6. 診断データを統合
     const diagnosisData = {

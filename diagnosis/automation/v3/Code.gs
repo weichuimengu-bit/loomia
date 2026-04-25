@@ -77,13 +77,13 @@ function processSubmission(formData) {
     }
 
     // 4. フル診断処理(訪問介護のみ)
-    const reduction = calculateReduction(formData);
-    const productMatch = matchProducts(formData);
-    const subsidies = matchSubsidies(formData);
+    const reduction = ReductionCalculator.calculate(formData);
+    const productMatch = ProductMatcher.match(formData);
+    const subsidies = SubsidyMatcher.match(formData);
 
     // 5. Claude API で診断アセスメント生成
     const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
-    const aiAssessment = callClaudeAPI(claudeInput);
+    const aiAssessment = ClaudeAPI.generateReport(claudeInput);
 
     // 6. 診断データを統合
     const diagnosisData = {
