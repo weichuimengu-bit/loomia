@@ -392,7 +392,7 @@ body {
   </div>
 </div>
 
-<form id="diagnosisForm" method="POST" target="resultFrame" enctype="application/x-www-form-urlencoded">
+<form id="diagnosisForm" method="POST" target="resultFrame" enctype="application/x-www-form-urlencoded" action="<?= scriptUrl ?>">
 
 <!-- Q1: メールアドレス -->
 <div class="question" data-q="1">
@@ -890,10 +890,8 @@ body {
     hiddenInput.value = JSON.stringify(formData);
     form.appendChild(hiddenInput);
 
-    // form.action を Web App URL に設定(doGet で埋め込まれた scriptUrl)
-    form.action = '<?= scriptUrl ?>';
-
     // 通常の form submit を実行(target="resultFrame" で隠し iframe に遷移、画面は静止)
+    // ※ form.action は HTML テンプレート側で <?= scriptUrl ?> として直接埋め込み済み
     HTMLFormElement.prototype.submit.call(form);
 
     // 30秒後に成功画面に遷移(Claude API は 4フェーズで30秒程度かかるため長めに設定)
