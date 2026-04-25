@@ -898,7 +898,7 @@ body {
         submitBtn.disabled = false;
         alert('送信エラーが発生しました。時間をおいて再度お試しください。\n\nエラー: ' + (err.message || err));
       })
-      .processSubmission(formData);
+      .processSubmission(JSON.stringify(formData));
   });
 
   updateProgress();

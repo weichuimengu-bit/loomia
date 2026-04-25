@@ -2151,6 +2151,35 @@ function doGet(e) {
 // =============================================================
 
 function processSubmission(formData) {
+  console.log('=== processSubmission CALLED ===');
+  console.log('formData type:', typeof formData);
+  console.log('arguments length:', arguments.length);
+
+  // 文字列で渡された場合は JSON.parse する(google.script.run の配列シリアライザ問題回避)
+  if (typeof formData === 'string') {
+    try {
+      formData = JSON.parse(formData);
+      console.log('formData parsed from string successfully');
+    } catch (parseErr) {
+      console.error('Failed to parse formData string:', parseErr);
+      return {
+        status: 'error',
+        message: 'リクエストのフォーマットが不正です。'
+      };
+    }
+  }
+
+  // formData の存在を再確認
+  if (!formData || typeof formData !== 'object') {
+    console.error('formData is invalid after parsing');
+    return {
+      status: 'error',
+      message: 'フォームデータを受け取れませんでした。再度お試しください。'
+    };
+  }
+
+  console.log('formData keys:', Object.keys(formData).join(', '));
+
   const startTime = new Date();
 
   try {
