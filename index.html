@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#0a0a0b" />
   <meta name="color-scheme" content="dark" />
 
-  <title>Loomia｜AI × 既存スキルで事業の断片を、ひとつの光に</title>
-  <meta name="description" content="AI活用フリーランスLoomia。中小企業・個人事業主の制作・運用・自動化をひとり窓口で完結。無料AI活用度診断を24時間以内にお届け。" />
-  <meta name="keywords" content="AIフリーランス,AI活用,業務自動化,Webサイト制作,SEO記事,AI導入代行,ChatBot,フリーランス,制作代行,Loomia" />
+  <title>Loomia | 訪問介護事業所のためのAI伴走パートナー</title>
+  <meta name="description" content="訪問介護事業所のための、AI業務自動化と補助金申請代行をワンストップで。訪問記録の音声入力、加算管理、家族連絡を自動化。補助金で実質1/5負担で導入できます。" />
+  <meta name="keywords" content="訪問介護,AI,業務自動化,介護記録,加算管理,補助金,介護ICT,カイポケ,介護DX,Loomia" />
   <meta name="author" content="Loomia" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://weichuimengu-bit.github.io/loomia/" />
@@ -16,12 +16,12 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://weichuimengu-bit.github.io/loomia/" />
-  <meta property="og:title" content="Loomia｜AIで、事業の断片を、ひとつの光に。" />
-  <meta property="og:description" content="AI×既存スキルで、中小企業・個人事業主の制作・運用・自動化をひとりの窓口で完結。無料AI活用度診断を24時間以内に。" />
+  <meta property="og:title" content="Loomia | 訪問介護事業所のためのAI伴走パートナー" />
+  <meta property="og:description" content="訪問介護事業所のための、AI業務自動化と補助金申請代行をワンストップで。訪問記録の音声入力、加算管理、家族連絡を自動化。補助金で実質1/5負担で導入できます。" />
   <meta property="og:image" content="https://weichuimengu-bit.github.io/loomia/ogp.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Loomia - AIで、事業の断片を、ひとつの光に。" />
+  <meta property="og:image:alt" content="Loomia - 訪問介護事業所のためのAI伴走パートナー" />
   <meta property="og:site_name" content="Loomia" />
   <meta property="og:locale" content="ja_JP" />
 
@@ -29,10 +29,10 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@loomia_ai" />
   <meta name="twitter:creator" content="@loomia_ai" />
-  <meta name="twitter:title" content="Loomia｜AIで、事業の断片を、ひとつの光に。" />
-  <meta name="twitter:description" content="AI×既存スキルで、中小企業・個人事業主の制作・運用・自動化をひとりの窓口で完結。" />
+  <meta name="twitter:title" content="Loomia | 訪問介護事業所のためのAI伴走パートナー" />
+  <meta name="twitter:description" content="訪問介護事業所のためのAI業務自動化と補助金申請代行をワンストップで。" />
   <meta name="twitter:image" content="https://weichuimengu-bit.github.io/loomia/ogp.png" />
-  <meta name="twitter:image:alt" content="Loomia - AIで、事業の断片を、ひとつの光に。" />
+  <meta name="twitter:image:alt" content="Loomia - 訪問介護事業所のためのAI伴走パートナー" />
 
   <!-- Favicon: inline SVG data URL (luminous gradient circle) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><radialGradient id='g' cx='50%25' cy='40%25' r='60%25'><stop offset='0%25' stop-color='%23e0f2fe'/><stop offset='45%25' stop-color='%237dd3fc'/><stop offset='100%25' stop-color='%230a0a0b'/></radialGradient></defs><rect width='64' height='64' rx='14' fill='%230a0a0b'/><circle cx='32' cy='32' r='20' fill='url(%23g)'/></svg>" />
@@ -295,6 +295,74 @@
     /* Hero CTA: mobile full-width treatment for thumb-friendly tap */
     @media (max-width: 640px) {
       .hero-cta {
+        width: 80%;
+        max-width: 320px;
+        justify-content: center;
+      }
+    }
+
+    /* Hero eyebrow (vertical-positioning subtitle) */
+    .hero-eyebrow {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: none;
+    }
+    @media (min-width: 768px) { .hero-eyebrow { font-size: 15px; } }
+
+    /* Hero CTA row (primary + secondary side by side) */
+    .hero-cta-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    @media (min-width: 768px) {
+      .hero-cta-row {
+        flex-direction: row;
+        justify-content: center;
+        gap: 16px;
+      }
+    }
+
+    /* Hero secondary CTA — outlined ghost variant */
+    .hero-cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid rgba(125, 211, 252, 0.32);
+      border-radius: 8px;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition:
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-cta-secondary:hover {
+      border-color: var(--accent);
+      background: rgba(125, 211, 252, 0.05);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .hero-cta-secondary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+    .hero-cta-secondary .arrow {
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-cta-secondary:hover .arrow { transform: translateX(4px); }
+    @media (max-width: 640px) {
+      .hero-cta-secondary {
         width: 80%;
         max-width: 320px;
         justify-content: center;
@@ -833,6 +901,232 @@
     .service-card .card-hr { margin-top: auto; }
 
     /* ────────────────────────────────────────────────
+       SERVICES — 3-Tier model (home care vertical)
+       ──────────────────────────────────────────────── */
+    .services-tiers {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+      margin-top: 80px;
+      max-width: 880px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (min-width: 768px) {
+      .services-tiers { gap: 80px; margin-top: 96px; }
+    }
+
+    .tier {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px 28px;
+      transition:
+        border-color 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (min-width: 768px) {
+      .tier { padding: 48px 44px; }
+    }
+    .tier:hover {
+      border-color: rgba(125, 211, 252, 0.22);
+    }
+
+    .tier-step {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 44px;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.32;
+      letter-spacing: -0.04em;
+    }
+    @media (min-width: 768px) { .tier-step { font-size: 60px; } }
+
+    .tier-title {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 14px;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { .tier-title { font-size: 28px; } }
+    @media (min-width: 1024px) { .tier-title { font-size: 30px; } }
+
+    .tier-tag {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(125, 211, 252, 0.1);
+      border: 1px solid rgba(125, 211, 252, 0.4);
+      color: var(--accent);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      vertical-align: middle;
+    }
+    @media (min-width: 768px) { .tier-tag { font-size: 13px; padding: 5px 14px; } }
+
+    .tier-body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.95;
+      color: var(--text-secondary);
+      margin-top: 18px;
+    }
+    @media (min-width: 768px) { .tier-body { font-size: 16px; } }
+    .tier-strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .tier-pricing {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .tier-pricing-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 14px;
+    }
+    .tier-pricing-label {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      min-width: 88px;
+    }
+    .tier-pricing-value {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { .tier-pricing-value { font-size: 20px; } }
+    .tier-pricing-note {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+      flex-basis: 100%;
+    }
+    @media (min-width: 640px) { .tier-pricing-note { flex-basis: auto; } }
+
+    .tier-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: var(--bg-primary);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(125, 211, 252, 0.2);
+      transition:
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tier-cta:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(125, 211, 252, 0.32);
+    }
+    .tier-cta:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .tier-cta .arrow {
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tier-cta:hover .arrow { transform: translateX(4px); }
+
+    .tier-products-eyebrow {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.15em;
+      margin-top: 28px;
+      margin-bottom: 16px;
+    }
+    .tier-products {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 640px) {
+      .tier-products { grid-template-columns: 1fr 1fr; gap: 16px; }
+    }
+    @media (min-width: 1024px) {
+      .tier-products { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    }
+
+    .product {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 20px;
+      transition:
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .product:hover {
+      transform: translateY(-2px);
+      border-color: rgba(125, 211, 252, 0.28);
+    }
+    .product-icon-wrap {
+      display: inline-flex;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(125, 211, 252, 0.08);
+      border: 1px solid rgba(125, 211, 252, 0.14);
+      align-items: center;
+      justify-content: center;
+    }
+    .product-icon {
+      width: 18px; height: 18px;
+      color: var(--accent);
+      stroke-width: 1.75;
+    }
+    .product-title {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 14px;
+      line-height: 1.45;
+      letter-spacing: -0.005em;
+    }
+    .product-desc {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    /* ────────────────────────────────────────────────
        WHY LOOMIA
        ──────────────────────────────────────────────── */
     .why {
@@ -873,7 +1167,7 @@
       margin-top: 64px;
     }
     @media (min-width: 768px) {
-      .why-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 80px; }
+      .why-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 80px; }
     }
     @media (min-width: 1024px) {
       .why-grid { gap: 32px; }
@@ -947,7 +1241,128 @@
     }
 
     /* ────────────────────────────────────────────────
-       PROCESS (supersedes WORKS)
+       COVERAGE (対応する領域 / 対応しない領域)
+       ──────────────────────────────────────────────── */
+    .coverage {
+      background: var(--bg-secondary);
+      padding: 90px 0;
+    }
+    @media (min-width: 768px) { .coverage { padding: 140px 0; } }
+
+    .coverage-header { text-align: center; }
+    .coverage-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-top: 24px;
+      color: var(--text-primary);
+    }
+    @media (min-width: 768px) { .coverage-title { font-size: 56px; } }
+    @media (min-width: 1024px) { .coverage-title { font-size: 64px; } }
+    .coverage-title .line { display: block; }
+    .coverage-title .accent { color: var(--accent); font-style: italic; }
+
+    .coverage-subcopy {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin: 28px auto 0;
+      max-width: 640px;
+    }
+    @media (min-width: 768px) { .coverage-subcopy { font-size: 18px; } }
+
+    .coverage-grid {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 768px) {
+      .coverage-grid { grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 72px; }
+    }
+
+    .coverage-block {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition:
+        transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (min-width: 768px) { .coverage-block { padding: 32px 28px; } }
+    .coverage-block:hover {
+      transform: translateY(-2px);
+      border-color: rgba(125, 211, 252, 0.22);
+    }
+
+    .coverage-block-title {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.005em;
+      line-height: 1.4;
+    }
+    @media (min-width: 768px) { .coverage-block-title { font-size: 17px; } }
+    .coverage-block-note {
+      display: inline-block;
+      margin-left: 6px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+    .coverage-block-intro {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+
+    .coverage-block-list {
+      list-style: none;
+      padding: 0;
+      margin: 14px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .coverage-block-list li {
+      position: relative;
+      padding-left: 18px;
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .coverage-block-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+    }
+    .coverage-do .coverage-block-list li::before { background: #86efac; opacity: 0.78; }
+    .coverage-dont .coverage-block-list li::before { background: #f87171; opacity: 0.78; }
+    .coverage-future .coverage-block-list li::before { background: var(--accent); opacity: 0.7; }
+
+    /* Optional accent bars on coverage cards for tonal cue */
+    .coverage-do { box-shadow: inset 3px 0 0 0 rgba(134, 239, 172, 0.45); }
+    .coverage-dont { box-shadow: inset 3px 0 0 0 rgba(248, 113, 113, 0.45); }
+    .coverage-future { box-shadow: inset 3px 0 0 0 rgba(125, 211, 252, 0.45); }
+
+    /* ────────────────────────────────────────────────
+       PROCESS (legacy — kept for cleanup; section removed in markup)
        ──────────────────────────────────────────────── */
     .process {
       background: var(--bg-secondary);
@@ -1825,71 +2240,74 @@
     "@type": "ProfessionalService",
     "name": "Loomia",
     "alternateName": "ルーミア",
-    "description": "AI活用フリーランス。中小企業・個人事業主向けの制作代行、SNS運用、業務自動化を、ひとりの窓口で完結。",
+    "description": "訪問介護事業所向けのAI伴走パートナー。AI業務自動化と介護ICT補助金の申請代行をワンストップで提供。",
     "url": "https://weichuimengu-bit.github.io/loomia/",
     "image": "https://weichuimengu-bit.github.io/loomia/ogp.png",
     "email": "loomia.jp@gmail.com",
-    "areaServed": [
-      { "@type": "Country", "name": "Japan" },
-      { "@type": "Place", "name": "Global" }
-    ],
-    "priceRange": "$$",
+    "areaServed": {
+      "@type": "Country",
+      "name": "Japan"
+    },
+    "priceRange": "¥¥¥",
+    "audience": {
+      "@type": "BusinessAudience",
+      "audienceType": "訪問介護事業所"
+    },
     "serviceType": [
-      "AI活用コンサルティング",
-      "LP・ウェブサイト制作",
-      "SNS運用代行",
-      "業務自動化",
-      "AIエージェント構築",
-      "AIセミナー・研修"
+      "訪問介護向けAI業務自動化",
+      "介護ICT補助金申請代行",
+      "訪問記録 音声入力AI",
+      "加算管理AI",
+      "訪問ルート最適化AI",
+      "家族連絡自動化AI",
+      "ケアプラン作成支援AI"
     ],
     "knowsAbout": [
-      "AI活用",
-      "業務自動化",
-      "ウェブ制作",
-      "コンテンツマーケティング",
-      "データ分析"
+      "訪問介護",
+      "介護報酬",
+      "LIFE加算",
+      "特定処遇改善加算",
+      "介護ICT補助金",
+      "デジタル化・AI導入補助金",
+      "カイポケ連携",
+      "介護DX"
     ],
     "founder": {
       "@type": "Person",
       "name": "偉吹"
     },
     "sameAs": [
-      "https://twitter.com/loomia_ai"
+      "https://twitter.com/loomia_ai",
+      "https://note.com/loomia_ai"
     ]
   }
   </script>
 
-  <!-- Schema.org HowTo: Loomiaへの依頼プロセス -->
+  <!-- Schema.org HowTo: 訪問介護事業所のAI導入3ステップ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": "Loomiaへの依頼プロセス",
-    "description": "初回相談から納品後の伴走まで、4つのステップ",
+    "name": "訪問介護事業所のAI導入 3ステップ",
+    "description": "現状診断から月額伴走まで、3つのステップで訪問介護事業所のAI導入を支援",
     "step": [
       {
         "@type": "HowToStep",
         "position": 1,
-        "name": "聞く - 無料AI診断レポート",
-        "text": "業種・課題・予算感をお聞きし、AI活用の優先順位を24時間以内にPDFでお届け。"
+        "name": "Step 1 — 現状を診断する（無料）",
+        "text": "業務内容・お困りごと・予算感をフォームに入力するだけで、訪問介護AI活用度診断レポートをメールでお届け。所要1〜2分、24時間以内に納品。"
       },
       {
         "@type": "HowToStep",
         "position": 2,
-        "name": "設計 - ヒアリング & 要件定義",
-        "text": "ZoomまたはXのDMで30〜60分。現状の課題と目標を深く聞き、納品物の形を一緒に設計。"
+        "name": "Step 2 — AIを導入する（補助金で実質1/5負担）",
+        "text": "診断レポートを元に、現場に最適なAI業務自動化ツールを設計・導入。デジタル化・AI導入補助金（補助率最大4/5）の申請代行までセットで提供。"
       },
       {
         "@type": "HowToStep",
         "position": 3,
-        "name": "織る - 実装 & 途中レビュー",
-        "text": "AIを使いこなして高速実装。進捗の節目でレビューを挟み方向を調整。"
-      },
-      {
-        "@type": "HowToStep",
-        "position": 4,
-        "name": "続く - 納品 & 30日伴走",
-        "text": "納品後30日間、使い方の質問や微調整、追加要望に無料で対応。"
+        "name": "Step 3 — 運用しながら成長する",
+        "text": "導入後の運用サポート、機能追加、効果測定を月額でお引き受け。介護報酬改定や加算要件の変更にも伴走しながら対応。"
       }
     ]
   }
@@ -1962,13 +2380,21 @@
           AIで、事業の断片を、ひとつの光に。
         </p>
 
-        <p class="hero-desc mt-10 md:mt-12" lang="ja">
-          AI × 既存スキルで、中小企業・個人事業主の制作・運用・自動化を、ひとりの窓口で完結させます。
+        <p class="hero-eyebrow mt-6 md:mt-8" lang="ja">
+          訪問介護事業所のためのAI伴走パートナー
         </p>
 
-        <div class="mt-14 md:mt-16">
-          <a href="./form.html" class="hero-cta" aria-label="24時間以内に無料のAI活用度診断レポートを受け取る">
-            <span lang="ja">24時間で届く無料AI診断</span>
+        <p class="hero-desc mt-6 md:mt-8" lang="ja">
+          ヘルパーさんの訪問記録、加算管理、家族連絡。紙とExcelに散らばった現場の事務作業を、AIで「ひとつの流れ」にまとめます。補助金申請から運用までを、まるごと伴走します。
+        </p>
+
+        <div class="hero-cta-row mt-12 md:mt-14">
+          <a href="./form.html" class="hero-cta" aria-label="無料の訪問介護AI活用度診断レポートを24時間以内に受け取る">
+            <span lang="ja">無料・訪問介護AI活用度診断を受ける</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="mailto:loomia.jp@gmail.com?subject=20%E5%88%86%E7%84%A1%E6%96%99%E7%9B%B8%E8%AB%87%E5%B8%8C%E6%9C%9B" class="hero-cta-secondary" aria-label="loomia.jp@gmail.com に20分無料相談のメールを送る">
+            <span lang="ja">20分無料相談を申し込む</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -1998,36 +2424,35 @@
           <div class="about-headline-wrap">
             <span class="about-accent-bar" aria-hidden="true"></span>
             <h2 class="about-headline">
-              <span class="line">One freelancer,</span>
-              <span class="line">seven skills,</span>
-              <span class="line"><span class="accent-line"><span class="accent-underline">infinite weaves</span></span>.</span>
+              <span class="line">One weaver,</span>
+              <span class="line">built for</span>
+              <span class="line"><span class="accent-line"><span class="accent-underline">home care</span></span>.</span>
             </h2>
           </div>
-          <p class="about-location">— Based in Japan, Serving globally.</p>
+          <p class="about-location" lang="ja">— 訪問介護に特化した、AI伴走の一人事業所</p>
         </aside>
 
         <!-- Right column -->
         <div class="about-right">
           <p class="about-p reveal-up" style="--reveal-delay: 0ms" lang="ja">
-            ひとつの事業を立ち上げるとき、必要なものはバラバラに存在しています。言葉、デザイン、データ、仕組み、そして時間。Loomiaはそれらを、<strong class="about-key">AIという新しい糸</strong>で織り上げ、ひとつの光として届ける場所です。
+            訪問介護の現場には、ヘルパーさんの訪問記録、加算管理、家族への連絡、スケジュール調整、補助金申請——あらゆる事務作業が、紙とExcelとカイポケに<strong class="about-key">バラバラに散らばっています</strong>。Loomiaはそれらを、AIという新しい糸で織り上げ、ひとつの流れに変える場所です。
           </p>
           <p class="about-p reveal-up" style="--reveal-delay: 100ms" lang="ja">
-            Webサイト制作、SNS運用、業務自動化、データ分析、動画編集——これまで複数の外注先に頼んでいた仕事を、<strong class="about-key">ひとりの窓口</strong>で完結させます。AIを使いこなす個人だからこそ、大手制作会社と同等の品質を、フリーランス単価で提供できます。
+            訪問記録の音声入力、加算要件の自動判定、家族連絡の自動配信、補助金申請の代行まで——これまで複数の業者やソフトに分散していた仕事を、<strong class="about-key">ひとつの窓口</strong>で完結させます。既存の介護ソフトを置き換えるのではなく、その上に乗るAIレイヤーとして設計します。
           </p>
           <p class="about-p reveal-up" style="--reveal-delay: 200ms" lang="ja">
-            AIを取り入れたいが、何から始めるべきか分からない事業者の方。人手不足に悩む中小企業や個人事業主の方。新しい仕組みで一歩先に進みたいスタートアップの方。そんなあなたの<strong class="about-key">「はじめの一歩」</strong>を、一緒に織り上げていきます。
+            人手不足とペーパーワークに追われる訪問介護事業者の方。AIを取り入れたいが、現場で本当に使えるかが分からない管理者の方。補助金申請の手間で導入を諦めかけている方。そんなあなたの<strong class="about-key">「はじめの一歩」</strong>を、補助金申請から運用まで、まるごと伴走します。
           </p>
 
           <div class="skills-block">
-            <div class="skills-eyebrow reveal-up" style="--reveal-delay: 300ms">— Skills I weave with</div>
+            <div class="skills-eyebrow reveal-up" style="--reveal-delay: 300ms">— What we weave with</div>
             <ul class="skills-list" role="list">
-              <li class="skill-tag reveal-pop" style="--reveal-delay: 360ms"><span class="glyph" aria-hidden="true">✎</span>Writing</li>
-              <li class="skill-tag reveal-pop" style="--reveal-delay: 440ms"><span class="glyph" aria-hidden="true">◇</span>Design</li>
-              <li class="skill-tag reveal-pop" style="--reveal-delay: 520ms"><span class="glyph" aria-hidden="true">✦</span>Sales</li>
-              <li class="skill-tag reveal-pop" style="--reveal-delay: 600ms"><span class="glyph" aria-hidden="true">▤</span>Data</li>
-              <li class="skill-tag reveal-pop" style="--reveal-delay: 680ms"><span class="glyph" aria-hidden="true">⟨⟩</span>Code</li>
-              <li class="skill-tag reveal-pop" style="--reveal-delay: 760ms"><span class="glyph" aria-hidden="true">▶</span>Video</li>
-              <li class="skill-tag reveal-pop" style="--reveal-delay: 840ms"><span class="glyph" aria-hidden="true">✣</span>SNS</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 360ms" lang="ja"><span class="glyph" aria-hidden="true">●</span>訪問介護現場の理解</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 440ms" lang="ja"><span class="glyph" aria-hidden="true">◆</span>AI業務自動化</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 520ms" lang="ja"><span class="glyph" aria-hidden="true">¥</span>補助金申請代行</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 600ms" lang="ja"><span class="glyph" aria-hidden="true">▤</span>介護ソフト連携</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 680ms" lang="ja"><span class="glyph" aria-hidden="true">⟨⟩</span>カスタム開発</li>
+              <li class="skill-tag reveal-pop" style="--reveal-delay: 760ms" lang="ja"><span class="glyph" aria-hidden="true">✦</span>運用伴走</li>
             </ul>
           </div>
         </div>
@@ -2045,281 +2470,109 @@
           <span class="num">(02)</span> SERVICES
         </div>
         <h2 class="services-title reveal-up" style="--reveal-delay: 80ms">
-          <span class="line">Three layers of value,</span>
+          <span class="line">Three steps,</span>
           <span class="line"><span class="accent">one weaver</span>.</span>
         </h2>
         <p class="services-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
-          制作、運用、自動化。入口から自律まで、ひとりの織り手が伴走します。
+          診断 → 導入 → 月額運用。補助金で実質1/5負担、現場に定着するまでひとりで伴走します。
         </p>
       </div>
 
-      <div class="services-layers">
+      <div class="services-tiers">
 
-        <!-- ============ Layer 01 — Create ============ -->
-        <div class="layer" data-layer="1">
-          <header class="layer-head reveal-left">
-            <div class="layer-head-left">
-              <div class="layer-num" aria-hidden="true">01</div>
-              <div class="layer-title-block">
-                <div class="layer-title">
-                  Create <span class="sep" aria-hidden="true">｜</span> <span lang="ja">今すぐ依頼できる制作代行</span>
-                </div>
-                <div class="layer-en">The foundation. Fast, quality production at freelance rates.</div>
-              </div>
+        <!-- ============ Tier 1 — Diagnosis ============ -->
+        <article class="tier reveal-up" style="--reveal-delay: 0ms" data-tier="1">
+          <div class="tier-step" aria-hidden="true">Step 1</div>
+          <h3 class="tier-title" lang="ja">現状を診断する <span class="tier-tag">無料</span></h3>
+          <p class="tier-body" lang="ja">
+            訪問介護事業所の現状を、AI活用の観点から診断します。業務内容・お困りごと・予算感をフォームに入力するだけで、AI診断レポートをメールでお送りします（所要1〜2分）。「どこから手をつければ良いか」が言語化されます。
+          </p>
+          <a href="./form.html" class="tier-cta" aria-label="無料の訪問介護AI活用度診断フォームを開く">
+            <span lang="ja">無料診断を受ける</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </article>
+
+        <!-- ============ Tier 2 — Implementation + Subsidy ============ -->
+        <article class="tier reveal-up" style="--reveal-delay: 100ms" data-tier="2">
+          <div class="tier-step" aria-hidden="true">Step 2</div>
+          <h3 class="tier-title" lang="ja">AIを導入する <span class="tier-tag">補助金で実質1/5負担</span></h3>
+          <p class="tier-body" lang="ja">
+            診断レポートを元に、訪問介護現場に最適なAI業務自動化ツールを設計・導入します。2026年度デジタル化・AI導入補助金（補助率最大4/5、上限450万円）、介護ICT導入支援事業（都道府県別）など、<strong class="tier-strong">補助金申請代行までセットで提供</strong>します。クライアント様の実質負担は、本来の1/5になります。
+          </p>
+          <div class="tier-pricing">
+            <div class="tier-pricing-row">
+              <span class="tier-pricing-label" lang="ja">初期構築</span>
+              <span class="tier-pricing-value">¥100〜200万</span>
             </div>
-            <div class="layer-count" aria-hidden="true">3 services →</div>
-          </header>
-          <div class="layer-divider" aria-hidden="true"></div>
+            <div class="tier-pricing-row">
+              <span class="tier-pricing-label" lang="ja">補助金代行</span>
+              <span class="tier-pricing-value">成功報酬 15〜20%</span>
+            </div>
+          </div>
+        </article>
 
-          <div class="layer-grid">
+        <!-- ============ Tier 3 — Retainer + Products ============ -->
+        <article class="tier reveal-up" style="--reveal-delay: 200ms" data-tier="3">
+          <div class="tier-step" aria-hidden="true">Step 3</div>
+          <h3 class="tier-title" lang="ja">運用しながら成長する</h3>
+          <p class="tier-body" lang="ja">
+            導入後の運用サポート、機能追加、効果測定を月額でお引き受けします。訪問介護報酬改定や加算要件の変更にも、伴走しながら対応します。
+          </p>
 
-            <!-- Card 1 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
-              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="layout-dashboard" class="card-icon" aria-hidden="true"></i>
+          <div class="tier-products-eyebrow" lang="ja">— プロダクト群</div>
+          <div class="tier-products">
+
+            <article class="product">
+              <div class="product-icon-wrap">
+                <i data-lucide="mic" class="product-icon" aria-hidden="true"></i>
               </div>
-              <div class="card-subtitle">Website Design</div>
-              <h3 class="card-title" lang="ja">LP・ポートフォリオサイト制作</h3>
-              <p class="card-desc" lang="ja">ダーク基調のモダンなサイトを、AIで高速に。構成設計から実装、レスポンシブ対応まで一貫して対応します。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">from</span>¥50,000
-                </div>
-                <div class="card-price-note" lang="ja">初期ローンチ価格 / 先着3社限定</div>
-              </div>
-              <ul class="card-features">
-                <li>ヒアリング・構成設計</li>
-                <li>デザイン・実装（レスポンシブ）</li>
-                <li>初回公開まで</li>
-              </ul>
+              <h4 class="product-title" lang="ja">訪問記録 音声入力AI</h4>
+              <p class="product-desc" lang="ja">ヘルパーさんがスマホに話すだけで、AIが介護記録形式に自動整形。事務所での再入力作業を月15〜30時間削減。</p>
             </article>
 
-            <!-- Card 2 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
-              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="pen-tool" class="card-icon" aria-hidden="true"></i>
+            <article class="product">
+              <div class="product-icon-wrap">
+                <i data-lucide="badge-check" class="product-icon" aria-hidden="true"></i>
               </div>
-              <div class="card-subtitle">Content Writing</div>
-              <h3 class="card-title" lang="ja">ブログ・SEO記事執筆</h3>
-              <p class="card-desc" lang="ja">検索意図を捉えた、読まれる記事を量産。キーワード設計から納品まで対応。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">from</span>¥5,000<span class="price-unit">/ 記事</span>
-                </div>
-                <div class="card-price-note" lang="ja">初期ローンチ価格 / 先着3社限定</div>
-              </div>
-              <ul class="card-features">
-                <li>キーワード調査</li>
-                <li>構成案提出</li>
-                <li>3,000〜5,000字本文</li>
-              </ul>
+              <h4 class="product-title" lang="ja">加算管理AI</h4>
+              <p class="product-desc" lang="ja">LIFE加算、特定処遇改善加算など複雑な加算要件をAIが自動判定。申請書類の作成も自動化。</p>
             </article>
 
-            <!-- Card 3 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
-              <div class="card-layer-dots" aria-label="Layer 1"><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="instagram" class="card-icon" aria-hidden="true"></i>
+            <article class="product">
+              <div class="product-icon-wrap">
+                <i data-lucide="route" class="product-icon" aria-hidden="true"></i>
               </div>
-              <div class="card-subtitle">Social Content</div>
-              <h3 class="card-title" lang="ja">SNS投稿コンテンツ作成</h3>
-              <p class="card-desc" lang="ja">X・Instagram向けの画像付き投稿セット。発信の継続を仕組みで支えます。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">from</span>¥20,000<span class="price-unit">/ 月10投稿</span>
-                </div>
-                <div class="card-price-note" lang="ja">初期ローンチ価格 / 先着3社限定</div>
+              <h4 class="product-title" lang="ja">訪問ルート最適化AI</h4>
+              <p class="product-desc" lang="ja">ヘルパーさんと利用者さんのマッチング、移動ルートを最適化。</p>
+            </article>
+
+            <article class="product">
+              <div class="product-icon-wrap">
+                <i data-lucide="message-square" class="product-icon" aria-hidden="true"></i>
               </div>
-              <ul class="card-features">
-                <li>投稿テキスト</li>
-                <li>画像制作（10枚）</li>
-                <li>投稿カレンダー</li>
-              </ul>
+              <h4 class="product-title" lang="ja">家族連絡自動化AI</h4>
+              <p class="product-desc" lang="ja">訪問終了後、家族の方にLINEで状況を自動配信。</p>
+            </article>
+
+            <article class="product">
+              <div class="product-icon-wrap">
+                <i data-lucide="clipboard-list" class="product-icon" aria-hidden="true"></i>
+              </div>
+              <h4 class="product-title" lang="ja">ケアプラン作成支援AI</h4>
+              <p class="product-desc" lang="ja">ケアマネ向け。アセスメント情報からケアプラン下書きを自動生成。</p>
             </article>
 
           </div>
-        </div>
 
-        <!-- ============ Layer 02 — Amplify ============ -->
-        <div class="layer" data-layer="2">
-          <header class="layer-head reveal-left">
-            <div class="layer-head-left">
-              <div class="layer-num" aria-hidden="true">02</div>
-              <div class="layer-title-block">
-                <div class="layer-title">
-                  Amplify <span class="sep" aria-hidden="true">｜</span> <span lang="ja">AI活用で差別化する運用支援</span>
-                </div>
-                <div class="layer-en">The multiplier. Existing skills, amplified by AI.</div>
-              </div>
+          <div class="tier-pricing">
+            <div class="tier-pricing-row">
+              <span class="tier-pricing-label" lang="ja">月額</span>
+              <span class="tier-pricing-value">¥5〜30万</span>
+              <span class="tier-pricing-note" lang="ja">規模・選択プロダクトにより変動</span>
             </div>
-            <div class="layer-count" aria-hidden="true">3 services →</div>
-          </header>
-          <div class="layer-divider" aria-hidden="true"></div>
-
-          <div class="layer-grid">
-
-            <!-- Card 1 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
-              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="video" class="card-icon" aria-hidden="true"></i>
-              </div>
-              <div class="card-subtitle">Video Production</div>
-              <h3 class="card-title" lang="ja">動画編集 + AIサムネ・台本</h3>
-              <p class="card-desc" lang="ja">編集だけでなく、再生される仕掛けまで。AI台本生成＋サムネABテスト対応。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">from</span>¥8,000<span class="price-unit">/ 本</span>
-                </div>
-                <div class="card-price-note" lang="ja">初期ローンチ価格 / 先着3社限定</div>
-              </div>
-              <ul class="card-features">
-                <li>動画編集（10分まで）</li>
-                <li>AIサムネイル3案</li>
-                <li>台本・テロップ</li>
-              </ul>
-            </article>
-
-            <!-- Card 2 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
-              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="bar-chart-3" class="card-icon" aria-hidden="true"></i>
-              </div>
-              <div class="card-subtitle">Data &amp; Automation</div>
-              <h3 class="card-title" lang="ja">Excel業務効率化・データ分析</h3>
-              <p class="card-desc" lang="ja">面倒な集計を自動化し、洞察まで届ける。マクロ・関数・レポート設計。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">from</span>¥30,000<span class="price-unit">/ 案件</span>
-                </div>
-                <div class="card-price-note" lang="ja">初期ローンチ価格 / 先着3社限定</div>
-              </div>
-              <ul class="card-features">
-                <li>現状フロー分析</li>
-                <li>自動化実装</li>
-                <li>運用マニュアル</li>
-              </ul>
-            </article>
-
-            <!-- Card 3 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
-              <div class="card-layer-dots" aria-label="Layer 2"><span></span><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="users" class="card-icon" aria-hidden="true"></i>
-              </div>
-              <div class="card-subtitle">Training &amp; Consulting</div>
-              <h3 class="card-title" lang="ja">AI活用セミナー・社員研修</h3>
-              <p class="card-desc" lang="ja">現場で使えるAI活用を、実演形式で。業種別カスタマイズ可能。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">from</span>¥30,000<span class="price-unit">/ 1h</span>
-                </div>
-                <div class="card-price-note" lang="ja">初期ローンチ価格 / 先着3社限定</div>
-              </div>
-              <ul class="card-features">
-                <li>事前ヒアリング</li>
-                <li>1時間の実演研修</li>
-                <li>実践ワーク＋Q&amp;A</li>
-              </ul>
-            </article>
-
           </div>
-        </div>
-
-        <!-- ============ Layer 03 — Automate ============ -->
-        <div class="layer" data-layer="3">
-          <header class="layer-head reveal-left">
-            <div class="layer-head-left">
-              <div class="layer-num" aria-hidden="true">03</div>
-              <div class="layer-title-block">
-                <div class="layer-title">
-                  Automate <span class="sep" aria-hidden="true">｜</span> <span lang="ja">業務自動化・エージェント構築</span>
-                </div>
-                <div class="layer-en">The future. Systems that weave themselves.</div>
-              </div>
-            </div>
-            <div class="layer-count" aria-hidden="true">3 services →</div>
-          </header>
-          <div class="layer-divider" aria-hidden="true"></div>
-
-          <div class="layer-grid">
-
-            <!-- Card 1 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 0ms">
-              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="bot" class="card-icon" aria-hidden="true"></i>
-              </div>
-              <div class="card-subtitle">Agent Development</div>
-              <h3 class="card-title" lang="ja">ChatBot・業務フロー自動化</h3>
-              <p class="card-desc" lang="ja">問い合わせ対応・社内業務を24時間稼働。Claude / GPT / n8n 連携対応。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">初期</span>¥300,000<span class="price-unit">〜</span>
-                </div>
-                <div class="card-price-sub">月額 ¥50,000〜</div>
-              </div>
-              <ul class="card-features">
-                <li>要件定義・設計</li>
-                <li>実装・テスト</li>
-                <li>1ヶ月の運用保守</li>
-              </ul>
-            </article>
-
-            <!-- Card 2 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 100ms">
-              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="zap" class="card-icon" aria-hidden="true"></i>
-              </div>
-              <div class="card-subtitle">Agent Setup</div>
-              <h3 class="card-title" lang="ja">AIエージェント導入代行</h3>
-              <p class="card-desc" lang="ja">ロリポップAIエージェントクラウド等の設定と運用。導入後の伴走まで。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price">
-                  <span class="price-prefix">from</span>¥50,000
-                </div>
-              </div>
-              <ul class="card-features">
-                <li>ツール選定</li>
-                <li>初期セットアップ</li>
-                <li>30日サポート</li>
-              </ul>
-            </article>
-
-            <!-- Card 3 -->
-            <article class="service-card reveal-up" style="--reveal-delay: 200ms">
-              <div class="card-layer-dots" aria-label="Layer 3"><span></span><span></span><span></span></div>
-              <div class="card-icon-wrap">
-                <i data-lucide="code-2" class="card-icon" aria-hidden="true"></i>
-              </div>
-              <div class="card-subtitle">Custom Development</div>
-              <h3 class="card-title" lang="ja">カスタムAIツール開発</h3>
-              <p class="card-desc" lang="ja">業界特化ツールをゼロから、あなたの現場に。ヒアリング重視で伴走。</p>
-              <div class="card-hr" aria-hidden="true"></div>
-              <div class="card-price-block">
-                <div class="card-price quote">要見積</div>
-              </div>
-              <ul class="card-features">
-                <li>業務ヒアリング</li>
-                <li>プロトタイプ</li>
-                <li>本実装・納品</li>
-              </ul>
-            </article>
-
-          </div>
-        </div>
+        </article>
 
       </div>
     </div>
@@ -2334,11 +2587,11 @@
           <span class="num">(03)</span> WHY LOOMIA
         </div>
         <h2 class="why-title reveal-up" style="--reveal-delay: 80ms">
-          <span class="line">Why choose a</span>
-          <span class="line"><span class="accent">single weaver</span>?</span>
+          <span class="line">Why choose</span>
+          <span class="line"><span class="accent">Loomia</span>?</span>
         </h2>
         <p class="why-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
-          複数の外注先に頼む時代は、もう終わりました。ひとりの窓口が、最速で最高品質を織り上げます。
+          訪問介護の業務を、本当に分かったうえでAIを設計する。それがLoomiaの一番の強みです。
         </p>
       </div>
 
@@ -2346,31 +2599,41 @@
 
         <article class="why-card reveal-up" style="--reveal-delay: 0ms">
           <div class="why-card-num" aria-hidden="true">01</div>
-          <i data-lucide="sparkles" class="why-icon" aria-hidden="true"></i>
-          <h3 class="why-card-title" lang="ja">半年先の提案を、今日の納品に</h3>
-          <div class="why-card-en">Tomorrow's tools, delivered today.</div>
+          <i data-lucide="heart-handshake" class="why-icon" aria-hidden="true"></i>
+          <h3 class="why-card-title" lang="ja">訪問介護に特化している</h3>
+          <div class="why-card-en">Built for home care, not generic AI.</div>
           <p class="why-card-body" lang="ja">
-            毎朝4時、AI業界の最新動向を自動で取り込み、提案に反映します。昨日リリースされた手法を、今日の実装に組み込める速度。「契約時は最新だった提案が、納品時には時代遅れ」という制作の古い痛みを、Loomiaは構造的に解消します。
+            汎用AIサービスではありません。訪問介護の業務フロー、加算制度、カイポケ等の介護ソフトとの連携を理解した上で設計しています。「現場で本当に使えるか」を最優先に、ヘルパーさん・サ責・管理者それぞれの動線で考えます。
           </p>
         </article>
 
         <article class="why-card reveal-up" style="--reveal-delay: 120ms">
           <div class="why-card-num" aria-hidden="true">02</div>
-          <i data-lucide="user-check" class="why-icon" aria-hidden="true"></i>
-          <h3 class="why-card-title" lang="ja">構想から納品まで、一人の織り手で</h3>
-          <div class="why-card-en">One weaver, one thread, zero relay.</div>
+          <i data-lucide="banknote" class="why-icon" aria-hidden="true"></i>
+          <h3 class="why-card-title" lang="ja">補助金申請まで一括代行</h3>
+          <div class="why-card-en">Subsidy paperwork, off your plate.</div>
           <p class="why-card-body" lang="ja">
-            ライティング・デザイン・営業・データ・コード・動画・SNS運用——これまで複数の外注先に分散していた7つのスキルを、AIと組み合わせてひとりで統合します。伝言ゲームも、担当者変更も、再説明の消耗もありません。あなたの事業を深く理解したひとりが、最初から最後まで伴走します。
+            AI導入だけで終わらせません。デジタル化・AI導入補助金（補助率最大4/5）、介護ICT導入支援事業など、補助金申請の書類作成・提出まで<strong>セットで対応</strong>します。クライアント様の実質負担は本来の1/5。
           </p>
         </article>
 
         <article class="why-card reveal-up" style="--reveal-delay: 240ms">
           <div class="why-card-num" aria-hidden="true">03</div>
-          <i data-lucide="gem" class="why-icon" aria-hidden="true"></i>
-          <h3 class="why-card-title" lang="ja">AIの出力を、使える成果物に</h3>
-          <div class="why-card-en">AI drafts. Human judgement.</div>
+          <i data-lucide="layers" class="why-icon" aria-hidden="true"></i>
+          <h3 class="why-card-title" lang="ja">既存の介護ソフトと共存</h3>
+          <div class="why-card-en">An AI layer, not a replacement.</div>
           <p class="why-card-body" lang="ja">
-            AIは下書きを高速で作りますが、「あなたの業界で響くか」「本当の課題を解けているか」を見極めるのは人間の仕事です。AIの量産力に、業務設計の経験と判断力を重ねて、納品まで仕上げます。
+            カイポケ・ワイズマン等の既存システムを置き換えるのではなく、「上に乗る」AIレイヤーとして設計しています。今お使いのソフトはそのまま活かせます。乗り換えコストもデータ移行リスクもゼロ。
+          </p>
+        </article>
+
+        <article class="why-card reveal-up" style="--reveal-delay: 360ms">
+          <div class="why-card-num" aria-hidden="true">04</div>
+          <i data-lucide="message-square-quote" class="why-icon" aria-hidden="true"></i>
+          <h3 class="why-card-title" lang="ja">本音で書く、できないことはできないと言う</h3>
+          <div class="why-card-en">Honest scope. No oversell.</div>
+          <p class="why-card-body" lang="ja">
+            すべての提案で「Loomiaに頼まなくていい領域」「対応できない領域」も正直に開示します。営業ではなく、現場のための伴走を選ぶブランドです。「貴事業所には、まだAIは早い」と言うこともあります。
           </p>
         </article>
 
@@ -2378,69 +2641,55 @@
     </div>
   </section>
 
-  <!-- 5. Process -->
-  <section id="process" class="process" aria-label="Loomiaの仕事の進め方">
+  <!-- 5. Coverage (対応する領域 / 対応しない領域) -->
+  <section id="coverage" class="coverage" aria-label="対応する領域 / 対応しない領域">
     <div class="section-inner">
 
-      <div class="process-header">
+      <div class="coverage-header">
         <div class="section-eyebrow reveal-up">
-          <span class="num">(04)</span> PROCESS
+          <span class="num">(04)</span> COVERAGE
         </div>
-        <h2 class="process-title reveal-up" style="--reveal-delay: 80ms">
-          <span class="line">How Loomia works.</span>
-          <span class="line" lang="ja">ひとつの依頼が、光になるまで。</span>
+        <h2 class="coverage-title reveal-up" style="--reveal-delay: 80ms">
+          <span class="line">What we do,</span>
+          <span class="line"><span class="accent">and what we don't</span>.</span>
         </h2>
-        <p class="process-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
-          制作・運用・自動化——サービスは違っても、進め方は同じ。初回のご相談から納品後の伴走まで、ひとりの織り手が一貫して対応します。
+        <p class="coverage-subcopy reveal-up" style="--reveal-delay: 160ms" lang="ja">
+          できることと、できないことを正直に書きます。誤解で時間を奪わないために。
         </p>
       </div>
 
-      <div class="process-timeline">
+      <div class="coverage-grid">
 
-        <article class="process-step reveal-up" style="--reveal-delay: 0ms">
-          <div class="process-step-num" aria-hidden="true">01</div>
-          <div class="process-step-body">
-            <h3 class="process-step-title" lang="ja"><span class="accent">聞く</span> — 無料AI診断レポート</h3>
-            <p class="process-step-text" lang="ja">
-              業種・課題・予算感をお聞きし、AI活用の優先順位を24時間以内にPDFでお届け。ここから始めて、合わなければそのまま終わっても構いません。
-            </p>
-            <div class="process-step-cta-wrap">
-              <a href="./form.html" class="process-step-cta" aria-label="無料のAI活用度診断レポートを24時間以内に受け取る">
-                <span>24時間で届く無料AI診断を申し込む</span>
-                <span class="arrow" aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
+        <article class="coverage-block coverage-do reveal-up" style="--reveal-delay: 0ms">
+          <h3 class="coverage-block-title" lang="ja">対応する領域</h3>
+          <ul class="coverage-block-list" role="list" lang="ja">
+            <li>訪問介護事業所の事務作業AI自動化</li>
+            <li>介護ICT補助金の申請代行</li>
+            <li>既存介護ソフト（カイポケ等）とのデータ連携</li>
+            <li>訪問介護向けAI業務改善コンサルティング</li>
+            <li>ケアマネ事業所向けケアプラン作成支援AI</li>
+          </ul>
         </article>
 
-        <article class="process-step reveal-up" style="--reveal-delay: 100ms">
-          <div class="process-step-num" aria-hidden="true">02</div>
-          <div class="process-step-body">
-            <h3 class="process-step-title" lang="ja"><span class="accent">設計</span> — ヒアリング & 要件定義</h3>
-            <p class="process-step-text" lang="ja">
-              Zoom または X のDMで30〜60分。現状の課題と到達したいゴールを深く聞き、AIの活用ポイントと納品物の形を一緒に設計します。
-            </p>
-          </div>
+        <article class="coverage-block coverage-dont reveal-up" style="--reveal-delay: 100ms">
+          <h3 class="coverage-block-title" lang="ja">対応しない領域<span class="coverage-block-note" lang="ja">（率直に書く）</span></h3>
+          <ul class="coverage-block-list" role="list" lang="ja">
+            <li>医療行為・医療判断に関わる領域（医療法の範囲）</li>
+            <li>介護報酬の不正請求に関わる領域</li>
+            <li>保険外の自費サービス全般</li>
+            <li>訪問介護以外の業態（現時点では）</li>
+          </ul>
         </article>
 
-        <article class="process-step reveal-up" style="--reveal-delay: 200ms">
-          <div class="process-step-num" aria-hidden="true">03</div>
-          <div class="process-step-body">
-            <h3 class="process-step-title" lang="ja"><span class="accent">織る</span> — 実装 & 途中レビュー</h3>
-            <p class="process-step-text" lang="ja">
-              AIを使いこなして高速で実装。完成してから「違う」となるのを防ぐため、進捗の節目で必ずレビューを挟み、方向を調整します。
-            </p>
-          </div>
-        </article>
-
-        <article class="process-step reveal-up" style="--reveal-delay: 300ms">
-          <div class="process-step-num" aria-hidden="true">04</div>
-          <div class="process-step-body">
-            <h3 class="process-step-title" lang="ja"><span class="accent">続く</span> — 納品 & 30日伴走</h3>
-            <p class="process-step-text" lang="ja">
-              納品して終わりではありません。納品後30日間は、使い方の質問や微調整、追加要望に無料で対応。現場に定着するまで伴走します。
-            </p>
-          </div>
+        <article class="coverage-block coverage-future reveal-up" style="--reveal-delay: 200ms">
+          <h3 class="coverage-block-title" lang="ja">今後拡大予定の領域</h3>
+          <p class="coverage-block-intro" lang="ja">訪問介護で実績を積んだ後、以下に順次拡大予定:</p>
+          <ul class="coverage-block-list" role="list" lang="ja">
+            <li>訪問看護事業所向け</li>
+            <li>通所介護（デイサービス）向け</li>
+            <li>グループホーム / 特養 / 老健向け</li>
+            <li>障害福祉サービス向け</li>
+          </ul>
         </article>
 
       </div>
@@ -2465,21 +2714,21 @@
         </p>
       </div>
 
-      <!-- Free AI diagnosis promotion (hero CTA of this section) -->
-      <div class="diag-block reveal-up" style="--reveal-delay: 220ms" role="region" aria-label="無料AI活用度診断">
+      <!-- Free home-care AI diagnosis promotion -->
+      <div class="diag-block reveal-up" style="--reveal-delay: 220ms" role="region" aria-label="無料・訪問介護AI活用度診断">
         <span class="diag-badge">🎁 FREE OFFER</span>
-        <h3 class="diag-title" lang="ja">あなたの事業、AIでどこまで変えられますか？</h3>
-        <p class="diag-subtitle" lang="ja">AI活用度診断レポートを、無料で作成します</p>
-        <p class="diag-desc" lang="ja">業種・現状の業務課題・予算感から、あなたの事業で今すぐAIで自動化・効率化できるポイントを洗い出した個別レポート（PDF約5ページ）を無料でお渡しします。</p>
+        <h3 class="diag-title" lang="ja">貴事業所、AIでどこまで変えられますか？</h3>
+        <p class="diag-subtitle" lang="ja">訪問介護AI活用度診断レポートを、無料で作成します</p>
+        <p class="diag-desc" lang="ja">事業所の規模・現状の業務課題・予算感から、訪問介護現場で今すぐAIで自動化・効率化できるポイントを洗い出した個別レポート（PDF約5ページ）を無料でお渡しします。</p>
 
         <ul class="diag-features" role="list">
           <li>
             <i data-lucide="inspect" aria-hidden="true"></i>
-            <strong lang="ja">業種別のAI活用チャンス5選</strong>
+            <strong lang="ja">事業所別のAI活用チャンス5選</strong>
           </li>
           <li>
-            <i data-lucide="trending-up" aria-hidden="true"></i>
-            <strong lang="ja">費用対効果のランキング</strong>
+            <i data-lucide="banknote" aria-hidden="true"></i>
+            <strong lang="ja">活用できる補助金一覧</strong>
           </li>
           <li>
             <i data-lucide="arrow-right-circle" aria-hidden="true"></i>
@@ -2491,16 +2740,16 @@
           <li><span class="key">料金</span><span class="val">無料</span></li>
           <li><span class="key">所要時間</span><span class="val">約24時間</span></li>
           <li><span class="key">納品形式</span><span class="val">PDFメール</span></li>
-          <li><span class="key">対象</span><span class="val">中小企業・個人事業主</span></li>
+          <li><span class="key">対象</span><span class="val">訪問介護事業所</span></li>
         </ul>
 
-        <a href="./form.html" class="diag-cta" aria-label="AI活用度診断フォームを開く">
+        <a href="./form.html" class="diag-cta" aria-label="訪問介護AI活用度診断フォームを開く">
           <i data-lucide="gift" aria-hidden="true"></i>
-          <span lang="ja">無料診断を申し込む</span>
+          <span lang="ja">無料・訪問介護AI診断を申し込む</span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
 
-        <p class="diag-foot" lang="ja">または <a href="https://twitter.com/loomia_ai" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">X（@loomia_ai）</a> のDMで「診断希望」とお送りください</p>
+        <p class="diag-foot" lang="ja">または <a href="https://twitter.com/loomia_ai" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">X（@loomia_ai）</a> のDMで「訪問介護診断希望」とお送りください</p>
       </div>
 
       <div class="contact-secondary reveal-up" style="--reveal-delay: 320ms">
@@ -2536,7 +2785,7 @@
         <div class="footer-brand">
           <span class="footer-logo">Loomia</span>
           <p class="footer-tagline">Weave your ideas into light.</p>
-          <p class="footer-meta" lang="ja">AIフリーランス / based in Japan</p>
+          <p class="footer-meta" lang="ja">訪問介護のためのAI伴走 / based in Japan</p>
         </div>
 
         <nav aria-label="フッターナビゲーション">
@@ -2545,7 +2794,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#why">Why Loomia</a></li>
-            <li><a href="#process">Process</a></li>
+            <li><a href="#coverage">Coverage</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
@@ -2563,6 +2812,12 @@
               <a href="https://twitter.com/loomia_ai" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter) @loomia_ai">
                 <i data-lucide="twitter" aria-hidden="true"></i>
                 <span>X: @loomia_ai</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://note.com/loomia_ai" target="_blank" rel="noopener noreferrer" aria-label="note @loomia_ai">
+                <i data-lucide="book-open" aria-hidden="true"></i>
+                <span>note: @loomia_ai</span>
               </a>
             </li>
           </ul>
@@ -2613,7 +2868,7 @@
       }
 
       // Scroll reveal: add .in-view to sections/layers when ~15% has entered
-      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.process, section.contact, .layer, footer.footer');
+      const revealTargets = document.querySelectorAll('[data-reveal-root], section.about, section.services, section.why, section.coverage, section.contact, .tier, footer.footer');
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
