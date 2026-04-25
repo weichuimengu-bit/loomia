@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>福祉事業所のための AI 活用度診断 | Loomia</title>
+<meta name="description" content="訪問介護・訪問看護・通所介護・ケアマネ・障害福祉サービスのためのAI活用度を無料で診断。月間削減時間と年間人件費削減見込を試算します。">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --bg-card: #16161a;
+  --bg-input: #1c1c20;
+  --accent: #7dd3fc;
+  --accent-dim: #5fb8e0;
+  --text: #f4f4f5;
+  --text-sub: #a1a1aa;
+  --text-muted: #71717a;
+  --border: #27272a;
+  --warning: #fcd34d;
+  --error: #f87171;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+}
+
+.brand {
+  margin-bottom: 48px;
+}
+
+.brand-name {
+  font-family: 'Fraunces', 'Noto Serif JP', Georgia, serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+
+.brand-tagline {
+  font-size: 13px;
+  color: var(--text-sub);
+  letter-spacing: 0.05em;
+}
+
+.hero {
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-family: 'Fraunces', 'Noto Serif JP', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.45;
+  margin-bottom: 16px;
+}
+
+.hero-title .accent {
+  color: var(--accent);
+}
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--text-sub);
+  line-height: 1.85;
+}
+
+.meta-row {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.meta-row strong {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.progress-bar {
+  position: sticky;
+  top: 0;
+  height: 3px;
+  background: var(--border);
+  margin: -48px -20px 32px;
+  z-index: 10;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.question {
+  margin-bottom: 32px;
+  padding: 24px;
+  background: var(--bg-card);
+  border-radius: 4px;
+  border-left: 3px solid transparent;
+  transition: border-left-color 0.2s ease;
+}
+
+.question.filled {
+  border-left-color: var(--accent);
+}
+
+.question-num {
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.question-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.question-label .required {
+  color: var(--accent);
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.question-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.input-text,
+.input-email,
+.input-number,
+.input-select,
+.input-textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  font-size: 14px;
+  border-radius: 3px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.input-textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.input-text:focus,
+.input-email:focus,
+.input-number:focus,
+.input-select:focus,
+.input-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.input-text::placeholder,
+.input-email::placeholder,
+.input-number::placeholder,
+.input-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.choice-group {
+  display: grid;
+  gap: 8px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.choice:hover {
+  border-color: var(--accent-dim);
+}
+
+.choice input {
+  margin-right: 12px;
+  accent-color: var(--accent);
+}
+
+.choice-label {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.choice-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 600px) {
+  .checkbox-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.input-error {
+  display: none;
+  font-size: 12px;
+  color: var(--error);
+  margin-top: 6px;
+}
+
+.input-error.visible {
+  display: block;
+}
+
+.cta-area {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, var(--bg) 30%);
+  padding: 24px 0 8px;
+  margin-top: 32px;
+}
+
+.cta-button {
+  width: 100%;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 16px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s ease;
+}
+
+.cta-button:hover:not(:disabled) {
+  background: var(--accent-dim);
+}
+
+.cta-button:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.cta-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.7;
+}
+
+.privacy-notice {
+  margin-top: 32px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.85;
+}
+
+.privacy-notice strong {
+  color: var(--warning);
+}
+
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.success-screen.visible {
+  display: block;
+}
+
+.success-screen .check {
+  font-size: 48px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.success-screen h2 {
+  font-family: 'Fraunces', 'Noto Serif JP', Georgia, serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.success-screen p {
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.85;
+}
+
+.loading-screen {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-screen.visible {
+  display: block;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 24px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+
+<div class="brand">
+  <div class="brand-name">Loomia</div>
+  <div class="brand-tagline">AIで、事業の断片を、ひとつの光に。</div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">福祉事業所のための AI 活用度診断</div>
+  <h1 class="hero-title">月の業務時間が、<br>どれだけ削減できるか<br><span class="accent">試算します。</span></h1>
+  <p class="hero-desc">訪問介護・訪問看護・通所介護・ケアマネ・障害福祉サービス向けの AI 活用度を 14 問の質問で診断します。回答内容から、月間削減時間・年間人件費削減見込・推奨プロダクト・活用可能な補助金を試算したレポートをメールでお送りします。</p>
+  <div class="meta-row">
+    <div>料金: <strong>無料</strong></div>
+    <div>所要時間: <strong>約3分</strong></div>
+    <div>納品: <strong>24時間以内</strong></div>
+  </div>
+</div>
+
+<form id="diagnosisForm">
+
+<!-- Q1: メールアドレス -->
+<div class="question" data-q="1">
+  <div class="question-num">QUESTION 01 / 14</div>
+  <div class="question-label">メールアドレス<span class="required">必須</span></div>
+  <div class="question-hint">診断レポートのお届け先になります。loomia.jp@gmail.com から1営業日以内にお送りします。</div>
+  <input type="email" class="input-email" name="q1_email" id="q1_email" placeholder="you@example.com" required>
+  <div class="input-error" id="err_q1">有効なメールアドレスを入力してください</div>
+</div>
+
+<!-- Q2: 事業所名 -->
+<div class="question" data-q="2">
+  <div class="question-num">QUESTION 02 / 14</div>
+  <div class="question-label">事業所名<span class="required">必須</span></div>
+  <div class="question-hint">診断レポートの宛名になります</div>
+  <input type="text" class="input-text" name="q2_company" id="q2_company" placeholder="例: 株式会社○○ケアサービス" required>
+  <div class="input-error" id="err_q2">事業所名を入力してください</div>
+</div>
+
+<!-- Q3: 担当者名 -->
+<div class="question" data-q="3">
+  <div class="question-num">QUESTION 03 / 14</div>
+  <div class="question-label">ご担当者名</div>
+  <div class="question-hint">任意ですが、レポートの宛名がより丁寧になります</div>
+  <input type="text" class="input-text" name="q3_contact" id="q3_contact" placeholder="例: 山田 太郎">
+</div>
+
+<!-- Q4: 業態 -->
+<div class="question" data-q="4">
+  <div class="question-num">QUESTION 04 / 14</div>
+  <div class="question-label">事業所の業態<span class="required">必須</span></div>
+  <div class="question-hint">該当する1つを選択してください。Loomia は現在、訪問介護を最初の対応領域としています。他業態は2026年Q4以降順次対応予定です。</div>
+  <div class="choice-group">
+    <label class="choice">
+      <input type="radio" name="q4_service" value="訪問介護" required>
+      <span class="choice-label">訪問介護</span>
+      <span class="choice-sub">現在対応中</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q4_service" value="訪問看護">
+      <span class="choice-label">訪問看護</span>
+      <span class="choice-sub">2026年Q4対応予定</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q4_service" value="通所介護">
+      <span class="choice-label">通所介護(デイサービス)</span>
+      <span class="choice-sub">2027年Q1対応予定</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q4_service" value="ケアマネ事業所">
+      <span class="choice-label">居宅介護支援(ケアマネ事業所)</span>
+      <span class="choice-sub">2027年Q2対応予定</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q4_service" value="障害福祉サービス">
+      <span class="choice-label">障害福祉サービス</span>
+      <span class="choice-sub">2027年Q3対応予定</span>
+    </label>
+  </div>
+  <div class="input-error" id="err_q4">業態を選択してください</div>
+</div>
+
+<!-- Q5: 職員数 -->
+<div class="question" data-q="5">
+  <div class="question-num">QUESTION 05 / 14</div>
+  <div class="question-label">職員数(常勤・非常勤を含む)<span class="required">必須</span></div>
+  <div class="question-hint">人数規模で削減効果の試算が変わります。だいたいで構いません</div>
+  <input type="number" class="input-number" name="q5_staff" id="q5_staff" min="1" max="500" placeholder="例: 12" required>
+  <div class="input-error" id="err_q5">1以上500以下の数値を入力してください</div>
+</div>
+
+<!-- Q6: 都道府県 -->
+<div class="question" data-q="6">
+  <div class="question-num">QUESTION 06 / 14</div>
+  <div class="question-label">所在都道府県<span class="required">必須</span></div>
+  <div class="question-hint">活用できる補助金が都道府県により異なります(大阪府は介護ICT導入支援事業 上限300万円など)</div>
+  <select class="input-select" name="q6_prefecture" id="q6_prefecture" required>
+    <option value="">選択してください</option>
+    <option value="北海道">北海道</option>
+    <option value="青森県">青森県</option>
+    <option value="岩手県">岩手県</option>
+    <option value="宮城県">宮城県</option>
+    <option value="秋田県">秋田県</option>
+    <option value="山形県">山形県</option>
+    <option value="福島県">福島県</option>
+    <option value="茨城県">茨城県</option>
+    <option value="栃木県">栃木県</option>
+    <option value="群馬県">群馬県</option>
+    <option value="埼玉県">埼玉県</option>
+    <option value="千葉県">千葉県</option>
+    <option value="東京都">東京都</option>
+    <option value="神奈川県">神奈川県</option>
+    <option value="新潟県">新潟県</option>
+    <option value="富山県">富山県</option>
+    <option value="石川県">石川県</option>
+    <option value="福井県">福井県</option>
+    <option value="山梨県">山梨県</option>
+    <option value="長野県">長野県</option>
+    <option value="岐阜県">岐阜県</option>
+    <option value="静岡県">静岡県</option>
+    <option value="愛知県">愛知県</option>
+    <option value="三重県">三重県</option>
+    <option value="滋賀県">滋賀県</option>
+    <option value="京都府">京都府</option>
+    <option value="大阪府">大阪府</option>
+    <option value="兵庫県">兵庫県</option>
+    <option value="奈良県">奈良県</option>
+    <option value="和歌山県">和歌山県</option>
+    <option value="鳥取県">鳥取県</option>
+    <option value="島根県">島根県</option>
+    <option value="岡山県">岡山県</option>
+    <option value="広島県">広島県</option>
+    <option value="山口県">山口県</option>
+    <option value="徳島県">徳島県</option>
+    <option value="香川県">香川県</option>
+    <option value="愛媛県">愛媛県</option>
+    <option value="高知県">高知県</option>
+    <option value="福岡県">福岡県</option>
+    <option value="佐賀県">佐賀県</option>
+    <option value="長崎県">長崎県</option>
+    <option value="熊本県">熊本県</option>
+    <option value="大分県">大分県</option>
+    <option value="宮崎県">宮崎県</option>
+    <option value="鹿児島県">鹿児島県</option>
+    <option value="沖縄県">沖縄県</option>
+  </select>
+  <div class="input-error" id="err_q6">都道府県を選択してください</div>
+</div>
+
+<!-- Q7: 利用者数 -->
+<div class="question" data-q="7">
+  <div class="question-num">QUESTION 07 / 14</div>
+  <div class="question-label">月間の延べ利用者数(対応している利用者の人数)</div>
+  <div class="question-hint">任意。加算の収益増試算に使います。だいたいで構いません</div>
+  <input type="number" class="input-number" name="q7_users" id="q7_users" min="1" max="2000" placeholder="例: 45">
+</div>
+
+<!-- Q8: 介護ソフト -->
+<div class="question" data-q="8">
+  <div class="question-num">QUESTION 08 / 14</div>
+  <div class="question-label">現在使っている介護ソフト・記録システム</div>
+  <div class="question-hint">該当するものすべて選択してください(複数選択可)</div>
+  <div class="checkbox-grid">
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="カイポケ">
+      <span class="choice-label">カイポケ</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="ほのぼの(NDソフト)">
+      <span class="choice-label">ほのぼの(NDソフト)</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="ワイズマン">
+      <span class="choice-label">ワイズマン</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="カナミック">
+      <span class="choice-label">カナミック</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="CareViewer">
+      <span class="choice-label">CareViewer</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="ファーストケア">
+      <span class="choice-label">ファーストケア</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="楽すけ">
+      <span class="choice-label">楽すけ</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="紙の記録のみ">
+      <span class="choice-label">紙の記録のみ</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q8_software" value="その他">
+      <span class="choice-label">その他</span>
+    </label>
+  </div>
+</div>
+
+<!-- Q9: 業務上の悩み -->
+<div class="question" data-q="9">
+  <div class="question-num">QUESTION 09 / 14</div>
+  <div class="question-label">現在、現場で時間がかかっている業務<span class="required">必須</span></div>
+  <div class="question-hint">該当するものすべて選択してください(複数選択可、最低1つ)</div>
+  <div class="checkbox-grid">
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="訪問記録の入力">
+      <span class="choice-label">訪問記録の入力</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="ケアプラン作成">
+      <span class="choice-label">ケアプラン作成</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="申し送り・議事録">
+      <span class="choice-label">申し送り・議事録</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="加算の届出・管理">
+      <span class="choice-label">加算の届出・管理</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="家族からの問い合わせ対応">
+      <span class="choice-label">家族からの問い合わせ対応</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="シフト作成">
+      <span class="choice-label">シフト作成</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="訪問ルート調整">
+      <span class="choice-label">訪問ルート調整</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="ヒヤリハット・事故報告">
+      <span class="choice-label">ヒヤリハット・事故報告</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="国保連請求">
+      <span class="choice-label">国保連請求</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q9_pain_points" value="採用・教育">
+      <span class="choice-label">採用・教育</span>
+    </label>
+  </div>
+  <div class="input-error" id="err_q9">最低1つは選択してください</div>
+</div>
+
+<!-- Q10: 加算取得状況 -->
+<div class="question" data-q="10">
+  <div class="question-num">QUESTION 10 / 14</div>
+  <div class="question-label">生産性向上推進体制加算の取得状況</div>
+  <div class="question-hint">2026年6月から処遇改善加算上位区分の事実上の必須要件になります</div>
+  <div class="choice-group">
+    <label class="choice">
+      <input type="radio" name="q10_kasan" value="加算Ⅰを取得済み">
+      <span class="choice-label">加算Ⅰを取得済み(月100単位/人)</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q10_kasan" value="加算Ⅱを取得済み">
+      <span class="choice-label">加算Ⅱを取得済み(月10単位/人)</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q10_kasan" value="未取得・取得予定">
+      <span class="choice-label">未取得だが取得を検討中</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q10_kasan" value="未取得・予定なし">
+      <span class="choice-label">未取得・予定なし</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q10_kasan" value="わからない">
+      <span class="choice-label">わからない</span>
+    </label>
+  </div>
+</div>
+
+<!-- Q11: 補助金の活用経験 -->
+<div class="question" data-q="11">
+  <div class="question-num">QUESTION 11 / 14</div>
+  <div class="question-label">補助金の活用経験</div>
+  <div class="question-hint">過去3年以内の活用経験で該当するもの(複数選択可)</div>
+  <div class="checkbox-grid">
+    <label class="choice">
+      <input type="checkbox" name="q11_subsidy_exp" value="介護テクノロジー導入支援事業">
+      <span class="choice-label">介護テクノロジー導入支援事業</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q11_subsidy_exp" value="IT導入補助金">
+      <span class="choice-label">IT導入補助金</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q11_subsidy_exp" value="ものづくり補助金">
+      <span class="choice-label">ものづくり補助金</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q11_subsidy_exp" value="業務改善助成金">
+      <span class="choice-label">業務改善助成金</span>
+    </label>
+    <label class="choice">
+      <input type="checkbox" name="q11_subsidy_exp" value="使ったことがない">
+      <span class="choice-label">使ったことがない</span>
+    </label>
+  </div>
+</div>
+
+<!-- Q12: AI への関心度 -->
+<div class="question" data-q="12">
+  <div class="question-num">QUESTION 12 / 14</div>
+  <div class="question-label">AI 導入への姿勢</div>
+  <div class="question-hint">現場のヘルパーさん・看護師さん・ケアマネさんの判断権を尊重した上での導入を前提としています</div>
+  <div class="choice-group">
+    <label class="choice">
+      <input type="radio" name="q12_attitude" value="積極的に導入したい">
+      <span class="choice-label">積極的に導入したい</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q12_attitude" value="効果があれば導入したい">
+      <span class="choice-label">効果があれば導入したい</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q12_attitude" value="慎重に検討したい">
+      <span class="choice-label">慎重に検討したい</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q12_attitude" value="現場の理解を得てから">
+      <span class="choice-label">まず現場の理解を得てから</span>
+    </label>
+    <label class="choice">
+      <input type="radio" name="q12_attitude" value="まだ判断材料が足りない">
+      <span class="choice-label">まだ判断材料が足りない</span>
+    </label>
+  </div>
+</div>
+
+<!-- Q13: 具体的な課題(自由記述) -->
+<div class="question" data-q="13">
+  <div class="question-num">QUESTION 13 / 14</div>
+  <div class="question-label">具体的に困っていること(自由記述)</div>
+  <div class="question-hint">記録時間の長さ、加算届出の煩雑さ、家族対応の負担など、現場で実際に感じている課題があれば教えてください。診断レポートの精度が上がります。</div>
+  <textarea class="input-textarea" name="q13_issues" id="q13_issues" placeholder="例: ヘルパー1人あたり1日6訪問で、訪問記録に毎日2時間かかっている。残業の主原因がここ。"></textarea>
+</div>
+
+<!-- Q14: 期待・備考(自由記述) -->
+<div class="question" data-q="14">
+  <div class="question-num">QUESTION 14 / 14</div>
+  <div class="question-label">AI 導入で期待すること・その他のご質問</div>
+  <div class="question-hint">なんでも構いません。診断レポート作成時の参考にします。</div>
+  <textarea class="input-textarea" name="q14_expectations" id="q14_expectations" placeholder="例: ヘルパーの記録業務を半分にしたい。同時にケアの質も維持したい。"></textarea>
+</div>
+
+<!-- プライバシー注記 -->
+<div class="privacy-notice">
+  <strong>個人情報の取扱いについて</strong><br>
+  ・本フォームでは、利用者(被介護者)の医療歴・介護歴・氏名等の<strong>要配慮個人情報は一切お聞きしません</strong>。事業所の運営状況のみ伺います。<br>
+  ・送信されたデータは Loomia 側で安全に管理し、診断レポート作成と本人への返信以外の目的では使用しません。<br>
+  ・診断レポートの数値は他事業所の実績データを基にした<strong>試算値</strong>であり、貴事業所の実数値を保証するものではありません。<br>
+  ・補助金の採択は審査機関の判断によります。Loomia は採択を保証するものではありません。<br>
+  ・士業独占業務(社労士・行政書士の申請代行)は提携士業との分業体制で支援します。Loomia 単独では受任しません。
+</div>
+
+<!-- 送信ボタン -->
+<div class="cta-area">
+  <button type="submit" class="cta-button" id="submitBtn">無料で診断レポートを受け取る</button>
+  <div class="cta-note">送信後、24時間以内に loomia.jp@gmail.com からレポートをお送りします</div>
+</div>
+
+</form>
+
+<!-- 送信中画面 -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <h2 style="font-family:'Fraunces','Noto Serif JP',Georgia,serif;font-size:20px;font-weight:500;margin-bottom:8px;">診断レポートを生成しています</h2>
+  <p style="font-size:13px;color:var(--text-sub);">30秒ほどかかります。このまま画面を閉じずにお待ちください。</p>
+</div>
+
+<!-- 完了画面 -->
+<div class="success-screen" id="successScreen">
+  <div class="check">✓</div>
+  <h2>送信を受け付けました</h2>
+  <p>24時間以内に診断レポートを<br><strong id="successEmail" style="color:var(--accent);"></strong> にお送りします。<br><br>もし届かない場合は迷惑メールフォルダもご確認ください。<br>ご質問は loomia.jp@gmail.com までお気軽にどうぞ。</p>
+</div>
+
+</div>
+
+<script>
+(function() {
+  const form = document.getElementById('diagnosisForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const loadingScreen = document.getElementById('loadingScreen');
+  const successScreen = document.getElementById('successScreen');
+  const progressFill = document.getElementById('progressFill');
+  const successEmail = document.getElementById('successEmail');
+
+  const questions = document.querySelectorAll('.question');
+
+  // 進捗バーの更新
+  function updateProgress() {
+    let filled = 0;
+    questions.forEach(q => {
+      const inputs = q.querySelectorAll('input, select, textarea');
+      let hasValue = false;
+      inputs.forEach(input => {
+        if (input.type === 'radio' || input.type === 'checkbox') {
+          if (input.checked) hasValue = true;
+        } else if (input.value && input.value.trim()) {
+          hasValue = true;
+        }
+      });
+      if (hasValue) {
+        q.classList.add('filled');
+        filled++;
+      } else {
+        q.classList.remove('filled');
+      }
+    });
+    const percent = (filled / questions.length) * 100;
+    progressFill.style.width = percent + '%';
+  }
+
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('change', updateProgress);
+
+  // バリデーション
+  function validate() {
+    let valid = true;
+    document.querySelectorAll('.input-error').forEach(e => e.classList.remove('visible'));
+
+    const email = document.getElementById('q1_email').value.trim();
+    if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      document.getElementById('err_q1').classList.add('visible');
+      valid = false;
+    }
+
+    const company = document.getElementById('q2_company').value.trim();
+    if (!company) {
+      document.getElementById('err_q2').classList.add('visible');
+      valid = false;
+    }
+
+    const service = form.querySelector('input[name="q4_service"]:checked');
+    if (!service) {
+      document.getElementById('err_q4').classList.add('visible');
+      valid = false;
+    }
+
+    const staff = parseInt(document.getElementById('q5_staff').value);
+    if (!staff || staff < 1 || staff > 500) {
+      document.getElementById('err_q5').classList.add('visible');
+      valid = false;
+    }
+
+    const prefecture = document.getElementById('q6_prefecture').value;
+    if (!prefecture) {
+      document.getElementById('err_q6').classList.add('visible');
+      valid = false;
+    }
+
+    const painPoints = form.querySelectorAll('input[name="q9_pain_points"]:checked');
+    if (painPoints.length === 0) {
+      document.getElementById('err_q9').classList.add('visible');
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  // フォーム送信処理
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (!validate()) {
+      const firstError = document.querySelector('.input-error.visible');
+      if (firstError) {
+        firstError.closest('.question').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    submitBtn.disabled = true;
+    form.style.display = 'none';
+    loadingScreen.classList.add('visible');
+
+    // フォームデータを構造化
+    const formData = {
+      q1_email: document.getElementById('q1_email').value.trim(),
+      q2_business_name: document.getElementById('q2_company').value.trim(),
+      q3_contact_name: document.getElementById('q3_contact').value.trim(),
+      q4_business_type: form.querySelector('input[name="q4_service"]:checked').value,
+      q5_staff_count: parseInt(document.getElementById('q5_staff').value),
+      q7_user_count: parseInt(document.getElementById('q7_users').value) || null,
+      q6_prefecture: document.getElementById('q6_prefecture').value,
+      q8_software: Array.from(form.querySelectorAll('input[name="q8_software"]:checked')).map(c => c.value),
+      q9_pain_points: Array.from(form.querySelectorAll('input[name="q9_pain_points"]:checked')).map(c => c.value),
+      q10_kasan: (form.querySelector('input[name="q10_kasan"]:checked') || {}).value || '',
+      q11_subsidy_experience: Array.from(form.querySelectorAll('input[name="q11_subsidy_exp"]:checked')).map(c => c.value),
+      q12_ai_attitude: (form.querySelector('input[name="q12_attitude"]:checked') || {}).value || '',
+      q13_issues: document.getElementById('q13_issues').value.trim(),
+      q14_free_text: document.getElementById('q14_expectations').value.trim()
+    };
+
+    // Apps Script Web App の doPost に送信
+    fetch(window.location.href, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(res => res.json())
+    .then(data => {
+      loadingScreen.classList.remove('visible');
+      successScreen.classList.add('visible');
+      successEmail.textContent = formData.q1_email;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .catch(err => {
+      loadingScreen.classList.remove('visible');
+      form.style.display = 'block';
+      submitBtn.disabled = false;
+      alert('送信エラーが発生しました。時間をおいて再度お試しください。\n\nエラー: ' + err.message);
+    });
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>
+
