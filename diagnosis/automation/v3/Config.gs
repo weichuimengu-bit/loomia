@@ -30,6 +30,11 @@ const Config = {
   },
   NOTION_API_VERSION: '2022-06-28',
 
+  // === Google Sheets ログ連携 ====================================
+  get SHEETS_LOG_ID() {
+    return PropertiesService.getScriptProperties().getProperty('SHEETS_LOG_ID');
+  },
+
   // === メール送信 ==========================================================
   SENDER_EMAIL: 'loomia.jp@gmail.com',
   SENDER_NAME: 'Loomia / 偉吹',
