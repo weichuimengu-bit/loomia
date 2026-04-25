@@ -1279,9 +1279,12 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 20px;
+      max-width: 880px;
+      margin-left: auto;
+      margin-right: auto;
     }
     @media (min-width: 768px) {
-      .coverage-grid { grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 72px; }
+      .coverage-grid { grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 72px; }
     }
 
     .coverage-block {
@@ -1354,12 +1357,35 @@
     }
     .coverage-do .coverage-block-list li::before { background: #86efac; opacity: 0.78; }
     .coverage-dont .coverage-block-list li::before { background: #f87171; opacity: 0.78; }
-    .coverage-future .coverage-block-list li::before { background: var(--accent); opacity: 0.7; }
 
     /* Optional accent bars on coverage cards for tonal cue */
     .coverage-do { box-shadow: inset 3px 0 0 0 rgba(134, 239, 172, 0.45); }
     .coverage-dont { box-shadow: inset 3px 0 0 0 rgba(248, 113, 113, 0.45); }
-    .coverage-future { box-shadow: inset 3px 0 0 0 rgba(125, 211, 252, 0.45); }
+
+    /* Status badge inside coverage list (現在主力 / 2026年Q4〜 等) */
+    .coverage-status {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 2px 10px;
+      border-radius: 100px;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .coverage-status.status-active {
+      background: rgba(125, 211, 252, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(125, 211, 252, 0.4);
+      font-weight: 600;
+    }
+    .coverage-status.status-roadmap {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
     /* ────────────────────────────────────────────────
        PROCESS (legacy — kept for cleanup; section removed in markup)
@@ -2381,11 +2407,11 @@
         </p>
 
         <p class="hero-eyebrow mt-6 md:mt-8" lang="ja">
-          訪問介護事業所のためのAI伴走パートナー
+          福祉業界のためのAI伴走パートナー
         </p>
 
         <p class="hero-desc mt-6 md:mt-8" lang="ja">
-          ヘルパーさんの訪問記録、加算管理、家族連絡。紙とExcelに散らばった現場の事務作業を、AIで「ひとつの流れ」にまとめます。補助金申請から運用までを、まるごと伴走します。
+          ヘルパーさんの訪問記録、加算管理、家族連絡。紙とExcelに散らばった現場の事務作業を、AIで「ひとつの流れ」にまとめます。訪問介護からスタートし、訪問看護・通所介護・ケアマネ・障害福祉まで、福祉業界全体のAI化を伴走します。補助金申請から運用まで、まるごと支援します。
         </p>
 
         <div class="hero-cta-row mt-12 md:mt-14">
@@ -2663,11 +2689,11 @@
         <article class="coverage-block coverage-do reveal-up" style="--reveal-delay: 0ms">
           <h3 class="coverage-block-title" lang="ja">対応する領域</h3>
           <ul class="coverage-block-list" role="list" lang="ja">
-            <li>訪問介護事業所の事務作業AI自動化</li>
-            <li>介護ICT補助金の申請代行</li>
-            <li>既存介護ソフト（カイポケ等）とのデータ連携</li>
-            <li>訪問介護向けAI業務改善コンサルティング</li>
-            <li>ケアマネ事業所向けケアプラン作成支援AI</li>
+            <li>訪問介護事業所<span class="coverage-status status-active">現在主力</span></li>
+            <li>訪問看護事業所<span class="coverage-status status-roadmap">2026年 Q4〜</span></li>
+            <li>通所介護<span class="coverage-status status-roadmap">2027年 Q1〜</span></li>
+            <li>ケアマネ事業所<span class="coverage-status status-roadmap">2027年 Q2〜</span></li>
+            <li>障害福祉サービス<span class="coverage-status status-roadmap">2027年 Q3〜</span></li>
           </ul>
         </article>
 
@@ -2676,19 +2702,7 @@
           <ul class="coverage-block-list" role="list" lang="ja">
             <li>医療行為・医療判断に関わる領域（医療法の範囲）</li>
             <li>介護報酬の不正請求に関わる領域</li>
-            <li>保険外の自費サービス全般</li>
-            <li>訪問介護以外の業態（現時点では）</li>
-          </ul>
-        </article>
-
-        <article class="coverage-block coverage-future reveal-up" style="--reveal-delay: 200ms">
-          <h3 class="coverage-block-title" lang="ja">今後拡大予定の領域</h3>
-          <p class="coverage-block-intro" lang="ja">訪問介護で実績を積んだ後、以下に順次拡大予定:</p>
-          <ul class="coverage-block-list" role="list" lang="ja">
-            <li>訪問看護事業所向け</li>
-            <li>通所介護（デイサービス）向け</li>
-            <li>グループホーム / 特養 / 老健向け</li>
-            <li>障害福祉サービス向け</li>
+            <li>福祉以外の業界（中小企業全般、士業、EC等）</li>
           </ul>
         </article>
 
