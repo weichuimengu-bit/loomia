@@ -10,7 +10,8 @@ const Config = {
 
   // === Claude API ===========================================================
   get CLAUDE_API_KEY() {
-    return PropertiesService.getScriptProperties().getProperty('CLAUDE_API_KEY');
+    const props = PropertiesService.getScriptProperties();
+    return props.getProperty('CLAUDE_API_KEY') || props.getProperty('ANTHROPIC_API_KEY');
   },
   CLAUDE_MODEL: 'claude-opus-4-7',
   CLAUDE_API_URL: 'https://api.anthropic.com/v1/messages',
@@ -148,7 +149,7 @@ const Config = {
       rate_standard: 0.5,
       rate_premium: 0.75,
       eligible_types: ['visiting_care', 'visiting_nursing', 'day_service'],
-      eligible_prefectures: ['osaka'],
+      eligible_prefectures: ['大阪府'],
       year: 2026
     }
   ],

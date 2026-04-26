@@ -158,13 +158,18 @@ function buildProductSection_(data) {
   const products = data.recommendedProducts || [];
   if (products.length === 0) return '';
 
-  const cards = products.map((p, i) => `          <tr><td style="padding:0 0 12px 0;">
+  const cards = products.map((p, i) => {
+    const reasonText = (p.reasons && p.reasons.length > 0)
+      ? p.reasons.join('、')
+      : (p.reason || '');
+    return `          <tr><td style="padding:0 0 12px 0;">
             <div style="background:${RF_COLORS.BG_CARD};padding:20px;border:1px solid ${RF_COLORS.BORDER};">
               <div style="display:inline-block;font-size:11px;color:${RF_COLORS.ACCENT};border:1px solid ${RF_COLORS.ACCENT};padding:2px 10px;letter-spacing:0.1em;margin-bottom:10px;">優先度 ${i + 1}</div>
               <div style="font-family:${RF_FONT.HEADING};font-size:17px;font-weight:500;color:${RF_COLORS.TEXT_PRIMARY};margin-bottom:6px;">${escapeHtml_(p.name || '')}</div>
-              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.75;">${escapeHtml_(p.reason || '')}</div>
+              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.75;">${escapeHtml_(reasonText)}</div>
             </div>
-          </td></tr>`).join('\n');
+          </td></tr>`;
+  }).join('\n');
 
   return `      <tr><td style="padding:32px 0 16px 0;">
         <div style="font-family:${RF_FONT.HEADING};font-size:20px;font-weight:500;color:${RF_COLORS.TEXT_PRIMARY};margin-bottom:16px;">推奨プロダクト</div>
@@ -180,13 +185,19 @@ function buildSubsidySection_(data) {
   if (subsidies.length === 0) return '';
 
   const items = subsidies.map((s) => {
-    const rate = s.coverageRate ? `${Math.round(s.coverageRate * 100)}%` : '-';
-    const max = s.maxAmount ? `${formatNumber_(s.maxAmount)}円` : '-';
+    const rateValue = (typeof s.coverageRate === 'number') ? s.coverageRate : s.applicable_rate;
+    const rate = (typeof rateValue === 'number') ? `${Math.round(rateValue * 100)}%` : '-';
+    const maxValue = s.maxAmount || s.max_amount;
+    const max = maxValue ? `${formatNumber_(maxValue)}円` : '-';
+    const description = s.description
+      || s.external_partner_note
+      || s.rate_reason
+      || (s.note || '');
     return `          <tr><td style="padding:0 0 12px 0;">
             <div style="background:${RF_COLORS.BG_CARD};padding:18px 20px;border-left:2px solid ${RF_COLORS.ACCENT_DIM};">
               <div style="font-size:15px;color:${RF_COLORS.TEXT_PRIMARY};font-weight:500;margin-bottom:4px;">${escapeHtml_(s.name || '')}</div>
               <div style="font-size:12px;color:${RF_COLORS.TEXT_SECONDARY};margin-bottom:8px;">補助率 <span style="color:${RF_COLORS.ACCENT};">${rate}</span> / 上限 <span style="color:${RF_COLORS.ACCENT};">${max}</span></div>
-              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.65;">${escapeHtml_(s.description || '')}</div>
+              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.65;">${escapeHtml_(description)}</div>
             </div>
           </td></tr>`;
   }).join('\n');

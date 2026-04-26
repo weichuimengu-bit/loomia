@@ -6,11 +6,13 @@
  *       ルート最適化AI、家族連絡AI、ケアプラン作成支援AI)それぞれの
  *       適合度をスコアリングし、Top3を抽出する。
  *
- * スコアリング(100点満点):
+ * V3.0 注記: HTML フォームは q4_service(業態英語キー)、q9_pain_points
+ *           (日本語ラベル配列)、q12_attitude(日本語ラベル)を送信する。
+ *
+ * スコアリング(80点満点):
  *   - 業態適合性: 40点
- *   - 痛み点(Q7)の一致: 30点
- *   - 取り組みテーマ(Q11)の一致: 20点
- *   - ICT姿勢(Q9)のボーナス: 10点
+ *   - 痛み点(Q9)の一致: 30点
+ *   - AI姿勢(Q12)のボーナス: 10点
  *
  * 適合度ランク:
  *   70点以上 → 高
@@ -19,6 +21,23 @@
  */
 
 const ProductMatcher = {
+
+  /**
+   * 痛み点ラベル(日本語) → 内部キー(英語)変換マップ
+   * Config.PRODUCTS.target_pain_points は内部英語キーで定義されている。
+   */
+  PAIN_POINT_JP_TO_EN: {
+    '訪問記録の入力': 'visit_records',
+    'ケアプラン作成': 'care_plan',
+    '申し送り・議事録': 'other',
+    '加算の届出・管理': 'addition_management',
+    '家族からの問い合わせ対応': 'family_communication',
+    'シフト作成': 'shift_creation',
+    '訪問ルート調整': 'route_optimization',
+    'ヒヤリハット・事故報告': 'other',
+    '国保連請求': 'billing',
+    '採用・教育': 'recruitment'
+  },
 
   /**
    * メイン関数: 全プロダクトの適合度を計算してソート済みで返す
@@ -42,35 +61,44 @@ const ProductMatcher = {
   },
 
   /**
-   * 個別プロダクトのスコアリング (V3 14問フォーム対応)
+   * 個別プロダクトのスコアリング
    */
   _scoreProduct(product, formData) {
     let score = 0;
     const reasons = [];
-    const businessType = formData.q4_business_type;
-    const painPointsRaw = formData.q9_pain_points || [];
-    const painPoints = painPointsRaw.map(this._normalizePainPoint, this);
-    const aiAttitude = formData.q12_ai_attitude;
+    const businessType = formData.q4_service;
+    const painPointLabels = formData.q9_pain_points || [];
+    const aiAttitude = formData.q12_attitude || '';
+
+    const self = this;
+    const painPointKeys = painPointLabels.map(function(label) {
+      return self.PAIN_POINT_JP_TO_EN[label] || 'other';
+    });
 
     // 業態適合性(40点満点)
-    const businessTypeMatch = (product.best_for_business_types || []).includes(businessType);
+    const businessTypeMatch = (product.best_for_business_types || []).indexOf(businessType) >= 0;
     if (businessTypeMatch) {
       score += 40;
       reasons.push('業態「' + this._getBusinessTypeLabel(businessType) + '」に高適合');
     }
 
     // 痛み点の一致(30点満点)
-    const painMatchList = painPoints.filter(function(p) {
+    const painMatchList = painPointKeys.filter(function(p) {
       return (product.target_pain_points || []).indexOf(p) >= 0;
     });
     if (painMatchList.length > 0) {
       const painPointBonus = Math.min(30, painMatchList.length * 15);
       score += painPointBonus;
-      reasons.push('お困りごと「' + painMatchList.map(this._getPainPointLabel, this).join('、') + '」に対応');
+      // 表示は元の日本語ラベルのまま
+      const matchedLabels = painPointLabels.filter(function(label) {
+        const key = self.PAIN_POINT_JP_TO_EN[label] || 'other';
+        return (product.target_pain_points || []).indexOf(key) >= 0;
+      });
+      reasons.push('お困りごと「' + matchedLabels.join('、') + '」に対応');
     }
 
-    // ICT姿勢ボーナス(10点)
-    if (aiAttitude === '積極的に導入したい' || aiAttitude === '効果があれば導入したい') {
+    // AI姿勢ボーナス(10点)
+    if (aiAttitude.indexOf('積極的') >= 0 || aiAttitude.indexOf('効果があれば') >= 0) {
       score += 10;
       reasons.push('AI/ICT活用への前向きな姿勢');
     }
@@ -100,72 +128,18 @@ const ProductMatcher = {
   },
 
   /**
-   * V3 フォームの日本語ラベルを内部キーに正規化
-   */
-  _normalizePainPoint: function(label) {
-    const map = {
-      '訪問記録の入力': 'visit_records',
-      'ケアプラン作成': 'care_plan',
-      '申し送り・議事録': 'other',
-      '加算の届出・管理': 'addition_management',
-      '家族からの問い合わせ対応': 'family_communication',
-      'シフト作成': 'shift_creation',
-      '訪問ルート調整': 'route_optimization',
-      'ヒヤリハット・事故報告': 'other',
-      '国保連請求': 'billing',
-      '採用・教育': 'recruitment'
-    };
-    return map[label] || 'other';
-  },
-
-  /**
    * 業態コードを日本語ラベルに変換
    */
   _getBusinessTypeLabel(code) {
     const labels = {
       'visiting_care': '訪問介護',
       'visiting_nursing': '訪問看護',
-      'day_care': '通所介護(デイサービス)',
+      'day_service': '通所介護(デイサービス)',
       'care_manager': '居宅介護支援(ケアマネ事業所)',
       'group_home': 'グループホーム/特養/老健',
       'disability_welfare': '障害福祉サービス',
       'child_development': '児童発達支援/放デイ',
       'other': 'その他'
-    };
-    return labels[code] || code;
-  },
-
-  /**
-   * 痛み点コードを日本語ラベルに変換
-   */
-  _getPainPointLabel(code) {
-    const labels = {
-      'visit_records': '訪問記録の手書き・再入力',
-      'addition_management': 'LIFE加算など加算管理',
-      'shift_creation': 'シフト作成',
-      'route_optimization': '訪問ルートの調整',
-      'family_communication': '家族・利用者への連絡',
-      'billing': 'レセプト・国保連請求',
-      'care_plan': 'ケアプラン作成',
-      'assessment': 'アセスメント',
-      'recruitment': '採用・教育',
-      'other': 'その他'
-    };
-    return labels[code] || code;
-  },
-
-  /**
-   * テーマコードを日本語ラベルに変換
-   */
-  _getThemeLabel(code) {
-    const labels = {
-      'admin_reduction': 'ヘルパー事務作業の削減',
-      'addition_max': '加算取得の正確化・最大化',
-      'user_satisfaction': '利用者・家族満足度の向上',
-      'retention': '採用・離職対策',
-      'revision_response': '介護報酬改定への対応',
-      'subsidy_application': '補助金活用',
-      'other_theme': 'その他'
     };
     return labels[code] || code;
   },

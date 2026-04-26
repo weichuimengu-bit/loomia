@@ -3,12 +3,12 @@
  * Code.gs — メインエントリポイント
  *
  * @author Loomia (偉吹)
- * @lastModified 2026-04-25
- * @version 3.0.0
+ * @lastModified 2026-04-26
+ * @version 3.0.1
  *
  * 役割:
  *   doGet  — 14問フォーム (index.html) のサーブ
- *   doPost — 診断フォーム送信を受け、業態判定→計算→Claude→メール→Notion→ログ
+ *   doPost — 診断フォーム送信を受け、業態判定→計算→Sheets→Claude→メール→ログ
  *
  * 倫理 5 制約 (絶対遵守):
  *   1. 介護報酬不正請求への加担を促す表現を含めない
@@ -31,19 +31,16 @@ function doGet(e) {
 
 
 // =============================================================
-// processSubmission: フォーム送信処理の本体(google.script.run と doPost の両方から呼ばれる)
+// processSubmission: フォーム送信処理の本体
 // =============================================================
 
 function processSubmission(formData) {
   console.log('=== processSubmission CALLED ===');
-  console.log('formData type:', typeof formData);
-  console.log('arguments length:', arguments.length);
 
-  // 文字列で渡された場合は JSON.parse する(google.script.run の配列シリアライザ問題回避)
+  // 文字列で渡された場合は JSON.parse する
   if (typeof formData === 'string') {
     try {
       formData = JSON.parse(formData);
-      console.log('formData parsed from string successfully');
     } catch (parseErr) {
       console.error('Failed to parse formData string:', parseErr);
       return {
@@ -53,7 +50,6 @@ function processSubmission(formData) {
     }
   }
 
-  // formData の存在を再確認
   if (!formData || typeof formData !== 'object') {
     console.error('formData is invalid after parsing');
     return {
@@ -62,12 +58,17 @@ function processSubmission(formData) {
     };
   }
 
-  console.log('formData keys:', Object.keys(formData).join(', '));
+  // V3_TEST: 受信フォームのキー整合確認用デバッグログ
+  console.log('V3_TEST: q5_staff=' + formData.q5_staff +
+              ', q9_pain_points=' + JSON.stringify(formData.q9_pain_points) +
+              ', q4_service=' + formData.q4_service +
+              ', q6_prefecture=' + formData.q6_prefecture +
+              ', q12_attitude=' + formData.q12_attitude);
 
   const startTime = new Date();
 
   try {
-    // 1. 入力バリデーション + PII / 医療要求ガード(Validator.gs)
+    // 1. 入力バリデーション(Validator が定義されていれば)
     if (typeof Validator !== 'undefined' && Validator.validate) {
       const validation = Validator.validate(formData);
       if (!validation.valid) {
@@ -82,7 +83,7 @@ function processSubmission(formData) {
       }
     }
 
-    // 2. hCaptcha 検証(formData.captchaToken が存在する場合)
+    // 2. hCaptcha 検証
     if (formData.captchaToken && typeof Validator !== 'undefined' && Validator.verifyCaptcha) {
       const captchaOk = Validator.verifyCaptcha(formData.captchaToken);
       if (!captchaOk) {
@@ -94,7 +95,7 @@ function processSubmission(formData) {
     }
 
     // 3. 業態フィルタ: 訪問介護 = フル診断、それ以外 = 段階対応メール
-    const businessType = formData.q4_business_type;
+    const businessType = formData.q4_service;
     if (!isCurrentlySupported(businessType)) {
       if (typeof EmailSender !== 'undefined' && EmailSender.sendDeferredResponseEmail) {
         EmailSender.sendDeferredResponseEmail(formData);
@@ -105,45 +106,62 @@ function processSubmission(formData) {
       };
     }
 
-    // 4. フル診断処理(訪問介護のみ)
+    // 4. 計算層(訪問介護のみ)
     const reduction = ReductionCalculator.calculate(formData);
     const productMatch = ProductMatcher.match(formData);
     const subsidies = SubsidyMatcher.match(formData);
 
-    // 5. Claude API で診断アセスメント生成
-    const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
-    const aiAssessment = ClaudeAPI.generateReport(claudeInput);
-
-    // 6. 診断データを統合
+    // 5. 診断データ統合(Claude 結果は後で差し込む)
     const diagnosisData = {
-      companyName: formData.q2_business_name,
-      contactName: formData.q3_contact_name,
+      companyName: formData.q2_company,
+      contactName: formData.q3_contact,
       contactEmail: formData.q1_email,
       prefecture: formData.q6_prefecture,
-      serviceType: (Config.BUSINESS_TYPES[formData.q4_business_type] || {}).label || formData.q4_business_type,
-      staffCount: formData.q5_staff_count,
+      serviceType: (Config.BUSINESS_TYPES[businessType] || {}).label || businessType,
+      staffCount: formData.q5_staff,
       reduction: reduction,
       recommendedProducts: productMatch,
       recommendedSubsidies: subsidies,
-      aiAssessment: aiAssessment,
-      notes: (formData.q13_issues || '') + ' / ' + (formData.q14_free_text || '')
+      aiAssessment: null,
+      notes: (formData.q13_issues || '') + ' / ' + (formData.q14_expectations || '')
     };
 
-    // 7. Sheets に書き込み
-    sendToSheets(diagnosisData);
+    // 6. Sheets に書き込み(Claude 失敗時もログを残すため先に実行)
+    try {
+      if (typeof sendToSheets === 'function') {
+        sendToSheets(diagnosisData);
+      } else if (typeof SheetsConnector !== 'undefined' && SheetsConnector.write) {
+        SheetsConnector.write(diagnosisData);
+      }
+    } catch (sheetsErr) {
+      console.error('sendToSheets failed (non-fatal): ' + sheetsErr.message);
+    }
+
+    // 7. Claude API で診断アセスメント生成(失敗してもメールは送る)
+    try {
+      const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
+      diagnosisData.aiAssessment = ClaudeAPI.generateReport(claudeInput);
+    } catch (claudeErr) {
+      console.error('Claude API failed: ' + claudeErr.message);
+      diagnosisData.aiAssessment = '※AIアセスメントの生成に失敗しました。担当者(loomia.jp@gmail.com)より個別にご連絡いたします。';
+    }
 
     // 8. メール送信
-    const htmlBody = formatReportToHtml(diagnosisData);
-    GmailApp.sendEmail(
-      formData.q1_email,
-      diagnosisData.companyName + ' 様 AI活用度診断レポート',
-      'HTMLメール対応のメーラーでご覧ください',
-      {
-        htmlBody: htmlBody,
-        name: 'Loomia',
-        from: Session.getActiveUser().getEmail()
-      }
-    );
+    try {
+      const htmlBody = formatReportToHtml(diagnosisData);
+      GmailApp.sendEmail(
+        formData.q1_email,
+        diagnosisData.companyName + ' 様 AI活用度診断レポート',
+        'HTMLメール対応のメーラーでご覧ください',
+        {
+          htmlBody: htmlBody,
+          name: 'Loomia',
+          from: Session.getActiveUser().getEmail()
+        }
+      );
+    } catch (mailErr) {
+      console.error('GmailApp.sendEmail failed: ' + mailErr.message);
+    }
 
     // 9. ログ記録
     if (typeof Logger !== 'undefined' && Logger.logSubmission) {
@@ -220,7 +238,6 @@ function doPost(e) {
 
 // ─────────────────────────────────────────
 // 業態フィルタ: V3.0 では訪問介護のみフル対応
-// 他業態は2026年Q4以降に段階展開予定
 // ─────────────────────────────────────────
 function isCurrentlySupported(businessType) {
   return businessType === 'visiting_care';
@@ -228,23 +245,23 @@ function isCurrentlySupported(businessType) {
 
 // ─────────────────────────────────────────
 // Claude に渡す統合入力を構築
-// (PII を含まないことを再確認した上で)
+// PII を含まないことを再確認した上で、HTML フォームの全 14 キーを反映
 // ─────────────────────────────────────────
 function buildClaudeInput(formData, reduction, productMatch, subsidies) {
   return {
-    business_name: formData.q2_business_name || '',
-    contact_name: formData.q3_contact_name || '',
-    business_type: formData.q4_business_type,
-    staff_count: formData.q5_staff_count,
+    business_name: formData.q2_company || '',
+    contact_name: formData.q3_contact || '',
+    business_type: formData.q4_service,
+    staff_count: formData.q5_staff,
     prefecture: formData.q6_prefecture,
-    user_count: formData.q7_user_count,
+    user_count: formData.q7_users,
     software: formData.q8_software || [],
     pain_points: formData.q9_pain_points || [],
     kasan_status: formData.q10_kasan || '',
-    subsidy_experience: formData.q11_subsidy_experience || [],
-    ai_attitude: formData.q12_ai_attitude,
+    subsidy_experience: formData.q11_subsidy_exp || [],
+    ai_attitude: formData.q12_attitude,
     issues: (formData.q13_issues || '').slice(0, 2000),
-    free_text: (formData.q14_free_text || '').slice(0, 2000),
+    free_text: (formData.q14_expectations || '').slice(0, 2000),
 
     calculated_reduction: reduction,
     matched_products: productMatch,
@@ -262,7 +279,6 @@ function jsonResponse(obj, statusCode) {
 
 // ─────────────────────────────────────────
 // HTML テンプレートのインクルード (Apps Script 慣例)
-// index.html から <?!= include('partial') ?> で参照可能
 // ─────────────────────────────────────────
 function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();

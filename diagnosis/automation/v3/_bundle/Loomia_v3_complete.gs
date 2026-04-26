@@ -1,12 +1,19 @@
 /**
- * Loomia AI診断システム V3.0 福祉業界特化版
- * 統合バンドル(9ファイルを連結した単一スクリプト)
+ * Loomia AI診断システム V3.0 — 統合バンドル
+ * Loomia_v3_complete.gs
+ *
+ * このファイルは Config.gs / ReductionCalculator.gs / ProductMatcher.gs /
+ * SubsidyMatcher.gs / ReportFormatter.gs / ClaudeAPI.gs /
+ * SheetsConnector.gs / NotionConnector.gs / Code.gs を連結したものです。
+ *
+ * Apps Script に直接貼り付ける場合に使用してください。
+ * 個別ファイルとして管理する場合は v3/ ディレクトリ配下の各 .gs を利用してください。
+ *
+ * 生成日時: 2026-04-26 01:34:39
  */
 
 
-// ============================================================================
 // ===== Config.gs =====
-// ============================================================================
 
 /**
  * Loomia AI診断システム V3.0 福祉業界特化版
@@ -20,7 +27,8 @@ const Config = {
 
   // === Claude API ===========================================================
   get CLAUDE_API_KEY() {
-    return PropertiesService.getScriptProperties().getProperty('CLAUDE_API_KEY');
+    const props = PropertiesService.getScriptProperties();
+    return props.getProperty('CLAUDE_API_KEY') || props.getProperty('ANTHROPIC_API_KEY');
   },
   CLAUDE_MODEL: 'claude-opus-4-7',
   CLAUDE_API_URL: 'https://api.anthropic.com/v1/messages',
@@ -158,7 +166,7 @@ const Config = {
       rate_standard: 0.5,
       rate_premium: 0.75,
       eligible_types: ['visiting_care', 'visiting_nursing', 'day_service'],
-      eligible_prefectures: ['osaka'],
+      eligible_prefectures: ['大阪府'],
       year: 2026
     }
   ],
@@ -274,9 +282,7 @@ const Config = {
   HOURLY_WAGE_YEN: 1500
 };
 
-// ============================================================================
 // ===== ReductionCalculator.gs =====
-// ============================================================================
 
 /**
  * Loomia AI診断システム V3.0 福祉業界特化版
@@ -284,6 +290,9 @@ const Config = {
  *
  * 役割: フォーム入力から「削減見込み時間」「年間人件費換算」を事前計算し、
  *       Claude APIに渡す確定値として提供することで、ハルシネーションを防ぐ。
+ *
+ * V3.0 注記: HTML フォーム (index.html) は q9_pain_points を日本語ラベル配列で、
+ *           q5_staff を整数で送信する。本モジュールはそれを直接扱う。
  *
  * 出典:
  *   - 福祉_AI自動化(訪問記録時間削減効果 月15〜30時間/人)
@@ -296,26 +305,26 @@ const ReductionCalculator = {
 
   /**
    * 各業務領域の削減ポテンシャル(時間/月/人)
-   * これは業界平均の参考値であり、最終的な数値は事業所ごとに変動する
+   * キーは HTML フォームの q9_pain_points が送る日本語ラベルそのもの
    */
   REDUCTION_RATES: {
-    'visit_records': 12,        // 訪問記録AI: 月12時間/人(Nuance DAX 60%削減ベース)
-    'addition_management': 6,   // 加算管理AI: 月6時間/人(管理者・サ責)
-    'shift_creation': 4,        // シフト作成: 月4時間/人(管理者)
-    'route_optimization': 3,    // ルート最適化: 月3時間/人(ヘルパー1人あたり)
-    'family_communication': 5,  // 家族連絡: 月5時間/人(ヘルパー)
-    'billing': 8,               // レセプト・国保連請求: 月8時間/人(管理者)
-    'care_plan': 15,            // ケアプラン: 月15時間/人(ケアマネ、CDI MAIA参考値)
-    'assessment': 6,            // アセスメント: 月6時間/人(ケアマネ)
-    'recruitment': 3,           // 採用・教育: 月3時間/人(管理者)
-    'other': 2                  // その他: 月2時間/人(保守的見積)
+    '訪問記録の入力': 12,
+    'ケアプラン作成': 15,
+    '申し送り・議事録': 4,
+    '加算の届出・管理': 6,
+    '家族からの問い合わせ対応': 5,
+    'シフト作成': 4,
+    '訪問ルート調整': 3,
+    'ヒヤリハット・事故報告': 3,
+    '国保連請求': 8,
+    '採用・教育': 3
   },
 
   /**
    * 時給換算用の係数(全国平均ベース、保守的)
    * 出典: 介護労働安定センター調査 + 福祉_AI自動化記載値
    */
-  HOURLY_WAGE_AVERAGE: 1500,  // 円/時(ヘルパー・管理者の平均的な時給換算)
+  HOURLY_WAGE_AVERAGE: 1500,
 
   /**
    * メイン関数: 削減効果を計算
@@ -323,21 +332,22 @@ const ReductionCalculator = {
    * @return {Object} 削減効果計算結果
    */
   calculate(formData) {
-    const staffCount = this._parseStaffCount(formData.q5_staff_count);
-    const painPoints = (formData.q9_pain_points || []).map(this._normalizePainPoint, this);
+    const staffCount = this._parseStaffCount(formData.q5_staff);
+    const painPoints = formData.q9_pain_points || [];
+    const userCount = Number(formData.q7_users) || 0;
+    const kasanStatus = formData.q10_kasan || '';
 
-    const adminHours = staffCount * 25;
-
-    const areaReductions = painPoints.map(function(pp) {
-      const hoursPerPerson = this.REDUCTION_RATES[pp] || 0;
+    const self = this;
+    const areaReductions = painPoints.map(function(label) {
+      const hoursPerPerson = self.REDUCTION_RATES[label] || 2;
       return {
-        area: pp,
-        area_label: this._getAreaLabel(pp),
+        area: label,
+        area_label: label,
         hours_per_person: hoursPerPerson,
         total_hours_per_month: hoursPerPerson * staffCount,
-        annual_yen: hoursPerPerson * staffCount * 12 * this.HOURLY_WAGE_AVERAGE
+        annual_yen: hoursPerPerson * staffCount * 12 * self.HOURLY_WAGE_AVERAGE
       };
-    }, this).sort(function(a, b) {
+    }).sort(function(a, b) {
       return b.total_hours_per_month - a.total_hours_per_month;
     });
 
@@ -347,10 +357,22 @@ const ReductionCalculator = {
     }, 0);
 
     const annualYenSaved = monthlyTotalHours * 12 * this.HOURLY_WAGE_AVERAGE;
-    const recordingReductionRate = painPoints.indexOf('visit_records') >= 0 ? 85 : 0;
-    const additionalRevenuePerMonth = (formData.q7_user_count || 0) * 10 * 10;
+
+    // 訪問記録AI が対象に入っていれば 60〜85% 削減を想定値として返す
+    const recordingReductionRate = painPoints.indexOf('訪問記録の入力') >= 0 ? 85 : 0;
+
+    // 加算取得状況に基づく追加収益見込み(月額)
+    // 「未取得」「これから取りたい」と答えた事業所には加算管理AIによる新規取得効果を加算
+    let additionalRevenuePerMonth = 0;
+    if (kasanStatus.indexOf('未取得') >= 0 || kasanStatus.indexOf('これから') >= 0 || kasanStatus.indexOf('検討') >= 0) {
+      // 利用者1人あたり月10単位 × 10円 = 100円/月/人 を保守的に見積もり
+      additionalRevenuePerMonth = userCount * 100;
+    } else if (kasanStatus.indexOf('一部') >= 0) {
+      additionalRevenuePerMonth = userCount * 50;
+    }
 
     return {
+      // 新キー(V3 命名)
       timeReductionPerMonth: monthlyTotalHours,
       costReductionPerYear: annualYenSaved,
       recordingReductionRate: recordingReductionRate,
@@ -359,61 +381,25 @@ const ReductionCalculator = {
       all_areas: areaReductions,
       staff_count: staffCount,
       hourly_wage_assumed: this.HOURLY_WAGE_AVERAGE,
-      assumption_note: '※削減見込みは業界平均からの参考値です。事業所ごとに変動します。'
+      assumption_note: '※削減見込みは業界平均からの参考値です。事業所ごとに変動します。',
+
+      // 旧キー(後方互換: ReportFormatter / Claude プロンプト用)
+      monthly_total_hours: monthlyTotalHours,
+      annual_yen_saved: annualYenSaved
     };
   },
 
   /**
-   * 職員数: V3 では数値直接入力
+   * 職員数: V3 では数値直接入力(整数文字列または整数)
    */
   _parseStaffCount: function(value) {
     const n = parseInt(value, 10);
     if (isNaN(n) || n < 1) return 8;
     return Math.min(n, 500);
-  },
-
-  /**
-   * V3 フォームの日本語ラベルを内部キーに正規化
-   */
-  _normalizePainPoint: function(label) {
-    const map = {
-      '訪問記録の入力': 'visit_records',
-      'ケアプラン作成': 'care_plan',
-      '申し送り・議事録': 'other',
-      '加算の届出・管理': 'addition_management',
-      '家族からの問い合わせ対応': 'family_communication',
-      'シフト作成': 'shift_creation',
-      '訪問ルート調整': 'route_optimization',
-      'ヒヤリハット・事故報告': 'other',
-      '国保連請求': 'billing',
-      '採用・教育': 'recruitment'
-    };
-    return map[label] || 'other';
-  },
-
-  /**
-   * 業務領域コードを日本語ラベルに変換
-   */
-  _getAreaLabel: function(code) {
-    const labels = {
-      'visit_records': '訪問記録の手書き・再入力',
-      'addition_management': 'LIFE加算など加算管理',
-      'shift_creation': 'シフト作成',
-      'route_optimization': '訪問ルートの調整',
-      'family_communication': '家族・利用者への連絡',
-      'billing': 'レセプト・国保連請求',
-      'care_plan': 'ケアプラン作成(ケアマネ向け)',
-      'assessment': 'アセスメント',
-      'recruitment': '採用・教育',
-      'other': 'その他'
-    };
-    return labels[code] || code;
   }
 };
 
-// ============================================================================
 // ===== ProductMatcher.gs =====
-// ============================================================================
 
 /**
  * Loomia AI診断システム V3.0 福祉業界特化版
@@ -423,11 +409,13 @@ const ReductionCalculator = {
  *       ルート最適化AI、家族連絡AI、ケアプラン作成支援AI)それぞれの
  *       適合度をスコアリングし、Top3を抽出する。
  *
- * スコアリング(100点満点):
+ * V3.0 注記: HTML フォームは q4_service(業態英語キー)、q9_pain_points
+ *           (日本語ラベル配列)、q12_attitude(日本語ラベル)を送信する。
+ *
+ * スコアリング(80点満点):
  *   - 業態適合性: 40点
- *   - 痛み点(Q7)の一致: 30点
- *   - 取り組みテーマ(Q11)の一致: 20点
- *   - ICT姿勢(Q9)のボーナス: 10点
+ *   - 痛み点(Q9)の一致: 30点
+ *   - AI姿勢(Q12)のボーナス: 10点
  *
  * 適合度ランク:
  *   70点以上 → 高
@@ -436,6 +424,23 @@ const ReductionCalculator = {
  */
 
 const ProductMatcher = {
+
+  /**
+   * 痛み点ラベル(日本語) → 内部キー(英語)変換マップ
+   * Config.PRODUCTS.target_pain_points は内部英語キーで定義されている。
+   */
+  PAIN_POINT_JP_TO_EN: {
+    '訪問記録の入力': 'visit_records',
+    'ケアプラン作成': 'care_plan',
+    '申し送り・議事録': 'other',
+    '加算の届出・管理': 'addition_management',
+    '家族からの問い合わせ対応': 'family_communication',
+    'シフト作成': 'shift_creation',
+    '訪問ルート調整': 'route_optimization',
+    'ヒヤリハット・事故報告': 'other',
+    '国保連請求': 'billing',
+    '採用・教育': 'recruitment'
+  },
 
   /**
    * メイン関数: 全プロダクトの適合度を計算してソート済みで返す
@@ -459,35 +464,44 @@ const ProductMatcher = {
   },
 
   /**
-   * 個別プロダクトのスコアリング (V3 14問フォーム対応)
+   * 個別プロダクトのスコアリング
    */
   _scoreProduct(product, formData) {
     let score = 0;
     const reasons = [];
-    const businessType = formData.q4_business_type;
-    const painPointsRaw = formData.q9_pain_points || [];
-    const painPoints = painPointsRaw.map(this._normalizePainPoint, this);
-    const aiAttitude = formData.q12_ai_attitude;
+    const businessType = formData.q4_service;
+    const painPointLabels = formData.q9_pain_points || [];
+    const aiAttitude = formData.q12_attitude || '';
+
+    const self = this;
+    const painPointKeys = painPointLabels.map(function(label) {
+      return self.PAIN_POINT_JP_TO_EN[label] || 'other';
+    });
 
     // 業態適合性(40点満点)
-    const businessTypeMatch = (product.best_for_business_types || []).includes(businessType);
+    const businessTypeMatch = (product.best_for_business_types || []).indexOf(businessType) >= 0;
     if (businessTypeMatch) {
       score += 40;
       reasons.push('業態「' + this._getBusinessTypeLabel(businessType) + '」に高適合');
     }
 
     // 痛み点の一致(30点満点)
-    const painMatchList = painPoints.filter(function(p) {
+    const painMatchList = painPointKeys.filter(function(p) {
       return (product.target_pain_points || []).indexOf(p) >= 0;
     });
     if (painMatchList.length > 0) {
       const painPointBonus = Math.min(30, painMatchList.length * 15);
       score += painPointBonus;
-      reasons.push('お困りごと「' + painMatchList.map(this._getPainPointLabel, this).join('、') + '」に対応');
+      // 表示は元の日本語ラベルのまま
+      const matchedLabels = painPointLabels.filter(function(label) {
+        const key = self.PAIN_POINT_JP_TO_EN[label] || 'other';
+        return (product.target_pain_points || []).indexOf(key) >= 0;
+      });
+      reasons.push('お困りごと「' + matchedLabels.join('、') + '」に対応');
     }
 
-    // ICT姿勢ボーナス(10点)
-    if (aiAttitude === '積極的に導入したい' || aiAttitude === '効果があれば導入したい') {
+    // AI姿勢ボーナス(10点)
+    if (aiAttitude.indexOf('積極的') >= 0 || aiAttitude.indexOf('効果があれば') >= 0) {
       score += 10;
       reasons.push('AI/ICT活用への前向きな姿勢');
     }
@@ -517,72 +531,18 @@ const ProductMatcher = {
   },
 
   /**
-   * V3 フォームの日本語ラベルを内部キーに正規化
-   */
-  _normalizePainPoint: function(label) {
-    const map = {
-      '訪問記録の入力': 'visit_records',
-      'ケアプラン作成': 'care_plan',
-      '申し送り・議事録': 'other',
-      '加算の届出・管理': 'addition_management',
-      '家族からの問い合わせ対応': 'family_communication',
-      'シフト作成': 'shift_creation',
-      '訪問ルート調整': 'route_optimization',
-      'ヒヤリハット・事故報告': 'other',
-      '国保連請求': 'billing',
-      '採用・教育': 'recruitment'
-    };
-    return map[label] || 'other';
-  },
-
-  /**
    * 業態コードを日本語ラベルに変換
    */
   _getBusinessTypeLabel(code) {
     const labels = {
       'visiting_care': '訪問介護',
       'visiting_nursing': '訪問看護',
-      'day_care': '通所介護(デイサービス)',
+      'day_service': '通所介護(デイサービス)',
       'care_manager': '居宅介護支援(ケアマネ事業所)',
       'group_home': 'グループホーム/特養/老健',
       'disability_welfare': '障害福祉サービス',
       'child_development': '児童発達支援/放デイ',
       'other': 'その他'
-    };
-    return labels[code] || code;
-  },
-
-  /**
-   * 痛み点コードを日本語ラベルに変換
-   */
-  _getPainPointLabel(code) {
-    const labels = {
-      'visit_records': '訪問記録の手書き・再入力',
-      'addition_management': 'LIFE加算など加算管理',
-      'shift_creation': 'シフト作成',
-      'route_optimization': '訪問ルートの調整',
-      'family_communication': '家族・利用者への連絡',
-      'billing': 'レセプト・国保連請求',
-      'care_plan': 'ケアプラン作成',
-      'assessment': 'アセスメント',
-      'recruitment': '採用・教育',
-      'other': 'その他'
-    };
-    return labels[code] || code;
-  },
-
-  /**
-   * テーマコードを日本語ラベルに変換
-   */
-  _getThemeLabel(code) {
-    const labels = {
-      'admin_reduction': 'ヘルパー事務作業の削減',
-      'addition_max': '加算取得の正確化・最大化',
-      'user_satisfaction': '利用者・家族満足度の向上',
-      'retention': '採用・離職対策',
-      'revision_response': '介護報酬改定への対応',
-      'subsidy_application': '補助金活用',
-      'other_theme': 'その他'
     };
     return labels[code] || code;
   },
@@ -601,17 +561,20 @@ const ProductMatcher = {
   }
 };
 
-// ============================================================================
 // ===== SubsidyMatcher.gs =====
-// ============================================================================
 
 /**
  * Loomia AI診断システム V3.0 福祉業界特化版
  * SubsidyMatcher.gs - 補助金マッチングロジック
  *
- * 役割: フォーム入力(業態・都道府県・補助金経験等)から、
- *       Config.SUBSIDIESに登録された補助金マスター7種に対して
- *       適用可否・補助率・実質負担額をマッチングする。
+ * 役割: フォーム入力(業態・都道府県・補助金経験等)から、Config.SUBSIDIES に
+ *       登録された補助金マスター7種に対して適用可否・補助率・実質負担額を
+ *       マッチングする。
+ *
+ * V3.0 注記: HTML フォームは q4_service(業態英語キー)、q6_prefecture
+ *           (都道府県の日本語ラベル「大阪府」等)、q11_subsidy_exp
+ *           (経験補助金の日本語配列)を送信する。Config.SUBSIDIES の
+ *           eligible_prefectures も日本語キーで揃えてある。
  *
  * 重要な前提:
  *   - 業務改善助成金等の厚労省管轄助成金は社労士独占業務
@@ -619,10 +582,6 @@ const ProductMatcher = {
  *   - そのため、Loomia単独受任ではなく「社労士・行政書士・
  *     中小企業診断士と連携して支援」を前提とする
  *   - 申請代行成功報酬は15〜20%(中央値17.5%)
- *
- * 出典:
- *   - 福祉_AI自動化(補助金7種・士業独占業務)
- *   - ＡＩＳＮＳ運用(申請代行相場感)
  */
 
 const SubsidyMatcher = {
@@ -639,9 +598,8 @@ const SubsidyMatcher = {
    * @return {Array} 補助金見込み額順にソートされた配列
    */
   match(formData) {
-    const businessType = formData.q4_business_type;
-    const prefectureLabel = formData.q6_prefecture || '';
-    const prefecture = this._normalizePrefecture(prefectureLabel);
+    const businessType = formData.q4_service;
+    const prefecture = formData.q6_prefecture || '';
 
     // プロダクトマッチングから投資額を見積もる
     const matchedProducts = ProductMatcher.matchTop3(formData);
@@ -655,61 +613,6 @@ const SubsidyMatcher = {
     }).sort(function(a, b) {
       return (b.estimated_subsidy || 0) - (a.estimated_subsidy || 0);
     });
-  },
-
-  /**
-   * V3 フォームの都道府県日本語ラベルを内部キーに正規化
-   */
-  _normalizePrefecture: function(label) {
-    if (!label) return '';
-    if (label.indexOf('北海道') >= 0) return 'hokkaido';
-    if (label.indexOf('青森') >= 0) return 'aomori';
-    if (label.indexOf('岩手') >= 0) return 'iwate';
-    if (label.indexOf('宮城') >= 0) return 'miyagi';
-    if (label.indexOf('秋田') >= 0) return 'akita';
-    if (label.indexOf('山形') >= 0) return 'yamagata';
-    if (label.indexOf('福島') >= 0) return 'fukushima';
-    if (label.indexOf('茨城') >= 0) return 'ibaraki';
-    if (label.indexOf('栃木') >= 0) return 'tochigi';
-    if (label.indexOf('群馬') >= 0) return 'gunma';
-    if (label.indexOf('埼玉') >= 0) return 'saitama';
-    if (label.indexOf('千葉') >= 0) return 'chiba';
-    if (label.indexOf('東京') >= 0) return 'tokyo';
-    if (label.indexOf('神奈川') >= 0) return 'kanagawa';
-    if (label.indexOf('新潟') >= 0) return 'niigata';
-    if (label.indexOf('富山') >= 0) return 'toyama';
-    if (label.indexOf('石川') >= 0) return 'ishikawa';
-    if (label.indexOf('福井') >= 0) return 'fukui';
-    if (label.indexOf('山梨') >= 0) return 'yamanashi';
-    if (label.indexOf('長野') >= 0) return 'nagano';
-    if (label.indexOf('岐阜') >= 0) return 'gifu';
-    if (label.indexOf('静岡') >= 0) return 'shizuoka';
-    if (label.indexOf('愛知') >= 0) return 'aichi';
-    if (label.indexOf('三重') >= 0) return 'mie';
-    if (label.indexOf('滋賀') >= 0) return 'shiga';
-    if (label.indexOf('京都') >= 0) return 'kyoto';
-    if (label.indexOf('大阪') >= 0) return 'osaka';
-    if (label.indexOf('兵庫') >= 0) return 'hyogo';
-    if (label.indexOf('奈良') >= 0) return 'nara';
-    if (label.indexOf('和歌山') >= 0) return 'wakayama';
-    if (label.indexOf('鳥取') >= 0) return 'tottori';
-    if (label.indexOf('島根') >= 0) return 'shimane';
-    if (label.indexOf('岡山') >= 0) return 'okayama';
-    if (label.indexOf('広島') >= 0) return 'hiroshima';
-    if (label.indexOf('山口') >= 0) return 'yamaguchi';
-    if (label.indexOf('徳島') >= 0) return 'tokushima';
-    if (label.indexOf('香川') >= 0) return 'kagawa';
-    if (label.indexOf('愛媛') >= 0) return 'ehime';
-    if (label.indexOf('高知') >= 0) return 'kochi';
-    if (label.indexOf('福岡') >= 0) return 'fukuoka';
-    if (label.indexOf('佐賀') >= 0) return 'saga';
-    if (label.indexOf('長崎') >= 0) return 'nagasaki';
-    if (label.indexOf('熊本') >= 0) return 'kumamoto';
-    if (label.indexOf('大分') >= 0) return 'oita';
-    if (label.indexOf('宮崎') >= 0) return 'miyazaki';
-    if (label.indexOf('鹿児島') >= 0) return 'kagoshima';
-    if (label.indexOf('沖縄') >= 0) return 'okinawa';
-    return label;
   },
 
   /**
@@ -733,6 +636,8 @@ const SubsidyMatcher = {
     }
 
     // 都道府県制限チェック(大阪府限定の補助金など)
+    // formData.q6_prefecture は「大阪府」のような日本語ラベル、
+    // Config 側も日本語ラベルで揃えてある。
     if (subsidy.eligible_prefectures &&
         subsidy.eligible_prefectures.indexOf(prefecture) < 0) {
       return null;
@@ -749,7 +654,6 @@ const SubsidyMatcher = {
 
     // IT導入補助金の小規模事業者向け特例
     if (subsidy.id === 'it_introduction_2026' && totalEstimatedInvestment <= 500000) {
-      // 50万円以下案件は最大4/5補助
       if (subsidy.rate_invoice_micro) {
         applicable_rate = subsidy.rate_invoice_micro;
         rate_reason = '50万円以下小規模事業者特例(4/5補助)';
@@ -830,16 +734,22 @@ const SubsidyMatcher = {
   },
 
   /**
-   * プレミアム補助率の条件判定 (V3: q11 は配列、日本語ラベル)
+   * プレミアム補助率の条件判定
+   * V3 フォーム: q11_subsidy_exp は日本語ラベル配列。
+   * 例: ['介護テクノロジー導入支援事業', 'IT導入補助金']
+   *     ['使ったことがない']
    */
   _meetsPremiumConditions: function(formData, subsidy) {
-    const exp = formData.q11_subsidy_experience || [];
-    const hasExperience = exp.some(function(e) {
-      return e !== '使ったことがない';
-    });
+    const exp = formData.q11_subsidy_exp || [];
 
-    if (subsidy.id === 'care_tech') return hasExperience;
-    if (subsidy.id === 'osaka_ict') return hasExperience;
+    if (subsidy.id === 'care_tech') {
+      // 介護テクノロジー導入支援事業の経験があればプレミアム
+      return exp.indexOf('介護テクノロジー導入支援事業') >= 0;
+    }
+    if (subsidy.id === 'osaka_ict') {
+      // 何らかの補助金経験があればプレミアム(「使ったことがない」のみは不可)
+      return exp.length > 0 && exp.indexOf('使ったことがない') < 0;
+    }
     return false;
   },
 
@@ -847,11 +757,9 @@ const SubsidyMatcher = {
    * 外部士業との連携が必要かどうかの判定
    */
   _requiresExternalPartner(subsidy) {
-    // 厚労省管轄助成金は社労士独占
     if (subsidy.independence_requirement === 'shaorshi') {
       return true;
     }
-    // 業務改善助成金、人材確保等支援助成金等
     if (subsidy.id === 'business_improvement') {
       return true;
     }
@@ -875,9 +783,7 @@ const SubsidyMatcher = {
   }
 };
 
-// ============================================================================
 // ===== ReportFormatter.gs =====
-// ============================================================================
 
 /**
  * ReportFormatter.gs
@@ -1039,13 +945,18 @@ function buildProductSection_(data) {
   const products = data.recommendedProducts || [];
   if (products.length === 0) return '';
 
-  const cards = products.map((p, i) => `          <tr><td style="padding:0 0 12px 0;">
+  const cards = products.map((p, i) => {
+    const reasonText = (p.reasons && p.reasons.length > 0)
+      ? p.reasons.join('、')
+      : (p.reason || '');
+    return `          <tr><td style="padding:0 0 12px 0;">
             <div style="background:${RF_COLORS.BG_CARD};padding:20px;border:1px solid ${RF_COLORS.BORDER};">
               <div style="display:inline-block;font-size:11px;color:${RF_COLORS.ACCENT};border:1px solid ${RF_COLORS.ACCENT};padding:2px 10px;letter-spacing:0.1em;margin-bottom:10px;">優先度 ${i + 1}</div>
               <div style="font-family:${RF_FONT.HEADING};font-size:17px;font-weight:500;color:${RF_COLORS.TEXT_PRIMARY};margin-bottom:6px;">${escapeHtml_(p.name || '')}</div>
-              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.75;">${escapeHtml_(p.reason || '')}</div>
+              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.75;">${escapeHtml_(reasonText)}</div>
             </div>
-          </td></tr>`).join('\n');
+          </td></tr>`;
+  }).join('\n');
 
   return `      <tr><td style="padding:32px 0 16px 0;">
         <div style="font-family:${RF_FONT.HEADING};font-size:20px;font-weight:500;color:${RF_COLORS.TEXT_PRIMARY};margin-bottom:16px;">推奨プロダクト</div>
@@ -1061,13 +972,19 @@ function buildSubsidySection_(data) {
   if (subsidies.length === 0) return '';
 
   const items = subsidies.map((s) => {
-    const rate = s.coverageRate ? `${Math.round(s.coverageRate * 100)}%` : '-';
-    const max = s.maxAmount ? `${formatNumber_(s.maxAmount)}円` : '-';
+    const rateValue = (typeof s.coverageRate === 'number') ? s.coverageRate : s.applicable_rate;
+    const rate = (typeof rateValue === 'number') ? `${Math.round(rateValue * 100)}%` : '-';
+    const maxValue = s.maxAmount || s.max_amount;
+    const max = maxValue ? `${formatNumber_(maxValue)}円` : '-';
+    const description = s.description
+      || s.external_partner_note
+      || s.rate_reason
+      || (s.note || '');
     return `          <tr><td style="padding:0 0 12px 0;">
             <div style="background:${RF_COLORS.BG_CARD};padding:18px 20px;border-left:2px solid ${RF_COLORS.ACCENT_DIM};">
               <div style="font-size:15px;color:${RF_COLORS.TEXT_PRIMARY};font-weight:500;margin-bottom:4px;">${escapeHtml_(s.name || '')}</div>
               <div style="font-size:12px;color:${RF_COLORS.TEXT_SECONDARY};margin-bottom:8px;">補助率 <span style="color:${RF_COLORS.ACCENT};">${rate}</span> / 上限 <span style="color:${RF_COLORS.ACCENT};">${max}</span></div>
-              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.65;">${escapeHtml_(s.description || '')}</div>
+              <div style="font-size:13px;color:${RF_COLORS.TEXT_SECONDARY};line-height:1.65;">${escapeHtml_(description)}</div>
             </div>
           </td></tr>`;
   }).join('\n');
@@ -1256,9 +1173,7 @@ function testFormatReport() {
   return html;
 }
 
-// ============================================================================
 // ===== ClaudeAPI.gs =====
-// ============================================================================
 
 /**
  * Loomia AI診断システム V3.0 福祉業界特化版
@@ -1665,9 +1580,7 @@ Markdown形式で出力してください。
   }
 };
 
-// ============================================================================
 // ===== SheetsConnector.gs =====
-// ============================================================================
 
 /**
  * SheetsConnector.gs
@@ -1948,9 +1861,7 @@ function testEnsureSheetSchema() {
   return result;
 }
 
-// ============================================================================
 // ===== NotionConnector.gs =====
-// ============================================================================
 
 /**
  * NotionConnector.gs
@@ -2148,21 +2059,19 @@ function testNotionConnector() {
   return result;
 }
 
-// ============================================================================
 // ===== Code.gs =====
-// ============================================================================
 
 /**
  * Loomia AI診断システム V3.0 福祉業界特化版
  * Code.gs — メインエントリポイント
  *
  * @author Loomia (偉吹)
- * @lastModified 2026-04-25
- * @version 3.0.0
+ * @lastModified 2026-04-26
+ * @version 3.0.1
  *
  * 役割:
  *   doGet  — 14問フォーム (index.html) のサーブ
- *   doPost — 診断フォーム送信を受け、業態判定→計算→Claude→メール→Notion→ログ
+ *   doPost — 診断フォーム送信を受け、業態判定→計算→Sheets→Claude→メール→ログ
  *
  * 倫理 5 制約 (絶対遵守):
  *   1. 介護報酬不正請求への加担を促す表現を含めない
@@ -2185,19 +2094,16 @@ function doGet(e) {
 
 
 // =============================================================
-// processSubmission: フォーム送信処理の本体(google.script.run と doPost の両方から呼ばれる)
+// processSubmission: フォーム送信処理の本体
 // =============================================================
 
 function processSubmission(formData) {
   console.log('=== processSubmission CALLED ===');
-  console.log('formData type:', typeof formData);
-  console.log('arguments length:', arguments.length);
 
-  // 文字列で渡された場合は JSON.parse する(google.script.run の配列シリアライザ問題回避)
+  // 文字列で渡された場合は JSON.parse する
   if (typeof formData === 'string') {
     try {
       formData = JSON.parse(formData);
-      console.log('formData parsed from string successfully');
     } catch (parseErr) {
       console.error('Failed to parse formData string:', parseErr);
       return {
@@ -2207,7 +2113,6 @@ function processSubmission(formData) {
     }
   }
 
-  // formData の存在を再確認
   if (!formData || typeof formData !== 'object') {
     console.error('formData is invalid after parsing');
     return {
@@ -2216,12 +2121,17 @@ function processSubmission(formData) {
     };
   }
 
-  console.log('formData keys:', Object.keys(formData).join(', '));
+  // V3_TEST: 受信フォームのキー整合確認用デバッグログ
+  console.log('V3_TEST: q5_staff=' + formData.q5_staff +
+              ', q9_pain_points=' + JSON.stringify(formData.q9_pain_points) +
+              ', q4_service=' + formData.q4_service +
+              ', q6_prefecture=' + formData.q6_prefecture +
+              ', q12_attitude=' + formData.q12_attitude);
 
   const startTime = new Date();
 
   try {
-    // 1. 入力バリデーション + PII / 医療要求ガード(Validator.gs)
+    // 1. 入力バリデーション(Validator が定義されていれば)
     if (typeof Validator !== 'undefined' && Validator.validate) {
       const validation = Validator.validate(formData);
       if (!validation.valid) {
@@ -2236,7 +2146,7 @@ function processSubmission(formData) {
       }
     }
 
-    // 2. hCaptcha 検証(formData.captchaToken が存在する場合)
+    // 2. hCaptcha 検証
     if (formData.captchaToken && typeof Validator !== 'undefined' && Validator.verifyCaptcha) {
       const captchaOk = Validator.verifyCaptcha(formData.captchaToken);
       if (!captchaOk) {
@@ -2248,7 +2158,7 @@ function processSubmission(formData) {
     }
 
     // 3. 業態フィルタ: 訪問介護 = フル診断、それ以外 = 段階対応メール
-    const businessType = formData.q4_business_type;
+    const businessType = formData.q4_service;
     if (!isCurrentlySupported(businessType)) {
       if (typeof EmailSender !== 'undefined' && EmailSender.sendDeferredResponseEmail) {
         EmailSender.sendDeferredResponseEmail(formData);
@@ -2259,45 +2169,62 @@ function processSubmission(formData) {
       };
     }
 
-    // 4. フル診断処理(訪問介護のみ)
+    // 4. 計算層(訪問介護のみ)
     const reduction = ReductionCalculator.calculate(formData);
     const productMatch = ProductMatcher.match(formData);
     const subsidies = SubsidyMatcher.match(formData);
 
-    // 5. Claude API で診断アセスメント生成
-    const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
-    const aiAssessment = ClaudeAPI.generateReport(claudeInput);
-
-    // 6. 診断データを統合
+    // 5. 診断データ統合(Claude 結果は後で差し込む)
     const diagnosisData = {
-      companyName: formData.q2_business_name,
-      contactName: formData.q3_contact_name,
+      companyName: formData.q2_company,
+      contactName: formData.q3_contact,
       contactEmail: formData.q1_email,
       prefecture: formData.q6_prefecture,
-      serviceType: (Config.BUSINESS_TYPES[formData.q4_business_type] || {}).label || formData.q4_business_type,
-      staffCount: formData.q5_staff_count,
+      serviceType: (Config.BUSINESS_TYPES[businessType] || {}).label || businessType,
+      staffCount: formData.q5_staff,
       reduction: reduction,
       recommendedProducts: productMatch,
       recommendedSubsidies: subsidies,
-      aiAssessment: aiAssessment,
-      notes: (formData.q13_issues || '') + ' / ' + (formData.q14_free_text || '')
+      aiAssessment: null,
+      notes: (formData.q13_issues || '') + ' / ' + (formData.q14_expectations || '')
     };
 
-    // 7. Sheets に書き込み
-    sendToSheets(diagnosisData);
+    // 6. Sheets に書き込み(Claude 失敗時もログを残すため先に実行)
+    try {
+      if (typeof sendToSheets === 'function') {
+        sendToSheets(diagnosisData);
+      } else if (typeof SheetsConnector !== 'undefined' && SheetsConnector.write) {
+        SheetsConnector.write(diagnosisData);
+      }
+    } catch (sheetsErr) {
+      console.error('sendToSheets failed (non-fatal): ' + sheetsErr.message);
+    }
+
+    // 7. Claude API で診断アセスメント生成(失敗してもメールは送る)
+    try {
+      const claudeInput = buildClaudeInput(formData, reduction, productMatch, subsidies);
+      diagnosisData.aiAssessment = ClaudeAPI.generateReport(claudeInput);
+    } catch (claudeErr) {
+      console.error('Claude API failed: ' + claudeErr.message);
+      diagnosisData.aiAssessment = '※AIアセスメントの生成に失敗しました。担当者(loomia.jp@gmail.com)より個別にご連絡いたします。';
+    }
 
     // 8. メール送信
-    const htmlBody = formatReportToHtml(diagnosisData);
-    GmailApp.sendEmail(
-      formData.q1_email,
-      diagnosisData.companyName + ' 様 AI活用度診断レポート',
-      'HTMLメール対応のメーラーでご覧ください',
-      {
-        htmlBody: htmlBody,
-        name: 'Loomia',
-        from: Session.getActiveUser().getEmail()
-      }
-    );
+    try {
+      const htmlBody = formatReportToHtml(diagnosisData);
+      GmailApp.sendEmail(
+        formData.q1_email,
+        diagnosisData.companyName + ' 様 AI活用度診断レポート',
+        'HTMLメール対応のメーラーでご覧ください',
+        {
+          htmlBody: htmlBody,
+          name: 'Loomia',
+          from: Session.getActiveUser().getEmail()
+        }
+      );
+    } catch (mailErr) {
+      console.error('GmailApp.sendEmail failed: ' + mailErr.message);
+    }
 
     // 9. ログ記録
     if (typeof Logger !== 'undefined' && Logger.logSubmission) {
@@ -2374,7 +2301,6 @@ function doPost(e) {
 
 // ─────────────────────────────────────────
 // 業態フィルタ: V3.0 では訪問介護のみフル対応
-// 他業態は2026年Q4以降に段階展開予定
 // ─────────────────────────────────────────
 function isCurrentlySupported(businessType) {
   return businessType === 'visiting_care';
@@ -2382,23 +2308,23 @@ function isCurrentlySupported(businessType) {
 
 // ─────────────────────────────────────────
 // Claude に渡す統合入力を構築
-// (PII を含まないことを再確認した上で)
+// PII を含まないことを再確認した上で、HTML フォームの全 14 キーを反映
 // ─────────────────────────────────────────
 function buildClaudeInput(formData, reduction, productMatch, subsidies) {
   return {
-    business_name: formData.q2_business_name || '',
-    contact_name: formData.q3_contact_name || '',
-    business_type: formData.q4_business_type,
-    staff_count: formData.q5_staff_count,
+    business_name: formData.q2_company || '',
+    contact_name: formData.q3_contact || '',
+    business_type: formData.q4_service,
+    staff_count: formData.q5_staff,
     prefecture: formData.q6_prefecture,
-    user_count: formData.q7_user_count,
+    user_count: formData.q7_users,
     software: formData.q8_software || [],
     pain_points: formData.q9_pain_points || [],
     kasan_status: formData.q10_kasan || '',
-    subsidy_experience: formData.q11_subsidy_experience || [],
-    ai_attitude: formData.q12_ai_attitude,
+    subsidy_experience: formData.q11_subsidy_exp || [],
+    ai_attitude: formData.q12_attitude,
     issues: (formData.q13_issues || '').slice(0, 2000),
-    free_text: (formData.q14_free_text || '').slice(0, 2000),
+    free_text: (formData.q14_expectations || '').slice(0, 2000),
 
     calculated_reduction: reduction,
     matched_products: productMatch,
@@ -2416,7 +2342,6 @@ function jsonResponse(obj, statusCode) {
 
 // ─────────────────────────────────────────
 // HTML テンプレートのインクルード (Apps Script 慣例)
-// index.html から <?!= include('partial') ?> で参照可能
 // ─────────────────────────────────────────
 function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
