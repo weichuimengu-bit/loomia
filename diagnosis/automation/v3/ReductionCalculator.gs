@@ -43,11 +43,11 @@ const ReductionCalculator = {
    * @return {Object} 削減効果計算結果
    */
   calculate(formData) {
-    const staffCount = this._parseStaffCount(formData.q4_staff_count);
-    const adminHours = this._parseAdminHours(formData.q8_admin_hours);
-    const painPoints = formData.q7_pain_points || [];
+    const staffCount = this._parseStaffCount(formData.q5_staff_count);
+    const painPoints = (formData.q9_pain_points || []).map(this._normalizePainPoint, this);
 
-    // 各業務領域別の削減見込み計算
+    const adminHours = staffCount * 25;
+
     const areaReductions = painPoints.map(function(pp) {
       const hoursPerPerson = this.REDUCTION_RATES[pp] || 0;
       return {
@@ -67,52 +67,48 @@ const ReductionCalculator = {
     }, 0);
 
     const annualYenSaved = monthlyTotalHours * 12 * this.HOURLY_WAGE_AVERAGE;
-
-    // 現状の事務作業時間に対する削減率(最大70%でキャップ、現実的な値に)
-    const reductionRateEstimate = adminHours > 0 ?
-      Math.min(0.7, (areaReductions[0] && areaReductions[0].hours_per_person || 0) / adminHours) : 0;
+    const recordingReductionRate = painPoints.indexOf('visit_records') >= 0 ? 85 : 0;
+    const additionalRevenuePerMonth = (formData.q7_user_count || 0) * 10 * 10;
 
     return {
-      monthly_total_hours: monthlyTotalHours,
-      annual_yen_saved: annualYenSaved,
+      timeReductionPerMonth: monthlyTotalHours,
+      costReductionPerYear: annualYenSaved,
+      recordingReductionRate: recordingReductionRate,
+      additionalRevenuePerMonth: additionalRevenuePerMonth,
       top3_areas: top3,
       all_areas: areaReductions,
       staff_count: staffCount,
-      current_admin_hours_per_person: adminHours,
-      reduction_rate_estimate: reductionRateEstimate,
-      reduction_rate_percent: Math.round(reductionRateEstimate * 100),
       hourly_wage_assumed: this.HOURLY_WAGE_AVERAGE,
       assumption_note: '※削減見込みは業界平均からの参考値です。事業所ごとに変動します。'
     };
   },
 
   /**
-   * 職員数の範囲を中央値に変換
+   * 職員数: V3 では数値直接入力
    */
-  _parseStaffCount: function(range) {
-    const map = {
-      '1-5': 3,
-      '6-10': 8,
-      '11-15': 13,
-      '16-30': 23,
-      '31+': 35
-    };
-    return map[range] || 8;
+  _parseStaffCount: function(value) {
+    const n = parseInt(value, 10);
+    if (isNaN(n) || n < 1) return 8;
+    return Math.min(n, 500);
   },
 
   /**
-   * 月間事務作業時間の範囲を中央値に変換
+   * V3 フォームの日本語ラベルを内部キーに正規化
    */
-  _parseAdminHours: function(range) {
+  _normalizePainPoint: function(label) {
     const map = {
-      '0-5': 3,
-      '6-15': 10,
-      '16-30': 23,
-      '31-50': 40,
-      '51+': 60,
-      'unknown': 23  // 不明時は中規模事業所の平均値で代替
+      '訪問記録の入力': 'visit_records',
+      'ケアプラン作成': 'care_plan',
+      '申し送り・議事録': 'other',
+      '加算の届出・管理': 'addition_management',
+      '家族からの問い合わせ対応': 'family_communication',
+      'シフト作成': 'shift_creation',
+      '訪問ルート調整': 'route_optimization',
+      'ヒヤリハット・事故報告': 'other',
+      '国保連請求': 'billing',
+      '採用・教育': 'recruitment'
     };
-    return map[range] || 23;
+    return map[label] || 'other';
   },
 
   /**

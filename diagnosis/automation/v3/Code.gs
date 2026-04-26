@@ -120,7 +120,7 @@ function processSubmission(formData) {
       contactName: formData.q3_contact_name,
       contactEmail: formData.q1_email,
       prefecture: formData.q6_prefecture,
-      serviceType: formData.q4_business_type,
+      serviceType: (Config.BUSINESS_TYPES[formData.q4_business_type] || {}).label || formData.q4_business_type,
       staffCount: formData.q5_staff_count,
       reduction: reduction,
       recommendedProducts: productMatch,
@@ -232,22 +232,20 @@ function isCurrentlySupported(businessType) {
 // ─────────────────────────────────────────
 function buildClaudeInput(formData, reduction, productMatch, subsidies) {
   return {
-    // 事業所側の集計情報のみ (利用者個人情報は含まない)
-    business_name: formData.q1_business_name || '',
-    business_type: formData.q2_business_type,
-    insurance_number_provided: !!formData.q3_insurance_number,
-    staff_count: formData.q4_staff_count,
-    user_count: formData.q5_user_count,
-    software: formData.q6_software,
-    pain_points: formData.q7_pain_points || [],
-    admin_hours: formData.q8_admin_hours,
-    ai_attitude: formData.q9_attitude,
-    subsidy_experience: formData.q10_subsidy_experience,
-    themes: formData.q11_themes || [],
-    prefecture: formData.q12_prefecture,
+    business_name: formData.q2_business_name || '',
+    contact_name: formData.q3_contact_name || '',
+    business_type: formData.q4_business_type,
+    staff_count: formData.q5_staff_count,
+    prefecture: formData.q6_prefecture,
+    user_count: formData.q7_user_count,
+    software: formData.q8_software || [],
+    pain_points: formData.q9_pain_points || [],
+    kasan_status: formData.q10_kasan || '',
+    subsidy_experience: formData.q11_subsidy_experience || [],
+    ai_attitude: formData.q12_ai_attitude,
+    issues: (formData.q13_issues || '').slice(0, 2000),
     free_text: (formData.q14_free_text || '').slice(0, 2000),
 
-    // 事前計算済み数値 (Claude にこれ以外の数値を発明させない)
     calculated_reduction: reduction,
     matched_products: productMatch,
     matched_subsidies: subsidies

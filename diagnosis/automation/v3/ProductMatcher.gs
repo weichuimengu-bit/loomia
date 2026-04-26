@@ -42,23 +42,21 @@ const ProductMatcher = {
   },
 
   /**
-   * 個別プロダクトのスコアリング
+   * 個別プロダクトのスコアリング (V3 14問フォーム対応)
    */
   _scoreProduct(product, formData) {
     let score = 0;
     const reasons = [];
-    const businessType = formData.q2_business_type;
-    const painPoints = formData.q7_pain_points || [];
-    const themes = formData.q11_themes || [];
-    const aiAttitude = formData.q9_attitude;
+    const businessType = formData.q4_business_type;
+    const painPointsRaw = formData.q9_pain_points || [];
+    const painPoints = painPointsRaw.map(this._normalizePainPoint, this);
+    const aiAttitude = formData.q12_ai_attitude;
 
     // 業態適合性(40点満点)
     const businessTypeMatch = (product.best_for_business_types || []).includes(businessType);
     if (businessTypeMatch) {
       score += 40;
       reasons.push('業態「' + this._getBusinessTypeLabel(businessType) + '」に高適合');
-    } else {
-      reasons.push('業態「' + this._getBusinessTypeLabel(businessType) + '」は対象外または対象拡大予定');
     }
 
     // 痛み点の一致(30点満点)
@@ -68,40 +66,19 @@ const ProductMatcher = {
     if (painMatchList.length > 0) {
       const painPointBonus = Math.min(30, painMatchList.length * 15);
       score += painPointBonus;
-      const painLabels = painMatchList.map(function(p) {
-        return this._getPainPointLabel(p);
-      }, this).join('、');
-      reasons.push('お困りごと「' + painLabels + '」に対応');
-    }
-
-    // 取り組みテーマの一致(20点満点)
-    const themeMatchList = themes.filter(function(t) {
-      return (product.target_themes || []).indexOf(t) >= 0;
-    });
-    if (themeMatchList.length > 0) {
-      const themeBonus = Math.min(20, themeMatchList.length * 10);
-      score += themeBonus;
-      const themeLabels = themeMatchList.map(function(t) {
-        return this._getThemeLabel(t);
-      }, this).join('、');
-      reasons.push('取り組みテーマ「' + themeLabels + '」に対応');
+      reasons.push('お困りごと「' + painMatchList.map(this._getPainPointLabel, this).join('、') + '」に対応');
     }
 
     // ICT姿勢ボーナス(10点)
-    if (aiAttitude === 'active' || aiAttitude === 'considering') {
+    if (aiAttitude === '積極的に導入したい' || aiAttitude === '効果があれば導入したい') {
       score += 10;
       reasons.push('AI/ICT活用への前向きな姿勢');
     }
 
-    // 適合度ランクの判定
     let matchLevel;
-    if (score >= 70) {
-      matchLevel = '高';
-    } else if (score >= 40) {
-      matchLevel = '中';
-    } else {
-      matchLevel = '低';
-    }
+    if (score >= 70) matchLevel = '高';
+    else if (score >= 40) matchLevel = '中';
+    else matchLevel = '低';
 
     return {
       id: product.id,
@@ -115,11 +92,30 @@ const ProductMatcher = {
       readiness_label: this._getReadinessLabel(product.readiness),
       match_score: score,
       match_level: matchLevel,
+      reason: reasons.join(' / '),
       reasons: reasons,
       target_pain_points: product.target_pain_points,
-      target_themes: product.target_themes,
       best_for_business_types: product.best_for_business_types
     };
+  },
+
+  /**
+   * V3 フォームの日本語ラベルを内部キーに正規化
+   */
+  _normalizePainPoint: function(label) {
+    const map = {
+      '訪問記録の入力': 'visit_records',
+      'ケアプラン作成': 'care_plan',
+      '申し送り・議事録': 'other',
+      '加算の届出・管理': 'addition_management',
+      '家族からの問い合わせ対応': 'family_communication',
+      'シフト作成': 'shift_creation',
+      '訪問ルート調整': 'route_optimization',
+      'ヒヤリハット・事故報告': 'other',
+      '国保連請求': 'billing',
+      '採用・教育': 'recruitment'
+    };
+    return map[label] || 'other';
   },
 
   /**

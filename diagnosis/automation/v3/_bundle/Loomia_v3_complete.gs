@@ -66,7 +66,7 @@ const Config = {
   BUSINESS_TYPES: {
     visiting_care:        { label: '訪問介護',                      readiness: 'available',     roadmap_quarter: '現在主力 (2026 Q2 〜)' },
     visiting_nursing:     { label: '訪問看護',                      readiness: 'roadmap',       roadmap_quarter: '2026 Q4 〜' },
-    day_care:             { label: '通所介護 (デイサービス)',          readiness: 'roadmap',       roadmap_quarter: '2027 Q1 〜' },
+    day_service:             { label: '通所介護 (デイサービス)',          readiness: 'roadmap',       roadmap_quarter: '2027 Q1 〜' },
     care_manager:         { label: '居宅介護支援 (ケアマネ事業所)',     readiness: 'roadmap',       roadmap_quarter: '2027 Q2 〜' },
     group_home:           { label: 'グループホーム / 特養 / 老健',     readiness: 'roadmap',       roadmap_quarter: '2027 Q3 〜' },
     disability_welfare:   { label: '障害福祉サービス',                readiness: 'roadmap',       roadmap_quarter: '2027 Q3 〜' },
@@ -86,7 +86,7 @@ const Config = {
       single_max: 1000000,
       rate_standard: 0.5,
       rate_premium: 0.75,              // 加算条件 (生産性ガイドライン提出 + ビギナー受講 + 相談センター受診)
-      eligible_types: ['visiting_care', 'visiting_nursing', 'day_care', 'group_home'],
+      eligible_types: ['visiting_care', 'visiting_nursing', 'day_service', 'group_home'],
       requirements: [
         '生産性向上ガイドラインに基づく計画提出',
         '生産性向上ビギナーセミナー受講',
@@ -147,7 +147,7 @@ const Config = {
       type: 'kasan',
       monthly_addition_unit_1: 100,    // 月 100 単位 / 人
       monthly_addition_unit_2: 10,
-      eligible_types: ['visiting_care', 'visiting_nursing', 'day_care', 'group_home'],
+      eligible_types: ['visiting_care', 'visiting_nursing', 'day_service', 'group_home'],
       mandatory_from: '2026-06-01',    // 2026/6 から処遇改善加算上位の前提条件
       year: 2026
     },
@@ -157,7 +157,7 @@ const Config = {
       max_amount: 3000000,
       rate_standard: 0.5,
       rate_premium: 0.75,
-      eligible_types: ['visiting_care', 'visiting_nursing', 'day_care'],
+      eligible_types: ['visiting_care', 'visiting_nursing', 'day_service'],
       eligible_prefectures: ['osaka'],
       year: 2026
     }
@@ -186,7 +186,7 @@ const Config = {
       monthly_savings_hours: 15,
       target_pain_points: ['addition_management', 'billing'],
       target_themes: ['addition_max', 'revision_response'],
-      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_care'],
+      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_service'],
       readiness: 'launching_2026q4'
     },
     {
@@ -210,7 +210,7 @@ const Config = {
       monthly_savings_hours: 8,
       target_pain_points: ['family_communication'],
       target_themes: ['user_satisfaction'],
-      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_care', 'group_home'],
+      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_service', 'group_home'],
       readiness: 'launching_2026q4'
     },
     {
@@ -323,11 +323,11 @@ const ReductionCalculator = {
    * @return {Object} 削減効果計算結果
    */
   calculate(formData) {
-    const staffCount = this._parseStaffCount(formData.q4_staff_count);
-    const adminHours = this._parseAdminHours(formData.q8_admin_hours);
-    const painPoints = formData.q7_pain_points || [];
+    const staffCount = this._parseStaffCount(formData.q5_staff_count);
+    const painPoints = (formData.q9_pain_points || []).map(this._normalizePainPoint, this);
 
-    // 各業務領域別の削減見込み計算
+    const adminHours = staffCount * 25;
+
     const areaReductions = painPoints.map(function(pp) {
       const hoursPerPerson = this.REDUCTION_RATES[pp] || 0;
       return {
@@ -347,52 +347,48 @@ const ReductionCalculator = {
     }, 0);
 
     const annualYenSaved = monthlyTotalHours * 12 * this.HOURLY_WAGE_AVERAGE;
-
-    // 現状の事務作業時間に対する削減率(最大70%でキャップ、現実的な値に)
-    const reductionRateEstimate = adminHours > 0 ?
-      Math.min(0.7, (areaReductions[0] && areaReductions[0].hours_per_person || 0) / adminHours) : 0;
+    const recordingReductionRate = painPoints.indexOf('visit_records') >= 0 ? 85 : 0;
+    const additionalRevenuePerMonth = (formData.q7_user_count || 0) * 10 * 10;
 
     return {
-      monthly_total_hours: monthlyTotalHours,
-      annual_yen_saved: annualYenSaved,
+      timeReductionPerMonth: monthlyTotalHours,
+      costReductionPerYear: annualYenSaved,
+      recordingReductionRate: recordingReductionRate,
+      additionalRevenuePerMonth: additionalRevenuePerMonth,
       top3_areas: top3,
       all_areas: areaReductions,
       staff_count: staffCount,
-      current_admin_hours_per_person: adminHours,
-      reduction_rate_estimate: reductionRateEstimate,
-      reduction_rate_percent: Math.round(reductionRateEstimate * 100),
       hourly_wage_assumed: this.HOURLY_WAGE_AVERAGE,
       assumption_note: '※削減見込みは業界平均からの参考値です。事業所ごとに変動します。'
     };
   },
 
   /**
-   * 職員数の範囲を中央値に変換
+   * 職員数: V3 では数値直接入力
    */
-  _parseStaffCount: function(range) {
-    const map = {
-      '1-5': 3,
-      '6-10': 8,
-      '11-15': 13,
-      '16-30': 23,
-      '31+': 35
-    };
-    return map[range] || 8;
+  _parseStaffCount: function(value) {
+    const n = parseInt(value, 10);
+    if (isNaN(n) || n < 1) return 8;
+    return Math.min(n, 500);
   },
 
   /**
-   * 月間事務作業時間の範囲を中央値に変換
+   * V3 フォームの日本語ラベルを内部キーに正規化
    */
-  _parseAdminHours: function(range) {
+  _normalizePainPoint: function(label) {
     const map = {
-      '0-5': 3,
-      '6-15': 10,
-      '16-30': 23,
-      '31-50': 40,
-      '51+': 60,
-      'unknown': 23  // 不明時は中規模事業所の平均値で代替
+      '訪問記録の入力': 'visit_records',
+      'ケアプラン作成': 'care_plan',
+      '申し送り・議事録': 'other',
+      '加算の届出・管理': 'addition_management',
+      '家族からの問い合わせ対応': 'family_communication',
+      'シフト作成': 'shift_creation',
+      '訪問ルート調整': 'route_optimization',
+      'ヒヤリハット・事故報告': 'other',
+      '国保連請求': 'billing',
+      '採用・教育': 'recruitment'
     };
-    return map[range] || 23;
+    return map[label] || 'other';
   },
 
   /**
@@ -463,23 +459,21 @@ const ProductMatcher = {
   },
 
   /**
-   * 個別プロダクトのスコアリング
+   * 個別プロダクトのスコアリング (V3 14問フォーム対応)
    */
   _scoreProduct(product, formData) {
     let score = 0;
     const reasons = [];
-    const businessType = formData.q2_business_type;
-    const painPoints = formData.q7_pain_points || [];
-    const themes = formData.q11_themes || [];
-    const aiAttitude = formData.q9_attitude;
+    const businessType = formData.q4_business_type;
+    const painPointsRaw = formData.q9_pain_points || [];
+    const painPoints = painPointsRaw.map(this._normalizePainPoint, this);
+    const aiAttitude = formData.q12_ai_attitude;
 
     // 業態適合性(40点満点)
     const businessTypeMatch = (product.best_for_business_types || []).includes(businessType);
     if (businessTypeMatch) {
       score += 40;
       reasons.push('業態「' + this._getBusinessTypeLabel(businessType) + '」に高適合');
-    } else {
-      reasons.push('業態「' + this._getBusinessTypeLabel(businessType) + '」は対象外または対象拡大予定');
     }
 
     // 痛み点の一致(30点満点)
@@ -489,40 +483,19 @@ const ProductMatcher = {
     if (painMatchList.length > 0) {
       const painPointBonus = Math.min(30, painMatchList.length * 15);
       score += painPointBonus;
-      const painLabels = painMatchList.map(function(p) {
-        return this._getPainPointLabel(p);
-      }, this).join('、');
-      reasons.push('お困りごと「' + painLabels + '」に対応');
-    }
-
-    // 取り組みテーマの一致(20点満点)
-    const themeMatchList = themes.filter(function(t) {
-      return (product.target_themes || []).indexOf(t) >= 0;
-    });
-    if (themeMatchList.length > 0) {
-      const themeBonus = Math.min(20, themeMatchList.length * 10);
-      score += themeBonus;
-      const themeLabels = themeMatchList.map(function(t) {
-        return this._getThemeLabel(t);
-      }, this).join('、');
-      reasons.push('取り組みテーマ「' + themeLabels + '」に対応');
+      reasons.push('お困りごと「' + painMatchList.map(this._getPainPointLabel, this).join('、') + '」に対応');
     }
 
     // ICT姿勢ボーナス(10点)
-    if (aiAttitude === 'active' || aiAttitude === 'considering') {
+    if (aiAttitude === '積極的に導入したい' || aiAttitude === '効果があれば導入したい') {
       score += 10;
       reasons.push('AI/ICT活用への前向きな姿勢');
     }
 
-    // 適合度ランクの判定
     let matchLevel;
-    if (score >= 70) {
-      matchLevel = '高';
-    } else if (score >= 40) {
-      matchLevel = '中';
-    } else {
-      matchLevel = '低';
-    }
+    if (score >= 70) matchLevel = '高';
+    else if (score >= 40) matchLevel = '中';
+    else matchLevel = '低';
 
     return {
       id: product.id,
@@ -536,11 +509,30 @@ const ProductMatcher = {
       readiness_label: this._getReadinessLabel(product.readiness),
       match_score: score,
       match_level: matchLevel,
+      reason: reasons.join(' / '),
       reasons: reasons,
       target_pain_points: product.target_pain_points,
-      target_themes: product.target_themes,
       best_for_business_types: product.best_for_business_types
     };
+  },
+
+  /**
+   * V3 フォームの日本語ラベルを内部キーに正規化
+   */
+  _normalizePainPoint: function(label) {
+    const map = {
+      '訪問記録の入力': 'visit_records',
+      'ケアプラン作成': 'care_plan',
+      '申し送り・議事録': 'other',
+      '加算の届出・管理': 'addition_management',
+      '家族からの問い合わせ対応': 'family_communication',
+      'シフト作成': 'shift_creation',
+      '訪問ルート調整': 'route_optimization',
+      'ヒヤリハット・事故報告': 'other',
+      '国保連請求': 'billing',
+      '採用・教育': 'recruitment'
+    };
+    return map[label] || 'other';
   },
 
   /**
@@ -647,8 +639,9 @@ const SubsidyMatcher = {
    * @return {Array} 補助金見込み額順にソートされた配列
    */
   match(formData) {
-    const businessType = formData.q2_business_type;
-    const prefecture = formData.q12_prefecture;
+    const businessType = formData.q4_business_type;
+    const prefectureLabel = formData.q6_prefecture || '';
+    const prefecture = this._normalizePrefecture(prefectureLabel);
 
     // プロダクトマッチングから投資額を見積もる
     const matchedProducts = ProductMatcher.matchTop3(formData);
@@ -662,6 +655,61 @@ const SubsidyMatcher = {
     }).sort(function(a, b) {
       return (b.estimated_subsidy || 0) - (a.estimated_subsidy || 0);
     });
+  },
+
+  /**
+   * V3 フォームの都道府県日本語ラベルを内部キーに正規化
+   */
+  _normalizePrefecture: function(label) {
+    if (!label) return '';
+    if (label.indexOf('北海道') >= 0) return 'hokkaido';
+    if (label.indexOf('青森') >= 0) return 'aomori';
+    if (label.indexOf('岩手') >= 0) return 'iwate';
+    if (label.indexOf('宮城') >= 0) return 'miyagi';
+    if (label.indexOf('秋田') >= 0) return 'akita';
+    if (label.indexOf('山形') >= 0) return 'yamagata';
+    if (label.indexOf('福島') >= 0) return 'fukushima';
+    if (label.indexOf('茨城') >= 0) return 'ibaraki';
+    if (label.indexOf('栃木') >= 0) return 'tochigi';
+    if (label.indexOf('群馬') >= 0) return 'gunma';
+    if (label.indexOf('埼玉') >= 0) return 'saitama';
+    if (label.indexOf('千葉') >= 0) return 'chiba';
+    if (label.indexOf('東京') >= 0) return 'tokyo';
+    if (label.indexOf('神奈川') >= 0) return 'kanagawa';
+    if (label.indexOf('新潟') >= 0) return 'niigata';
+    if (label.indexOf('富山') >= 0) return 'toyama';
+    if (label.indexOf('石川') >= 0) return 'ishikawa';
+    if (label.indexOf('福井') >= 0) return 'fukui';
+    if (label.indexOf('山梨') >= 0) return 'yamanashi';
+    if (label.indexOf('長野') >= 0) return 'nagano';
+    if (label.indexOf('岐阜') >= 0) return 'gifu';
+    if (label.indexOf('静岡') >= 0) return 'shizuoka';
+    if (label.indexOf('愛知') >= 0) return 'aichi';
+    if (label.indexOf('三重') >= 0) return 'mie';
+    if (label.indexOf('滋賀') >= 0) return 'shiga';
+    if (label.indexOf('京都') >= 0) return 'kyoto';
+    if (label.indexOf('大阪') >= 0) return 'osaka';
+    if (label.indexOf('兵庫') >= 0) return 'hyogo';
+    if (label.indexOf('奈良') >= 0) return 'nara';
+    if (label.indexOf('和歌山') >= 0) return 'wakayama';
+    if (label.indexOf('鳥取') >= 0) return 'tottori';
+    if (label.indexOf('島根') >= 0) return 'shimane';
+    if (label.indexOf('岡山') >= 0) return 'okayama';
+    if (label.indexOf('広島') >= 0) return 'hiroshima';
+    if (label.indexOf('山口') >= 0) return 'yamaguchi';
+    if (label.indexOf('徳島') >= 0) return 'tokushima';
+    if (label.indexOf('香川') >= 0) return 'kagawa';
+    if (label.indexOf('愛媛') >= 0) return 'ehime';
+    if (label.indexOf('高知') >= 0) return 'kochi';
+    if (label.indexOf('福岡') >= 0) return 'fukuoka';
+    if (label.indexOf('佐賀') >= 0) return 'saga';
+    if (label.indexOf('長崎') >= 0) return 'nagasaki';
+    if (label.indexOf('熊本') >= 0) return 'kumamoto';
+    if (label.indexOf('大分') >= 0) return 'oita';
+    if (label.indexOf('宮崎') >= 0) return 'miyazaki';
+    if (label.indexOf('鹿児島') >= 0) return 'kagoshima';
+    if (label.indexOf('沖縄') >= 0) return 'okinawa';
+    return label;
   },
 
   /**
@@ -782,26 +830,16 @@ const SubsidyMatcher = {
   },
 
   /**
-   * プレミアム補助率の条件判定
+   * プレミアム補助率の条件判定 (V3: q11 は配列、日本語ラベル)
    */
-  _meetsPremiumConditions(formData, subsidy) {
-    // 介護テクノロジー導入支援:過去の補助金経験があれば3/4補助
-    if (subsidy.id === 'care_tech') {
-      return formData.q10_subsidy_experience === 'multiple' ||
-             formData.q10_subsidy_experience === 'once';
-    }
+  _meetsPremiumConditions: function(formData, subsidy) {
+    const exp = formData.q11_subsidy_experience || [];
+    const hasExperience = exp.some(function(e) {
+      return e !== '使ったことがない';
+    });
 
-    // 大阪府介護ICT導入支援:過去の活用経験があれば3/4補助
-    if (subsidy.id === 'osaka_ict') {
-      return formData.q10_subsidy_experience === 'multiple' ||
-             formData.q10_subsidy_experience === 'once';
-    }
-
-    // 業務改善助成金:賃金要件達成は個別ヒアリング後に判定
-    if (subsidy.id === 'business_improvement') {
-      return false;
-    }
-
+    if (subsidy.id === 'care_tech') return hasExperience;
+    if (subsidy.id === 'osaka_ict') return hasExperience;
     return false;
   },
 
@@ -2236,7 +2274,7 @@ function processSubmission(formData) {
       contactName: formData.q3_contact_name,
       contactEmail: formData.q1_email,
       prefecture: formData.q6_prefecture,
-      serviceType: formData.q4_business_type,
+      serviceType: (Config.BUSINESS_TYPES[formData.q4_business_type] || {}).label || formData.q4_business_type,
       staffCount: formData.q5_staff_count,
       reduction: reduction,
       recommendedProducts: productMatch,
@@ -2348,22 +2386,20 @@ function isCurrentlySupported(businessType) {
 // ─────────────────────────────────────────
 function buildClaudeInput(formData, reduction, productMatch, subsidies) {
   return {
-    // 事業所側の集計情報のみ (利用者個人情報は含まない)
-    business_name: formData.q1_business_name || '',
-    business_type: formData.q2_business_type,
-    insurance_number_provided: !!formData.q3_insurance_number,
-    staff_count: formData.q4_staff_count,
-    user_count: formData.q5_user_count,
-    software: formData.q6_software,
-    pain_points: formData.q7_pain_points || [],
-    admin_hours: formData.q8_admin_hours,
-    ai_attitude: formData.q9_attitude,
-    subsidy_experience: formData.q10_subsidy_experience,
-    themes: formData.q11_themes || [],
-    prefecture: formData.q12_prefecture,
+    business_name: formData.q2_business_name || '',
+    contact_name: formData.q3_contact_name || '',
+    business_type: formData.q4_business_type,
+    staff_count: formData.q5_staff_count,
+    prefecture: formData.q6_prefecture,
+    user_count: formData.q7_user_count,
+    software: formData.q8_software || [],
+    pain_points: formData.q9_pain_points || [],
+    kasan_status: formData.q10_kasan || '',
+    subsidy_experience: formData.q11_subsidy_experience || [],
+    ai_attitude: formData.q12_ai_attitude,
+    issues: (formData.q13_issues || '').slice(0, 2000),
     free_text: (formData.q14_free_text || '').slice(0, 2000),
 
-    // 事前計算済み数値 (Claude にこれ以外の数値を発明させない)
     calculated_reduction: reduction,
     matched_products: productMatch,
     matched_subsidies: subsidies

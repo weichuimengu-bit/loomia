@@ -32,8 +32,9 @@ const SubsidyMatcher = {
    * @return {Array} 補助金見込み額順にソートされた配列
    */
   match(formData) {
-    const businessType = formData.q2_business_type;
-    const prefecture = formData.q12_prefecture;
+    const businessType = formData.q4_business_type;
+    const prefectureLabel = formData.q6_prefecture || '';
+    const prefecture = this._normalizePrefecture(prefectureLabel);
 
     // プロダクトマッチングから投資額を見積もる
     const matchedProducts = ProductMatcher.matchTop3(formData);
@@ -47,6 +48,61 @@ const SubsidyMatcher = {
     }).sort(function(a, b) {
       return (b.estimated_subsidy || 0) - (a.estimated_subsidy || 0);
     });
+  },
+
+  /**
+   * V3 フォームの都道府県日本語ラベルを内部キーに正規化
+   */
+  _normalizePrefecture: function(label) {
+    if (!label) return '';
+    if (label.indexOf('北海道') >= 0) return 'hokkaido';
+    if (label.indexOf('青森') >= 0) return 'aomori';
+    if (label.indexOf('岩手') >= 0) return 'iwate';
+    if (label.indexOf('宮城') >= 0) return 'miyagi';
+    if (label.indexOf('秋田') >= 0) return 'akita';
+    if (label.indexOf('山形') >= 0) return 'yamagata';
+    if (label.indexOf('福島') >= 0) return 'fukushima';
+    if (label.indexOf('茨城') >= 0) return 'ibaraki';
+    if (label.indexOf('栃木') >= 0) return 'tochigi';
+    if (label.indexOf('群馬') >= 0) return 'gunma';
+    if (label.indexOf('埼玉') >= 0) return 'saitama';
+    if (label.indexOf('千葉') >= 0) return 'chiba';
+    if (label.indexOf('東京') >= 0) return 'tokyo';
+    if (label.indexOf('神奈川') >= 0) return 'kanagawa';
+    if (label.indexOf('新潟') >= 0) return 'niigata';
+    if (label.indexOf('富山') >= 0) return 'toyama';
+    if (label.indexOf('石川') >= 0) return 'ishikawa';
+    if (label.indexOf('福井') >= 0) return 'fukui';
+    if (label.indexOf('山梨') >= 0) return 'yamanashi';
+    if (label.indexOf('長野') >= 0) return 'nagano';
+    if (label.indexOf('岐阜') >= 0) return 'gifu';
+    if (label.indexOf('静岡') >= 0) return 'shizuoka';
+    if (label.indexOf('愛知') >= 0) return 'aichi';
+    if (label.indexOf('三重') >= 0) return 'mie';
+    if (label.indexOf('滋賀') >= 0) return 'shiga';
+    if (label.indexOf('京都') >= 0) return 'kyoto';
+    if (label.indexOf('大阪') >= 0) return 'osaka';
+    if (label.indexOf('兵庫') >= 0) return 'hyogo';
+    if (label.indexOf('奈良') >= 0) return 'nara';
+    if (label.indexOf('和歌山') >= 0) return 'wakayama';
+    if (label.indexOf('鳥取') >= 0) return 'tottori';
+    if (label.indexOf('島根') >= 0) return 'shimane';
+    if (label.indexOf('岡山') >= 0) return 'okayama';
+    if (label.indexOf('広島') >= 0) return 'hiroshima';
+    if (label.indexOf('山口') >= 0) return 'yamaguchi';
+    if (label.indexOf('徳島') >= 0) return 'tokushima';
+    if (label.indexOf('香川') >= 0) return 'kagawa';
+    if (label.indexOf('愛媛') >= 0) return 'ehime';
+    if (label.indexOf('高知') >= 0) return 'kochi';
+    if (label.indexOf('福岡') >= 0) return 'fukuoka';
+    if (label.indexOf('佐賀') >= 0) return 'saga';
+    if (label.indexOf('長崎') >= 0) return 'nagasaki';
+    if (label.indexOf('熊本') >= 0) return 'kumamoto';
+    if (label.indexOf('大分') >= 0) return 'oita';
+    if (label.indexOf('宮崎') >= 0) return 'miyazaki';
+    if (label.indexOf('鹿児島') >= 0) return 'kagoshima';
+    if (label.indexOf('沖縄') >= 0) return 'okinawa';
+    return label;
   },
 
   /**
@@ -167,26 +223,16 @@ const SubsidyMatcher = {
   },
 
   /**
-   * プレミアム補助率の条件判定
+   * プレミアム補助率の条件判定 (V3: q11 は配列、日本語ラベル)
    */
-  _meetsPremiumConditions(formData, subsidy) {
-    // 介護テクノロジー導入支援:過去の補助金経験があれば3/4補助
-    if (subsidy.id === 'care_tech') {
-      return formData.q10_subsidy_experience === 'multiple' ||
-             formData.q10_subsidy_experience === 'once';
-    }
+  _meetsPremiumConditions: function(formData, subsidy) {
+    const exp = formData.q11_subsidy_experience || [];
+    const hasExperience = exp.some(function(e) {
+      return e !== '使ったことがない';
+    });
 
-    // 大阪府介護ICT導入支援:過去の活用経験があれば3/4補助
-    if (subsidy.id === 'osaka_ict') {
-      return formData.q10_subsidy_experience === 'multiple' ||
-             formData.q10_subsidy_experience === 'once';
-    }
-
-    // 業務改善助成金:賃金要件達成は個別ヒアリング後に判定
-    if (subsidy.id === 'business_improvement') {
-      return false;
-    }
-
+    if (subsidy.id === 'care_tech') return hasExperience;
+    if (subsidy.id === 'osaka_ict') return hasExperience;
     return false;
   },
 
