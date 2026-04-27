@@ -10,7 +10,8 @@ const Config = {
 
   // === Claude API ===========================================================
   get CLAUDE_API_KEY() {
-    return PropertiesService.getScriptProperties().getProperty('CLAUDE_API_KEY');
+    const props = PropertiesService.getScriptProperties();
+    return props.getProperty('CLAUDE_API_KEY') || props.getProperty('ANTHROPIC_API_KEY');
   },
   CLAUDE_MODEL: 'claude-opus-4-7',
   CLAUDE_API_URL: 'https://api.anthropic.com/v1/messages',
@@ -56,7 +57,7 @@ const Config = {
   BUSINESS_TYPES: {
     visiting_care:        { label: '訪問介護',                      readiness: 'available',     roadmap_quarter: '現在主力 (2026 Q2 〜)' },
     visiting_nursing:     { label: '訪問看護',                      readiness: 'roadmap',       roadmap_quarter: '2026 Q4 〜' },
-    day_care:             { label: '通所介護 (デイサービス)',          readiness: 'roadmap',       roadmap_quarter: '2027 Q1 〜' },
+    day_service:             { label: '通所介護 (デイサービス)',          readiness: 'roadmap',       roadmap_quarter: '2027 Q1 〜' },
     care_manager:         { label: '居宅介護支援 (ケアマネ事業所)',     readiness: 'roadmap',       roadmap_quarter: '2027 Q2 〜' },
     group_home:           { label: 'グループホーム / 特養 / 老健',     readiness: 'roadmap',       roadmap_quarter: '2027 Q3 〜' },
     disability_welfare:   { label: '障害福祉サービス',                readiness: 'roadmap',       roadmap_quarter: '2027 Q3 〜' },
@@ -76,7 +77,7 @@ const Config = {
       single_max: 1000000,
       rate_standard: 0.5,
       rate_premium: 0.75,              // 加算条件 (生産性ガイドライン提出 + ビギナー受講 + 相談センター受診)
-      eligible_types: ['visiting_care', 'visiting_nursing', 'day_care', 'group_home'],
+      eligible_types: ['visiting_care', 'visiting_nursing', 'day_service', 'group_home'],
       requirements: [
         '生産性向上ガイドラインに基づく計画提出',
         '生産性向上ビギナーセミナー受講',
@@ -137,7 +138,7 @@ const Config = {
       type: 'kasan',
       monthly_addition_unit_1: 100,    // 月 100 単位 / 人
       monthly_addition_unit_2: 10,
-      eligible_types: ['visiting_care', 'visiting_nursing', 'day_care', 'group_home'],
+      eligible_types: ['visiting_care', 'visiting_nursing', 'day_service', 'group_home'],
       mandatory_from: '2026-06-01',    // 2026/6 から処遇改善加算上位の前提条件
       year: 2026
     },
@@ -147,8 +148,8 @@ const Config = {
       max_amount: 3000000,
       rate_standard: 0.5,
       rate_premium: 0.75,
-      eligible_types: ['visiting_care', 'visiting_nursing', 'day_care'],
-      eligible_prefectures: ['osaka'],
+      eligible_types: ['visiting_care', 'visiting_nursing', 'day_service'],
+      eligible_prefectures: ['大阪府'],
       year: 2026
     }
   ],
@@ -176,7 +177,7 @@ const Config = {
       monthly_savings_hours: 15,
       target_pain_points: ['addition_management', 'billing'],
       target_themes: ['addition_max', 'revision_response'],
-      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_care'],
+      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_service'],
       readiness: 'launching_2026q4'
     },
     {
@@ -200,7 +201,7 @@ const Config = {
       monthly_savings_hours: 8,
       target_pain_points: ['family_communication'],
       target_themes: ['user_satisfaction'],
-      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_care', 'group_home'],
+      best_for_business_types: ['visiting_care', 'visiting_nursing', 'day_service', 'group_home'],
       readiness: 'launching_2026q4'
     },
     {

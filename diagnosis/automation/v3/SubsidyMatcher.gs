@@ -2,9 +2,14 @@
  * Loomia AI診断システム V3.0 福祉業界特化版
  * SubsidyMatcher.gs - 補助金マッチングロジック
  *
- * 役割: フォーム入力(業態・都道府県・補助金経験等)から、
- *       Config.SUBSIDIESに登録された補助金マスター7種に対して
- *       適用可否・補助率・実質負担額をマッチングする。
+ * 役割: フォーム入力(業態・都道府県・補助金経験等)から、Config.SUBSIDIES に
+ *       登録された補助金マスター7種に対して適用可否・補助率・実質負担額を
+ *       マッチングする。
+ *
+ * V3.0 注記: HTML フォームは q4_service(業態英語キー)、q6_prefecture
+ *           (都道府県の日本語ラベル「大阪府」等)、q11_subsidy_exp
+ *           (経験補助金の日本語配列)を送信する。Config.SUBSIDIES の
+ *           eligible_prefectures も日本語キーで揃えてある。
  *
  * 重要な前提:
  *   - 業務改善助成金等の厚労省管轄助成金は社労士独占業務
@@ -12,10 +17,6 @@
  *   - そのため、Loomia単独受任ではなく「社労士・行政書士・
  *     中小企業診断士と連携して支援」を前提とする
  *   - 申請代行成功報酬は15〜20%(中央値17.5%)
- *
- * 出典:
- *   - 福祉_AI自動化(補助金7種・士業独占業務)
- *   - ＡＩＳＮＳ運用(申請代行相場感)
  */
 
 const SubsidyMatcher = {
@@ -32,8 +33,8 @@ const SubsidyMatcher = {
    * @return {Array} 補助金見込み額順にソートされた配列
    */
   match(formData) {
-    const businessType = formData.q2_business_type;
-    const prefecture = formData.q12_prefecture;
+    const businessType = formData.q4_service;
+    const prefecture = formData.q6_prefecture || '';
 
     // プロダクトマッチングから投資額を見積もる
     const matchedProducts = ProductMatcher.matchTop3(formData);
@@ -70,6 +71,8 @@ const SubsidyMatcher = {
     }
 
     // 都道府県制限チェック(大阪府限定の補助金など)
+    // formData.q6_prefecture は「大阪府」のような日本語ラベル、
+    // Config 側も日本語ラベルで揃えてある。
     if (subsidy.eligible_prefectures &&
         subsidy.eligible_prefectures.indexOf(prefecture) < 0) {
       return null;
@@ -86,7 +89,6 @@ const SubsidyMatcher = {
 
     // IT導入補助金の小規模事業者向け特例
     if (subsidy.id === 'it_introduction_2026' && totalEstimatedInvestment <= 500000) {
-      // 50万円以下案件は最大4/5補助
       if (subsidy.rate_invoice_micro) {
         applicable_rate = subsidy.rate_invoice_micro;
         rate_reason = '50万円以下小規模事業者特例(4/5補助)';
@@ -168,25 +170,21 @@ const SubsidyMatcher = {
 
   /**
    * プレミアム補助率の条件判定
+   * V3 フォーム: q11_subsidy_exp は日本語ラベル配列。
+   * 例: ['介護テクノロジー導入支援事業', 'IT導入補助金']
+   *     ['使ったことがない']
    */
-  _meetsPremiumConditions(formData, subsidy) {
-    // 介護テクノロジー導入支援:過去の補助金経験があれば3/4補助
+  _meetsPremiumConditions: function(formData, subsidy) {
+    const exp = formData.q11_subsidy_exp || [];
+
     if (subsidy.id === 'care_tech') {
-      return formData.q10_subsidy_experience === 'multiple' ||
-             formData.q10_subsidy_experience === 'once';
+      // 介護テクノロジー導入支援事業の経験があればプレミアム
+      return exp.indexOf('介護テクノロジー導入支援事業') >= 0;
     }
-
-    // 大阪府介護ICT導入支援:過去の活用経験があれば3/4補助
     if (subsidy.id === 'osaka_ict') {
-      return formData.q10_subsidy_experience === 'multiple' ||
-             formData.q10_subsidy_experience === 'once';
+      // 何らかの補助金経験があればプレミアム(「使ったことがない」のみは不可)
+      return exp.length > 0 && exp.indexOf('使ったことがない') < 0;
     }
-
-    // 業務改善助成金:賃金要件達成は個別ヒアリング後に判定
-    if (subsidy.id === 'business_improvement') {
-      return false;
-    }
-
     return false;
   },
 
@@ -194,11 +192,9 @@ const SubsidyMatcher = {
    * 外部士業との連携が必要かどうかの判定
    */
   _requiresExternalPartner(subsidy) {
-    // 厚労省管轄助成金は社労士独占
     if (subsidy.independence_requirement === 'shaorshi') {
       return true;
     }
-    // 業務改善助成金、人材確保等支援助成金等
     if (subsidy.id === 'business_improvement') {
       return true;
     }
