@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<title>訪問記録 音声入力AI | Loomia MVP v0.1</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --bg-card: #15151a;
+  --bg-input: #1c1c20;
+  --accent: #7dd3fc;
+  --accent-dim: #5fb8e0;
+  --accent-strong: #38bdf8;
+  --text: #f4f4f5;
+  --text-sub: #a1a1aa;
+  --text-muted: #71717a;
+  --border: #27272a;
+  --warning: #fcd34d;
+  --error: #f87171;
+  --success: #86efac;
+  --recording: #ef4444;
+  --font-jp: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-jp);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  padding-bottom: 110px;
+}
+
+.container {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.brand {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.version {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+.step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 18px;
+  margin-bottom: 16px;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.step-num {
+  background: var(--accent);
+  color: var(--bg);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.step-help {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+}
+
+label.field-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="datetime-local"],
+textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+textarea {
+  min-height: 220px;
+  resize: vertical;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 48px;
+  transition: background 0.2s;
+}
+
+.btn:hover { background: var(--accent-strong); }
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: transparent;
+}
+
+.btn-block { width: 100%; }
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.mic-btn {
+  width: 100%;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 28px 20px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 90px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 16px rgba(125, 211, 252, 0.18);
+}
+
+.mic-btn:hover { background: var(--accent-strong); }
+
+.mic-btn.recording {
+  background: var(--recording);
+  animation: pulse 1.2s ease-in-out infinite;
+  box-shadow: 0 4px 24px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.transcript {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 14px;
+  min-height: 80px;
+  font-size: 15px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.transcript:empty::before {
+  content: '録音すると、ここに認識された文字が表示されます';
+  color: var(--text-muted);
+}
+
+.transcript .interim {
+  color: var(--text-sub);
+  font-style: italic;
+}
+
+.status {
+  font-size: 13px;
+  margin-top: 10px;
+  color: var(--text-sub);
+  min-height: 1.4em;
+}
+
+.status.success { color: var(--success); }
+.status.error { color: var(--error); }
+.status.warning { color: var(--warning); }
+
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.hidden { display: none !important; }
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.65;
+  z-index: 100;
+}
+
+.footer strong {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .container { padding: 16px 12px; }
+  .step { padding: 16px 14px; }
+  .brand { font-size: 24px; }
+  .title { font-size: 16px; }
+  .mic-btn { padding: 24px 16px; font-size: 18px; min-height: 80px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="container">
+
+    <header class="header">
+      <div class="brand">Loomia</div>
+      <div class="title">訪問記録 音声入力AI</div>
+      <div class="version">MVP v0.1 / 家業実証版</div>
+    </header>
+
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">1</span>
+        <span class="step-title">Claude API キー</span>
+      </div>
+      <p class="step-help">初回のみ入力すれば、ブラウザに保存されて次回以降は自動で読み込まれます。キーは外部送信されず、このブラウザのみに残ります。</p>
+      <label class="field-label" for="apiKey">API キー(sk-ant- で始まる文字列)</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div class="btn-row">
+        <button class="btn" id="saveKeyBtn">保存</button>
+        <button class="btn btn-secondary" id="clearKeyBtn">クリア</button>
+      </div>
+      <div class="status" id="keyStatus"></div>
+    </section>
+
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">2</span>
+        <span class="step-title">利用者情報(任意)</span>
+      </div>
+      <p class="step-help">記録のヘッダに含めます。空欄でも問題ありません。</p>
+      <label class="field-label" for="userName">利用者名</label>
+      <input type="text" id="userName" placeholder="例: 山田 様" autocomplete="off">
+      <label class="field-label" for="visitDate" style="margin-top:14px;">訪問日時</label>
+      <input type="datetime-local" id="visitDate">
+    </section>
+
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">3</span>
+        <span class="step-title">音声録音</span>
+      </div>
+      <p class="step-help">マイクボタンを押して話してください。もう一度押すと停止します。最初の起動時はマイクの利用許可をお願いします。</p>
+      <button class="mic-btn" id="micBtn" type="button">🎤 録音開始</button>
+      <div class="status" id="micStatus"></div>
+      <div class="transcript" id="transcript" aria-live="polite"></div>
+    </section>
+
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">4</span>
+        <span class="step-title">AI で介護記録に整形</span>
+      </div>
+      <p class="step-help">録音テキストを確認したら、整形ボタンを押してください。Claude Haiku 4.5 で整形します。</p>
+      <button class="btn btn-block" id="formatBtn" type="button">✨ 介護記録に整形する</button>
+      <div class="status" id="formatStatus"></div>
+    </section>
+
+    <section class="step hidden" id="resultStep">
+      <div class="step-header">
+        <span class="step-num">5</span>
+        <span class="step-title">整形結果(編集可能)</span>
+      </div>
+      <p class="step-help">必ず内容を確認・修正してから記録に使用してください。AI は事実の補完や医療判断を行わない設計です。</p>
+      <textarea id="resultText" rows="14" spellcheck="false"></textarea>
+      <div class="btn-row">
+        <button class="btn" id="copyBtn" type="button">📋 コピー</button>
+        <button class="btn btn-secondary" id="resetBtn" type="button">🔄 やり直す</button>
+      </div>
+      <div class="status" id="resultStatus"></div>
+    </section>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <strong>このAI出力は必ずヘルパーさんが内容を確認・修正してから記録に使用してください。</strong><br>
+  AIは医療判断を行いません。© 2026 Loomia
+</footer>
+
+<script>
+'use strict';
+
+const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+const MODEL = 'claude-haiku-4-5-20251001';
+const STORAGE_KEY = 'loomia_voice_recorder_apikey';
+
+const SYSTEM_PROMPT = `あなたは訪問介護のヘルパーが音声入力したメモを、介護記録形式に整形するアシスタントです。
+
+【絶対遵守の制約】
+1. 医療判断・診断・投薬指示は一切行わない。バイタル値や状態の記述は転記に留め、解釈や判断を加えない
+2. 入力に含まれない事実を補完しない。推測情報を出力しない
+3. 利用者の個人情報は記録形式に含めるが、整形以外の解釈は加えない
+4. 出力は「下書き」であり、ヘルパーが確認・修正することが前提
+5. 専門職(看護師・医師・ケアマネ等)の判断を要する事項には文末に「(要確認)」と明記
+6. 元の発話に含まれない敬語や挨拶を補完しない
+
+【出力形式】
+以下の構造で日本語で整形してください。元の発話に該当する情報がない項目は出力から省略してください(空欄として残さない)。
+
+■訪問日時:(ユーザー入力の日時)
+■利用者:(ユーザー入力の名前)
+■バイタル・状態:(音声入力で言及された体温・血圧・脈拍・表情・訴え等を簡潔に転記)
+■実施したケア:(音声入力で言及された具体的なケア内容を箇条書き)
+■申し送り事項:(次回への申し送り、家族への連絡事項等)
+■備考:(その他、特筆すべき事項)
+
+【トーン】
+- 簡潔で客観的な表記
+- 主観的な評価語(「良かった」「悪かった」等)はそのまま転記し、解釈を加えない
+- 元の発話に含まれない情報は加えない
+- 数値・薬剤名・固有名詞は元発話を忠実に再現する
+
+【出力長】
+元発話の要点を落とさない範囲で、簡潔にまとめる。冗長な前置きや締めの挨拶は不要。`;
+
+// State
+let recognition = null;
+let isRecording = false;
+let userStoppedManually = false;
+let finalTranscript = '';
+let interimTranscript = '';
+
+// Elements
+const $ = id => document.getElementById(id);
+const apiKeyInput = $('apiKey');
+const saveKeyBtn = $('saveKeyBtn');
+const clearKeyBtn = $('clearKeyBtn');
+const keyStatus = $('keyStatus');
+const userName = $('userName');
+const visitDate = $('visitDate');
+const micBtn = $('micBtn');
+const micStatus = $('micStatus');
+const transcriptEl = $('transcript');
+const formatBtn = $('formatBtn');
+const formatStatus = $('formatStatus');
+const resultStep = $('resultStep');
+const resultText = $('resultText');
+const copyBtn = $('copyBtn');
+const resetBtn = $('resetBtn');
+const resultStatus = $('resultStatus');
+
+function init() {
+  const savedKey = localStorage.getItem(STORAGE_KEY);
+  if (savedKey) {
+    apiKeyInput.value = savedKey;
+    setStatus(keyStatus, '✓ 保存済みのキーを読み込みました', 'success');
+  }
+
+  const now = new Date();
+  const tzOffset = now.getTimezoneOffset() * 60000;
+  visitDate.value = new Date(now - tzOffset).toISOString().slice(0, 16);
+
+  initSpeechRecognition();
+
+  saveKeyBtn.addEventListener('click', saveApiKey);
+  clearKeyBtn.addEventListener('click', clearApiKey);
+  micBtn.addEventListener('click', toggleRecording);
+  formatBtn.addEventListener('click', formatToCareRecord);
+  copyBtn.addEventListener('click', copyResult);
+  resetBtn.addEventListener('click', resetWorkflow);
+}
+
+function setStatus(el, text, type) {
+  el.textContent = text;
+  el.className = 'status' + (type ? ' ' + type : '');
+}
+
+// API Key
+function saveApiKey() {
+  const key = apiKeyInput.value.trim();
+  if (!key) {
+    setStatus(keyStatus, 'キーを入力してください', 'error');
+    return;
+  }
+  if (!key.startsWith('sk-ant-')) {
+    setStatus(keyStatus, '⚠ Claude API キーは「sk-ant-」で始まります。形式をご確認ください', 'warning');
+    return;
+  }
+  localStorage.setItem(STORAGE_KEY, key);
+  setStatus(keyStatus, '✓ 保存しました(このブラウザに残ります)', 'success');
+}
+
+function clearApiKey() {
+  localStorage.removeItem(STORAGE_KEY);
+  apiKeyInput.value = '';
+  setStatus(keyStatus, '✓ キーを削除しました', 'success');
+}
+
+// Speech Recognition
+function initSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    micBtn.disabled = true;
+    setStatus(micStatus, '⚠ このブラウザは音声認識に対応していません(推奨: Chrome / Safari)', 'error');
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = 'ja-JP';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = (event) => {
+    interimTranscript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalTranscript += transcript;
+      } else {
+        interimTranscript += transcript;
+      }
+    }
+    renderTranscript();
+  };
+
+  recognition.onerror = (event) => {
+    if (event.error === 'no-speech') return;
+    setStatus(micStatus, '⚠ 音声認識エラー: ' + event.error, 'error');
+    forceStopRecording();
+  };
+
+  recognition.onend = () => {
+    if (isRecording && !userStoppedManually) {
+      try {
+        recognition.start();
+      } catch (e) {
+        forceStopRecording();
+      }
+    }
+  };
+}
+
+function toggleRecording() {
+  if (isRecording) stopRecording();
+  else startRecording();
+}
+
+function startRecording() {
+  if (!recognition) return;
+  try {
+    userStoppedManually = false;
+    recognition.start();
+    isRecording = true;
+    micBtn.textContent = '⏹ 録音停止';
+    micBtn.classList.add('recording');
+    setStatus(micStatus, '🔴 録音中...話してください', 'warning');
+  } catch (e) {
+    setStatus(micStatus, '⚠ 録音開始失敗: ' + e.message, 'error');
+  }
+}
+
+function stopRecording() {
+  userStoppedManually = true;
+  isRecording = false;
+  if (recognition) {
+    try { recognition.stop(); } catch (e) { /* ignore */ }
+  }
+  micBtn.textContent = '🎤 録音開始';
+  micBtn.classList.remove('recording');
+  setStatus(micStatus, '✓ 録音停止しました', 'success');
+}
+
+function forceStopRecording() {
+  isRecording = false;
+  userStoppedManually = true;
+  micBtn.textContent = '🎤 録音開始';
+  micBtn.classList.remove('recording');
+}
+
+function renderTranscript() {
+  transcriptEl.innerHTML = '';
+  if (finalTranscript) {
+    const finalSpan = document.createElement('span');
+    finalSpan.textContent = finalTranscript;
+    transcriptEl.appendChild(finalSpan);
+  }
+  if (interimTranscript) {
+    const interimSpan = document.createElement('span');
+    interimSpan.className = 'interim';
+    interimSpan.textContent = interimTranscript;
+    transcriptEl.appendChild(interimSpan);
+  }
+}
+
+// Claude API
+async function formatToCareRecord() {
+  const apiKey = (localStorage.getItem(STORAGE_KEY) || apiKeyInput.value || '').trim();
+  if (!apiKey) {
+    setStatus(formatStatus, '⚠ Step 1 で API キーを保存してください', 'error');
+    return;
+  }
+  if (!finalTranscript.trim()) {
+    setStatus(formatStatus, '⚠ Step 3 で音声を録音してください', 'error');
+    return;
+  }
+  if (isRecording) stopRecording();
+
+  const userPrompt = buildUserPrompt();
+
+  formatBtn.disabled = true;
+  formatStatus.innerHTML = '<span class="loading"><span class="spinner"></span>AIが整形中...</span>';
+  formatStatus.className = 'status';
+
+  try {
+    const response = await fetch(ANTHROPIC_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 2000,
+        system: SYSTEM_PROMPT,
+        messages: [
+          { role: 'user', content: userPrompt }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error('API エラー (' + response.status + '): ' + errText.slice(0, 300));
+    }
+
+    const data = await response.json();
+    const formatted = (data.content && data.content[0] && data.content[0].text) || '(整形結果が取得できませんでした)';
+
+    resultText.value = formatted;
+    resultStep.classList.remove('hidden');
+    resultStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setStatus(formatStatus, '✓ 整形が完了しました', 'success');
+  } catch (err) {
+    setStatus(formatStatus, '⚠ ' + err.message, 'error');
+  } finally {
+    formatBtn.disabled = false;
+  }
+}
+
+function buildUserPrompt() {
+  const date = visitDate.value
+    ? new Date(visitDate.value).toLocaleString('ja-JP', { dateStyle: 'medium', timeStyle: 'short' })
+    : '未記入';
+  const name = userName.value.trim() || '未記入';
+
+  return [
+    '【訪問日時】' + date,
+    '【利用者】' + name,
+    '',
+    '【音声入力メモ】',
+    finalTranscript.trim()
+  ].join('\n');
+}
+
+// Result actions
+async function copyResult() {
+  try {
+    await navigator.clipboard.writeText(resultText.value);
+    setStatus(resultStatus, '✓ コピーしました!', 'success');
+    setTimeout(() => { setStatus(resultStatus, '', ''); }, 2400);
+  } catch (e) {
+    try {
+      resultText.select();
+      document.execCommand('copy');
+      setStatus(resultStatus, '✓ コピーしました(手動選択)', 'success');
+    } catch (e2) {
+      setStatus(resultStatus, '⚠ コピー失敗。長押しで手動コピーしてください', 'error');
+    }
+  }
+}
+
+function resetWorkflow() {
+  finalTranscript = '';
+  interimTranscript = '';
+  transcriptEl.innerHTML = '';
+  resultText.value = '';
+  resultStep.classList.add('hidden');
+  setStatus(formatStatus, '', '');
+  setStatus(micStatus, '', '');
+  setStatus(resultStatus, '', '');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
