@@ -392,7 +392,7 @@ body {
   </div>
 </div>
 
-<form id="diagnosisForm" method="POST" target="resultFrame" enctype="application/x-www-form-urlencoded" action="<?= scriptUrl ?>">
+<form id="diagnosisForm" method="POST" target="resultFrame" enctype="application/x-www-form-urlencoded" action="https://script.google.com/macros/s/AKfycbz86DTjH9qau2lQ0CbIpVfoJJ9VpGRfvAMfq1XfAdaRIg4TjIl25avNMNHsYJiSl-2z/exec">
 
 <!-- Q1: メールアドレス -->
 <div class="question" data-q="1">
@@ -891,7 +891,7 @@ body {
     form.appendChild(hiddenInput);
 
     // 通常の form submit を実行(target="resultFrame" で隠し iframe に遷移、画面は静止)
-    // ※ form.action は HTML テンプレート側で <?= scriptUrl ?> として直接埋め込み済み
+    // ※ form.action は GitHub Pages 配信を考慮し、Apps Script Web App URL をハードコード済み
     HTMLFormElement.prototype.submit.call(form);
 
     // 30秒後に成功画面に遷移(Claude API は 4フェーズで30秒程度かかるため長めに設定)
