@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="color-scheme" content="dark">
+<title>訪問介護 加算取得診断 | Loomia</title>
+<meta name="description" content="2分で分かる、あなたの訪問介護事業所が取れていない加算と損失額。10問のQ&Aで即診断。">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --bg-card: #15151a;
+  --bg-input: #1c1c20;
+  --accent: #7dd3fc;
+  --accent-strong: #38bdf8;
+  --accent-dim: #5fb8e0;
+  --text: #f4f4f5;
+  --text-sub: #a1a1aa;
+  --text-muted: #71717a;
+  --border: #27272a;
+  --warning: #fcd34d;
+  --error: #f87171;
+  --success: #86efac;
+  --font-jp: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  --font-en: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-jp);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+  flex: 1;
+}
+
+.brand {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* ===== Start screen ===== */
+.start-hero {
+  text-align: center;
+  padding: 32px 0 24px;
+}
+
+.start-title {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 6vw, 36px);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+
+.start-sub {
+  font-size: 15px;
+  color: var(--text-sub);
+  margin-bottom: 36px;
+  padding: 0 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 16px 28px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 56px;
+  transition: background 0.2s, transform 0.1s;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn:hover { background: var(--accent-strong); }
+.btn:active { transform: scale(0.98); }
+
+.btn-large {
+  font-size: 18px;
+  padding: 20px 36px;
+  min-height: 64px;
+}
+
+.btn-block { width: 100%; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-top: 40px;
+  padding: 16px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* ===== Question screen ===== */
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+  font-family: var(--font-en);
+  text-align: center;
+}
+
+.q-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 22px;
+  margin-bottom: 20px;
+}
+
+.q-num {
+  font-family: var(--font-en);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.q-text {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option {
+  display: block;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 16px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: all 0.15s;
+  min-height: 56px;
+}
+
+.option:hover {
+  border-color: var(--accent);
+  background: rgba(125, 211, 252, 0.04);
+}
+
+.option.selected {
+  border-color: var(--accent);
+  background: rgba(125, 211, 252, 0.1);
+  color: var(--accent);
+}
+
+.q-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.q-footer .btn { flex: 1; }
+
+/* ===== Result screen ===== */
+.result-hero {
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 36px 22px;
+  margin-bottom: 28px;
+}
+
+.result-label {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+
+.result-amount {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 9vw, 56px);
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.1;
+  margin: 8px 0;
+}
+
+.result-amount-unit {
+  font-size: 0.5em;
+  color: var(--text);
+  margin-left: 6px;
+}
+
+.result-caption {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-top: 12px;
+  line-height: 1.7;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 32px 0 16px;
+}
+
+.kazan-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 20px;
+  margin-bottom: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.kazan-rank {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.kazan-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.kazan-loss {
+  font-size: 15px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.kazan-loss strong {
+  font-size: 22px;
+  font-family: var(--font-serif);
+}
+
+.kazan-conditions {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+
+.kazan-conditions ul {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+
+.kazan-conditions li { margin: 4px 0; }
+
+.empty-state {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 22px;
+  text-align: center;
+  color: var(--text-sub);
+}
+
+.cta-block {
+  background: rgba(125, 211, 252, 0.06);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  border-radius: 14px;
+  padding: 28px 22px;
+  margin: 36px 0 24px;
+  text-align: center;
+}
+
+.cta-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.cta-sub {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 20px;
+}
+
+.cta-block .btn-row {
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.cta-block .btn { width: 100%; }
+
+.legal-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 480px) {
+  .container { padding: 24px 14px 40px; }
+  .q-card { padding: 22px 18px; }
+  .result-hero { padding: 28px 18px; }
+  .kazan-card { padding: 18px 16px; }
+  .cta-block { padding: 22px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="container">
+
+    <div class="brand">Loomia</div>
+
+    <!-- ===== START SCREEN ===== -->
+    <section id="screenStart">
+      <div class="start-hero">
+        <h1 class="start-title">訪問介護 加算取得診断</h1>
+        <p class="start-sub">2分で分かる、あなたの事業所が<br>取れていない加算と損失額</p>
+        <button class="btn btn-large" id="startBtn">診断スタート →</button>
+      </div>
+      <p class="disclaimer">
+        この診断結果はAIによる概算です。最終的な加算取得可否は専門家にご確認ください。<br>
+        © 2026 Loomia
+      </p>
+    </section>
+
+    <!-- ===== QUESTION SCREEN ===== -->
+    <section id="screenQuestion" class="hidden">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">QUESTION 1 / 10</div>
+
+      <div class="q-card">
+        <div class="q-num" id="qNum">Q1</div>
+        <div class="q-text" id="qText"></div>
+        <div class="options" id="qOptions"></div>
+      </div>
+
+      <div class="q-footer">
+        <button class="btn btn-secondary" id="prevBtn">← 戻る</button>
+        <button class="btn" id="nextBtn">次へ →</button>
+      </div>
+    </section>
+
+    <!-- ===== RESULT SCREEN ===== -->
+    <section id="screenResult" class="hidden">
+      <div class="result-hero">
+        <div class="result-label">あなたの事業所は毎月</div>
+        <div class="result-amount" id="resultAmount">0<span class="result-amount-unit">万円</span></div>
+        <div class="result-caption" id="resultCaption">の加算を取れていない可能性があります</div>
+      </div>
+
+      <h2 class="section-title">取れていない加算 ベスト3</h2>
+      <div id="kazanList"></div>
+
+      <div class="cta-block">
+        <div class="cta-title">Loomiaの無料相談で<br>加算取得のロードマップを作りましょう</div>
+        <p class="cta-sub">診断結果を踏まえて、現場フローと書類整備の優先順位をお話しします</p>
+        <div class="btn-row">
+          <a href="mailto:loomia.jp@gmail.com?subject=%E5%8A%A0%E7%AE%97%E5%8F%96%E5%BE%97%E7%9B%B8%E8%AB%87" class="btn">📅 20分無料相談を予約する</a>
+          <a href="https://script.google.com/macros/s/AKfycbz86DTjH9qau2lQ0CbIpVfoJJ9VpGRfvAMfq1XfAdaRIg4TjIl25avNMNHsYJiSl-2z/exec" class="btn btn-secondary">📋 無料のAI活用度診断も受ける</a>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-secondary btn-block" id="restartBtn">🔄 もう一度診断する</button>
+      </div>
+
+      <p class="legal-note">
+        この診断はAIによる概算であり、実際の加算算定可否は事業所の状況・要件確認・専門家への相談が必要です。<br>
+        加算の最終判断はサービス提供責任者・管理者が行ってください。© 2026 Loomia
+      </p>
+    </section>
+
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ===== Constants =====
+const STORAGE_KEY = 'loomia_kazan_shindan_state_v1';
+const UNIT_PRICE = 10.72; // 介護報酬1単位 (円、訪問介護の標準的な地域区分)
+
+// 利用者数の代表値(計算用)
+const USER_COUNT_BY_OPTION = {
+  '10人未満': 5,
+  '10〜30人': 20,
+  '31〜50人': 40,
+  '51人以上': 70
+};
+
+// 訪問介護の月額利用者単価(処遇改善加算計算用、保守的見積)
+const MONTHLY_REVENUE_PER_USER = 35000;
+
+// ===== Questions =====
+const QUESTIONS = [
+  {
+    id: 'q1_staff',
+    text: '常勤・非常勤含めたヘルパーの総数は?',
+    options: ['5人未満', '5〜10人', '11〜20人', '21人以上']
+  },
+  {
+    id: 'q2_users',
+    text: '現在の利用者数(月)は?',
+    options: ['10人未満', '10〜30人', '31〜50人', '51人以上']
+  },
+  {
+    id: 'q3_shogu',
+    text: '処遇改善加算の現在の算定区分は?',
+    options: ['区分Ⅰ(最上位)', '区分Ⅱ', '区分Ⅲ', '取っていない', 'わからない']
+  },
+  {
+    id: 'q4_seisansei',
+    text: '生産性向上推進体制加算を取っていますか?',
+    options: ['加算Ⅰを取っている', '加算Ⅱを取っている', '取っていない', 'わからない']
+  },
+  {
+    id: 'q5_ict',
+    text: '訪問記録をスマホやタブレットで入力していますか?',
+    options: ['はい、全員', 'はい、一部', 'いいえ、紙で書いている']
+  },
+  {
+    id: 'q6_intercom',
+    text: 'インカム(ヘッドセット等)を使っていますか?',
+    options: ['使っている', '使っていない']
+  },
+  {
+    id: 'q7_life',
+    text: 'LIFEにデータを提出していますか?',
+    options: ['毎月提出している', 'たまに提出している', '提出していない', 'LIFEを知らない']
+  },
+  {
+    id: 'q8_tokutei',
+    text: '特定事業所加算を取っていますか?',
+    options: ['取っている', '取っていない', 'わからない']
+  },
+  {
+    id: 'q9_careplan',
+    text: 'ケアプランデータ連携システムを使っていますか?',
+    options: ['使っている', '使っていない', 'わからない']
+  },
+  {
+    id: 'q10_pain',
+    text: '現在、月単位でどのくらいの課題を感じていますか?',
+    options: ['記録業務の時間', '加算の書類作成', 'ヘルパーの採用・定着', '利用者・家族対応', 'その他']
+  }
+];
+
+// ===== State =====
+let state = {
+  currentIndex: 0,
+  answers: {}
+};
+
+// ===== Elements =====
+const $ = id => document.getElementById(id);
+const screenStart = $('screenStart');
+const screenQuestion = $('screenQuestion');
+const screenResult = $('screenResult');
+
+// ===== Init =====
+function init() {
+  loadState();
+  bindEvents();
+
+  if (Object.keys(state.answers).length === 10) {
+    showResult();
+  } else if (Object.keys(state.answers).length > 0) {
+    showQuestion();
+  } else {
+    showStart();
+  }
+}
+
+function bindEvents() {
+  $('startBtn').addEventListener('click', () => {
+    state.currentIndex = 0;
+    state.answers = {};
+    saveState();
+    showQuestion();
+  });
+  $('prevBtn').addEventListener('click', () => {
+    if (state.currentIndex > 0) {
+      state.currentIndex--;
+      saveState();
+      renderQuestion();
+    } else {
+      showStart();
+    }
+  });
+  $('nextBtn').addEventListener('click', () => {
+    const q = QUESTIONS[state.currentIndex];
+    if (!state.answers[q.id]) {
+      // No answer selected yet
+      const opts = $('qOptions').querySelectorAll('.option');
+      opts.forEach(o => o.style.borderColor = 'var(--error)');
+      setTimeout(() => {
+        opts.forEach(o => o.style.borderColor = '');
+      }, 1200);
+      return;
+    }
+    if (state.currentIndex < QUESTIONS.length - 1) {
+      state.currentIndex++;
+      saveState();
+      renderQuestion();
+    } else {
+      saveState();
+      showResult();
+    }
+  });
+  $('restartBtn').addEventListener('click', () => {
+    state.currentIndex = 0;
+    state.answers = {};
+    localStorage.removeItem(STORAGE_KEY);
+    showStart();
+  });
+}
+
+// ===== Persistence =====
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { /* ignore */ }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        state = { currentIndex: 0, answers: {}, ...parsed };
+      }
+    }
+  } catch (e) { /* ignore */ }
+}
+
+// ===== Screen transitions =====
+function showStart() {
+  screenStart.classList.remove('hidden');
+  screenQuestion.classList.add('hidden');
+  screenResult.classList.add('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showQuestion() {
+  screenStart.classList.add('hidden');
+  screenQuestion.classList.remove('hidden');
+  screenResult.classList.add('hidden');
+  renderQuestion();
+}
+
+function showResult() {
+  screenStart.classList.add('hidden');
+  screenQuestion.classList.add('hidden');
+  screenResult.classList.remove('hidden');
+  renderResult();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== Render question =====
+function renderQuestion() {
+  const idx = state.currentIndex;
+  const q = QUESTIONS[idx];
+
+  const pct = Math.round(((idx + 1) / QUESTIONS.length) * 100);
+  $('progressFill').style.width = pct + '%';
+  $('progressText').textContent = 'QUESTION ' + (idx + 1) + ' / ' + QUESTIONS.length;
+
+  $('qNum').textContent = 'Q' + (idx + 1);
+  $('qText').textContent = q.text;
+
+  const optsContainer = $('qOptions');
+  optsContainer.innerHTML = '';
+  q.options.forEach(option => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option';
+    btn.textContent = option;
+    if (state.answers[q.id] === option) {
+      btn.classList.add('selected');
+    }
+    btn.addEventListener('click', () => {
+      state.answers[q.id] = option;
+      saveState();
+      optsContainer.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+    optsContainer.appendChild(btn);
+  });
+
+  $('nextBtn').textContent = (idx === QUESTIONS.length - 1) ? '結果を見る →' : '次へ →';
+  $('prevBtn').textContent = (idx === 0) ? '← スタートに戻る' : '← 戻る';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== Calculation =====
+function calculateLosses() {
+  const a = state.answers;
+  const userCount = USER_COUNT_BY_OPTION[a.q2_users] || 20;
+  const usesIct = (a.q5_ict === 'はい、全員' || a.q5_ict === 'はい、一部');
+  const usesIntercom = (a.q6_intercom === '使っている');
+
+  const cards = [];
+
+  // 1. 生産性向上推進体制加算
+  // 加算Ⅰ: 月100単位 / 加算Ⅱ: 月10単位
+  const seisansei = a.q4_seisansei;
+  const hasSeisanseiI = (seisansei === '加算Ⅰを取っている');
+  const hasSeisanseiII = (seisansei === '加算Ⅱを取っている');
+
+  if (!hasSeisanseiI) {
+    if (usesIct && usesIntercom && !hasSeisanseiII) {
+      // 加算Ⅰの取得余地あり(ICT+インカム両方使用)
+      const loss = 100 * userCount * UNIT_PRICE;
+      cards.push({
+        name: '生産性向上推進体制加算Ⅰ',
+        loss: loss,
+        conditions: [
+          'ICT機器(タブレット等)の利用',
+          'インカム等のコミュニケーション機器の利用',
+          '生産性向上計画の策定とデータ提出'
+        ]
+      });
+    } else if (usesIct && !hasSeisanseiII) {
+      // 加算Ⅱの取得余地あり(ICT使用)
+      const loss = 10 * userCount * UNIT_PRICE;
+      cards.push({
+        name: '生産性向上推進体制加算Ⅱ',
+        loss: loss,
+        conditions: [
+          'ICT機器(タブレット等)の利用',
+          '生産性向上計画の策定',
+          '効果の継続的な測定'
+        ]
+      });
+    } else if (hasSeisanseiII && usesIct && usesIntercom) {
+      // Ⅱ→Ⅰへの上位移行
+      const loss = (100 - 10) * userCount * UNIT_PRICE;
+      cards.push({
+        name: '生産性向上推進体制加算Ⅰ(Ⅱからの上位移行)',
+        loss: loss,
+        conditions: [
+          'インカム等のコミュニケーション機器の継続利用',
+          '生産性向上の効果データ提出',
+          '上位区分に必要な体制整備'
+        ]
+      });
+    }
+  }
+
+  // 2. 科学的介護推進体制加算 (LIFE)
+  // 月40単位 × 利用者数
+  if (a.q7_life !== '毎月提出している') {
+    const loss = 40 * userCount * UNIT_PRICE;
+    let conditions;
+    if (a.q7_life === 'LIFEを知らない') {
+      conditions = [
+        'LIFE(科学的介護情報システム)への利用者データ登録',
+        '月次でのデータ提出',
+        '提出データに基づくケア改善のPDCA運用'
+      ];
+    } else {
+      conditions = [
+        '毎月のLIFEへのデータ提出(現在不定期 → 毎月化)',
+        '提出データに基づくケア改善のPDCA運用',
+        'フィードバックの活用'
+      ];
+    }
+    cards.push({
+      name: '科学的介護推進体制加算(LIFE)',
+      loss: loss,
+      conditions: conditions
+    });
+  }
+
+  // 3. 処遇改善加算 上位区分
+  // 区分Ⅱ - 区分Ⅲ の差は約4.2%(訪問介護)
+  const shogu = a.q3_shogu;
+  if (shogu === '区分Ⅲ') {
+    const loss = userCount * MONTHLY_REVENUE_PER_USER * 0.042;
+    cards.push({
+      name: '処遇改善加算 区分Ⅱへの上位移行',
+      loss: loss,
+      conditions: [
+        '職場環境等要件の3区分以上の取り組み',
+        'キャリアパス要件の3要件全て充足',
+        '月額賃金改善要件の継続的な実施'
+      ]
+    });
+  } else if (shogu === '取っていない') {
+    const loss = userCount * MONTHLY_REVENUE_PER_USER * 0.224;
+    cards.push({
+      name: '処遇改善加算(新規取得)',
+      loss: loss,
+      conditions: [
+        'キャリアパス要件の整備',
+        '職場環境等要件の取り組み',
+        '賃金改善計画の策定と都道府県への届出'
+      ]
+    });
+  } else if (shogu === 'わからない') {
+    // 概算で区分Ⅲ→Ⅱ相当を表示
+    const loss = userCount * MONTHLY_REVENUE_PER_USER * 0.042;
+    cards.push({
+      name: '処遇改善加算 算定状況の確認',
+      loss: loss,
+      conditions: [
+        '現在の算定区分の確認',
+        '上位区分に必要な要件のギャップ分析',
+        '賃金改善計画の見直し'
+      ]
+    });
+  }
+
+  // 4. ケアプランデータ連携加算
+  // 月100単位 × ケアマネ連携件数(≒ 利用者数)
+  if (a.q9_careplan === '使っていない' || a.q9_careplan === 'わからない') {
+    const loss = 100 * userCount * UNIT_PRICE;
+    cards.push({
+      name: 'ケアプランデータ連携加算',
+      loss: loss,
+      conditions: [
+        '国保連のケアプランデータ連携システムへの利用申込',
+        'ケアマネ事業所との連携合意',
+        '電子的なケアプラン送受信運用'
+      ]
+    });
+  }
+
+  // 5. 特定事業所加算(参考、Q8 が「取っていない」なら参考表示)
+  if (a.q8_tokutei === '取っていない') {
+    // 訪問介護の特定事業所加算Ⅴ(初任者・実務者中心) などの試算は複雑なため、概算 5% 上乗せ相当として表示
+    const loss = userCount * MONTHLY_REVENUE_PER_USER * 0.05;
+    cards.push({
+      name: '特定事業所加算',
+      loss: loss,
+      conditions: [
+        '介護福祉士の配置割合(区分により30〜60%以上)',
+        '個別研修計画の作成と実施',
+        '緊急時訪問介護加算等の体制整備'
+      ]
+    });
+  }
+
+  // Sort by loss descending and pick top 3
+  cards.sort((x, y) => y.loss - x.loss);
+  const top3 = cards.slice(0, 3);
+  const totalLoss = cards.reduce((sum, c) => sum + c.loss, 0);
+
+  return { top3, totalLoss, allCards: cards };
+}
+
+// ===== Render result =====
+function renderResult() {
+  const { top3, totalLoss } = calculateLosses();
+
+  // Format total loss
+  const totalLossYen = Math.round(totalLoss);
+  const totalLossMan = Math.round(totalLossYen / 10000);
+
+  let amountText;
+  if (totalLossMan >= 1) {
+    amountText = '約 ' + totalLossMan.toLocaleString('ja-JP');
+    $('resultAmount').innerHTML = amountText + '<span class="result-amount-unit">万円</span>';
+  } else {
+    amountText = totalLossYen.toLocaleString('ja-JP');
+    $('resultAmount').innerHTML = amountText + '<span class="result-amount-unit">円</span>';
+  }
+
+  // Render top 3 cards
+  const list = $('kazanList');
+  list.innerHTML = '';
+
+  if (top3.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = '🎉 現状の回答からは、明確に取りこぼしている加算は検出されませんでした。<br>さらに最適化できる余地がないか、ぜひ無料相談でお話しさせてください。';
+    list.appendChild(empty);
+    $('resultAmount').innerHTML = '0<span class="result-amount-unit">円</span>';
+    $('resultCaption').textContent = 'の取りこぼしは検出されませんでした';
+  } else {
+    top3.forEach((card, i) => {
+      const lossYen = Math.round(card.loss);
+      const lossMan = (lossYen / 10000);
+      const lossDisplay = lossMan >= 1
+        ? '<strong>約 ' + lossMan.toFixed(1) + '</strong> 万円 / 月'
+        : '<strong>' + lossYen.toLocaleString('ja-JP') + '</strong> 円 / 月';
+
+      const condList = card.conditions.map(c => '<li>' + escapeHtml(c) + '</li>').join('');
+
+      const cardEl = document.createElement('div');
+      cardEl.className = 'kazan-card';
+      cardEl.innerHTML =
+        '<div class="kazan-rank">優先度 ' + (i + 1) + '</div>' +
+        '<div class="kazan-name">' + escapeHtml(card.name) + '</div>' +
+        '<div class="kazan-loss">取得時の収益増(試算): ' + lossDisplay + '</div>' +
+        '<div class="kazan-conditions">取得に必要な主な条件:<ul>' + condList + '</ul></div>';
+      list.appendChild(cardEl);
+    });
+  }
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ===== Boot =====
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
