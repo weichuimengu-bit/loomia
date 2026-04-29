@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<title>計画書ドラフトAI 訪問介護計画書版 | Loomia MVP v0.1</title>
+<meta name="description" content="訪問介護のサービス提供責任者向け、計画書ドラフトAI MVP v0.1。AIは下書きのみを生成し、最終判断はサ責が行います。">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --bg-card: #15151a;
+  --bg-input: #1c1c20;
+  --accent: #7dd3fc;
+  --accent-strong: #38bdf8;
+  --accent-dim: #5fb8e0;
+  --text: #f4f4f5;
+  --text-sub: #a1a1aa;
+  --text-muted: #71717a;
+  --border: #27272a;
+  --warning: #fcd34d;
+  --error: #f87171;
+  --success: #86efac;
+  --font-jp: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  --font-en: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-jp);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  padding-bottom: 130px;
+}
+
+.container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.brand {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.version {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+.step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 20px;
+  margin-bottom: 18px;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.step-num {
+  background: var(--accent);
+  color: var(--bg);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.step-help {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 16px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 600px) {
+  .field-row { grid-template-columns: 1fr; }
+}
+
+label.field-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+
+label.field-label .required {
+  color: var(--accent);
+  font-size: 11px;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%237dd3fc' d='M6 9L1 3h10z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 48px;
+  transition: background 0.2s;
+}
+
+.btn:hover { background: var(--accent-strong); }
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.btn-block { width: 100%; }
+
+.generate-btn {
+  width: 100%;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 22px 24px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 72px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(125, 211, 252, 0.18);
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: var(--accent-strong);
+}
+
+.generate-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.status {
+  font-size: 13px;
+  margin-top: 10px;
+  color: var(--text-sub);
+  min-height: 1.4em;
+}
+
+.status.success { color: var(--success); }
+.status.error { color: var(--error); }
+.status.warning { color: var(--warning); }
+
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.required-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.hidden { display: none !important; }
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 14px 16px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0));
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.7;
+  z-index: 100;
+}
+
+.footer strong {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .container { padding: 18px 12px; }
+  .step { padding: 18px 16px; }
+  .brand { font-size: 24px; }
+  .title { font-size: 15px; }
+  .generate-btn { padding: 18px 16px; font-size: 16px; min-height: 64px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="container">
+
+    <header class="header">
+      <div class="brand">Loomia</div>
+      <div class="title">計画書ドラフトAI - 訪問介護計画書版</div>
+      <div class="version">MVP v0.1 / 家業実証版</div>
+    </header>
+
+    <p class="required-note"><span style="color:var(--accent);">●</span> 印は必須項目です。下記すべてを入力するとドラフト生成ボタンが有効になります。</p>
+
+    <!-- ===== APIキー入力 ===== -->
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">0</span>
+        <span class="step-title">Claude API キー</span>
+      </div>
+      <p class="step-help">初回のみ入力すれば、ブラウザに保存されて次回以降は自動で読み込まれます。キーは外部送信されず、このブラウザのみに残ります。</p>
+      <label class="field-label" for="apiKey">API キー(sk-ant- で始まる文字列)</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div class="btn-row">
+        <button class="btn" type="button" id="saveKeyBtn">保存</button>
+        <button class="btn btn-secondary" type="button" id="clearKeyBtn">クリア</button>
+      </div>
+      <div class="status" id="keyStatus"></div>
+    </section>
+
+    <!-- ===== Step 1: 利用者基本情報 ===== -->
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">1</span>
+        <span class="step-title">利用者基本情報</span>
+      </div>
+      <p class="step-help">利用者の基本情報を入力してください。氏名はイニシャル可、または空欄でも構いません。</p>
+
+      <div class="field-row">
+        <div>
+          <label class="field-label" for="userName">利用者名(イニシャル可・省略可)</label>
+          <input type="text" id="userName" placeholder="例: A 様" autocomplete="off">
+        </div>
+        <div>
+          <label class="field-label" for="gender">性別</label>
+          <select id="gender">
+            <option value="">未選択</option>
+            <option value="男性">男性</option>
+            <option value="女性">女性</option>
+            <option value="その他">その他</option>
+            <option value="未回答">未回答</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label class="field-label" for="age">年齢</label>
+          <input type="number" id="age" min="0" max="150" placeholder="例: 82" autocomplete="off">
+        </div>
+        <div>
+          <label class="field-label" for="careLevel">要介護度<span class="required">●必須</span></label>
+          <select id="careLevel" data-required="true">
+            <option value="">未選択</option>
+            <option value="要支援1">要支援1</option>
+            <option value="要支援2">要支援2</option>
+            <option value="要介護1">要介護1</option>
+            <option value="要介護2">要介護2</option>
+            <option value="要介護3">要介護3</option>
+            <option value="要介護4">要介護4</option>
+            <option value="要介護5">要介護5</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="illness">主な疾患・既往歴<span class="required">●必須</span></label>
+        <textarea id="illness" data-required="true" rows="3" placeholder="例: 脳梗塞後遺症(左半身麻痺)、高血圧、糖尿病(内服コントロール中)"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="adl">ADL状況<span class="required">●必須</span></label>
+        <textarea id="adl" data-required="true" rows="4" placeholder="食事/排泄/入浴/移動/着替え/整容について現状を記述
+例:
+食事 — 自力可、刻み食。
+排泄 — トイレ移動は介助、排泄動作は自立。
+入浴 — 全介助。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="cognitive">認知機能の状況</label>
+        <textarea id="cognitive" rows="3" placeholder="例: 見当識やや低下。短期記憶障害あり。声かけに応じる。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="family">家族構成・主たる介護者</label>
+        <textarea id="family" rows="3" placeholder="例: 長女(同居・パート勤務)が主たる介護者。週末は次女が支援。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="environment">居住環境</label>
+        <textarea id="environment" rows="3" placeholder="例: 一戸建て2階、寝室は1階。玄関に段差あり、階段に手すり設置済み。"></textarea>
+      </div>
+    </section>
+
+    <!-- ===== Step 2: 利用者・家族の意向 ===== -->
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">2</span>
+        <span class="step-title">利用者・家族の意向</span>
+      </div>
+      <p class="step-help">アセスメントで聴取した利用者ご本人およびご家族の意向を入力してください。</p>
+
+      <div class="field">
+        <label class="field-label" for="userIntention">利用者本人の意向<span class="required">●必須</span></label>
+        <textarea id="userIntention" data-required="true" rows="3" placeholder="例: できる限り自宅で生活を続けたい。入浴は気持ちよく入りたい。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="familyIntention">家族の意向(家族なしの場合は「家族なし」と記入)</label>
+        <textarea id="familyIntention" rows="3" placeholder="例: 介護負担を軽減し、本人の希望を尊重したい。安全に過ごせる環境を維持したい。"></textarea>
+      </div>
+    </section>
+
+    <!-- ===== Step 3: ケアプラン情報(第2表より) ===== -->
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">3</span>
+        <span class="step-title">ケアプラン情報(第2表より転記)</span>
+      </div>
+      <p class="step-help">ケアマネジャーが作成したケアプラン(居宅サービス計画書 第1表・第2表)から該当部分を転記してください。</p>
+
+      <div class="field">
+        <label class="field-label" for="generalApproach">総合的な援助の方針(第1表より)</label>
+        <textarea id="generalApproach" rows="3" placeholder="例: 在宅生活の継続を支援し、ADLの維持・向上を図る。家族の介護負担軽減に配慮する。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="needs">解決すべき課題・ニーズ(第2表より)<span class="required">●必須</span></label>
+        <textarea id="needs" data-required="true" rows="3" placeholder="例: 清潔保持が困難なため、入浴の介助が必要。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="longGoal">長期目標(第2表より)<span class="required">●必須</span></label>
+        <textarea id="longGoal" data-required="true" rows="3" placeholder="例: 在宅生活を継続し、清潔を保ちながら穏やかに過ごせる。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="longGoalPeriod">長期目標の期間</label>
+        <input type="text" id="longGoalPeriod" placeholder="例: 6か月" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="shortGoal">短期目標(第2表より)<span class="required">●必須</span></label>
+        <textarea id="shortGoal" data-required="true" rows="3" placeholder="例: 週3回の入浴介助により、皮膚トラブルなく清潔を保つ。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="shortGoalPeriod">短期目標の期間</label>
+        <input type="text" id="shortGoalPeriod" placeholder="例: 3か月" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="serviceContent">訪問介護として提供するサービス内容(第2表より)<span class="required">●必須</span></label>
+        <textarea id="serviceContent" data-required="true" rows="4" placeholder="例:
+身体介護 — 入浴介助、排泄介助、更衣介助
+生活援助 — 居室・トイレの掃除、調理、買い物代行"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="frequency">訪問頻度・時間帯</label>
+        <input type="text" id="frequency" placeholder="例: 週3回 月水金 9:00-10:00" autocomplete="off">
+      </div>
+    </section>
+
+    <!-- ===== ドラフト生成ボタン ===== -->
+    <section class="step">
+      <div class="step-header">
+        <span class="step-num">4</span>
+        <span class="step-title">AIドラフト生成</span>
+      </div>
+      <p class="step-help">必須項目がすべて入力されると、ボタンが有効になります。生成には通常30〜60秒かかります。</p>
+      <button class="generate-btn" type="button" id="generateBtn" disabled>✨ 訪問介護計画書のドラフトを生成する</button>
+      <div class="status" id="generateStatus"></div>
+    </section>
+
+    <!-- ===== ローディングエリア(生成中表示) ===== -->
+    <section class="step hidden" id="loadingArea">
+      <div class="loading"><span class="spinner"></span><span>AIが下書き作成中... 通常30〜60秒かかります</span></div>
+    </section>
+
+    <!-- ===== 結果表示エリア ===== -->
+    <section class="step hidden" id="resultArea">
+      <div class="step-header">
+        <span class="step-num">5</span>
+        <span class="step-title">生成結果(編集可能)</span>
+      </div>
+      <p class="step-help">必ず内容を確認・修正してから、計画書として利用してください。AI は事実の補完や医療判断を行わない設計です。</p>
+      <textarea id="resultText" rows="20" spellcheck="false" style="min-height:400px;"></textarea>
+      <div class="btn-row">
+        <button class="btn" type="button" id="copyBtn">📋 全文をコピー</button>
+        <button class="btn btn-secondary" type="button" id="resetBtn">🔄 やり直す</button>
+      </div>
+      <div class="status" id="resultStatus"></div>
+    </section>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <strong>⚠️ このAI出力は必ずサービス提供責任者が内容を確認・修正してください。</strong><br>
+  利用者の状態判断・医療的判断はAIが行うものではありません。<br>
+  最終的な計画書としての記載・利用者および家族への説明・同意取得はサービス提供責任者の責任で行ってください。<br>
+  © 2026 Loomia
+</footer>
+
+<script>
+'use strict';
+
+// ===== Config =====
+const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+const MODEL = 'claude-haiku-4-5-20251001';
+const STORAGE_KEY = 'loomia_keikaku_mate_apikey';
+const REQUEST_TIMEOUT_MS = 60000;
+
+const SYSTEM_PROMPT = `あなたは訪問介護計画書の作成を支援するAIアシスタントです。
+サービス提供責任者(サ責)が入力したケアプラン情報と利用者基本情報をもとに、
+訪問介護計画書のドラフトを生成します。
+
+【絶対のルール】
+1. 入力されていない情報は推測・補完しない。「不明」「要確認」と記載する。
+2. 医療的判断は一切しない。「〜の疑いがある」「〜が悪化している」等の表現禁止。
+3. 投薬・治療・診断に関する記述をしない。
+4. 利用者の意向と家族の意向を必ず尊重する記述にする。
+5. 援助内容は訪問介護員の業務範囲内に限定する。
+6. 「○○できない」より「○○の支援を行う」という表現を優先する。
+7. 介護報酬の不正請求につながる記述(実態と異なるケア内容)を含めない。
+8. 出力は下書きであり、サ責が必ず確認・修正することを前提とする。
+
+【出力形式】
+【援助目標】
+■長期目標(訪問介護として)
+○か月で、利用者様が△△できるよう支援します。
+
+■短期目標(訪問介護として)
+○か月で、△△の状態を維持/改善できるよう支援します。
+
+【援助内容】
+■身体介護
+・(具体的な介助内容を箇条書き)
+
+■生活援助
+・(具体的な家事援助内容を箇条書き)
+
+【留意事項】
+・(利用者の状態に応じた配慮点)
+・(家族との連携方法)
+
+【緊急時対応】
+・体調変化時は速やかにケアマネへ連絡する。
+・主治医への連絡はケアマネを通じて行う。
+
+※本計画書はAIが生成した下書きです。サービス提供責任者が必ず内容を確認・修正したうえで、利用者様および家族にご説明し、同意を得てください。`;
+
+// ===== Elements =====
+const $ = id => document.getElementById(id);
+const apiKeyInput = $('apiKey');
+const saveKeyBtn = $('saveKeyBtn');
+const clearKeyBtn = $('clearKeyBtn');
+const keyStatus = $('keyStatus');
+const generateBtn = $('generateBtn');
+const generateStatus = $('generateStatus');
+const loadingArea = $('loadingArea');
+const resultArea = $('resultArea');
+const resultText = $('resultText');
+const copyBtn = $('copyBtn');
+const resetBtn = $('resetBtn');
+const resultStatus = $('resultStatus');
+
+// ===== Init =====
+function init() {
+  const savedKey = localStorage.getItem(STORAGE_KEY);
+  if (savedKey) {
+    apiKeyInput.value = savedKey;
+    setStatus(keyStatus, '✓ 保存済みのキーを読み込みました', 'success');
+  }
+
+  saveKeyBtn.addEventListener('click', saveApiKey);
+  clearKeyBtn.addEventListener('click', clearApiKey);
+  generateBtn.addEventListener('click', onGenerateClick);
+  copyBtn.addEventListener('click', copyResult);
+  resetBtn.addEventListener('click', resetResult);
+
+  const requiredFields = document.querySelectorAll('[data-required="true"]');
+  requiredFields.forEach(el => {
+    el.addEventListener('input', validateForm);
+    el.addEventListener('change', validateForm);
+  });
+  apiKeyInput.addEventListener('input', validateForm);
+
+  validateForm();
+}
+
+function setStatus(el, text, type) {
+  el.textContent = text;
+  el.className = 'status' + (type ? ' ' + type : '');
+}
+
+// ===== API Key =====
+function saveApiKey() {
+  const key = apiKeyInput.value.trim();
+  if (!key) {
+    setStatus(keyStatus, 'キーを入力してください', 'error');
+    return;
+  }
+  if (!key.startsWith('sk-ant-')) {
+    setStatus(keyStatus, '⚠ Claude API キーは「sk-ant-」で始まります。形式をご確認ください', 'warning');
+    return;
+  }
+  localStorage.setItem(STORAGE_KEY, key);
+  setStatus(keyStatus, '✓ 保存しました(このブラウザに残ります)', 'success');
+  validateForm();
+}
+
+function clearApiKey() {
+  localStorage.removeItem(STORAGE_KEY);
+  apiKeyInput.value = '';
+  setStatus(keyStatus, '✓ キーを削除しました', 'success');
+  validateForm();
+}
+
+// ===== Validation =====
+function validateForm() {
+  const requiredFields = document.querySelectorAll('[data-required="true"]');
+  let allFilled = true;
+  requiredFields.forEach(el => {
+    if (!el.value || !el.value.trim()) {
+      allFilled = false;
+    }
+  });
+  const hasKey = (apiKeyInput.value || '').trim().length > 0
+    || (localStorage.getItem(STORAGE_KEY) || '').length > 0;
+
+  generateBtn.disabled = !(allFilled && hasKey);
+
+  if (!hasKey) {
+    setStatus(generateStatus, 'Step 0 で API キーを保存してください', 'warning');
+  } else if (!allFilled) {
+    setStatus(generateStatus, '必須項目(●印)をすべて入力するとボタンが有効になります', 'warning');
+  } else {
+    setStatus(generateStatus, '✓ 入力完了。ドラフト生成の準備ができました', 'success');
+  }
+}
+
+// ===== User input builder =====
+function buildUserInput() {
+  const v = id => ($(id).value || '').trim();
+  const orUnset = s => s ? s : '(未入力)';
+
+  return '以下の情報をもとに訪問介護計画書のドラフトを作成してください。\n\n' +
+    '【利用者基本情報】\n' +
+    '氏名(イニシャル): ' + orUnset(v('userName')) + '\n' +
+    '性別: ' + orUnset(v('gender')) + '\n' +
+    '年齢: ' + orUnset(v('age')) + '\n' +
+    '要介護度: ' + orUnset(v('careLevel')) + '\n' +
+    '主な疾患・既往歴: ' + orUnset(v('illness')) + '\n' +
+    'ADL状況: ' + orUnset(v('adl')) + '\n' +
+    '認知機能: ' + orUnset(v('cognitive')) + '\n' +
+    '家族構成・主たる介護者: ' + orUnset(v('family')) + '\n' +
+    '居住環境: ' + orUnset(v('environment')) + '\n\n' +
+    '【利用者・家族の意向】\n' +
+    '利用者本人の意向: ' + orUnset(v('userIntention')) + '\n' +
+    '家族の意向: ' + orUnset(v('familyIntention')) + '\n\n' +
+    '【ケアプラン情報】\n' +
+    '総合的な援助の方針: ' + orUnset(v('generalApproach')) + '\n' +
+    '解決すべき課題・ニーズ: ' + orUnset(v('needs')) + '\n' +
+    '長期目標: ' + orUnset(v('longGoal')) + '(期間: ' + orUnset(v('longGoalPeriod')) + ')\n' +
+    '短期目標: ' + orUnset(v('shortGoal')) + '(期間: ' + orUnset(v('shortGoalPeriod')) + ')\n' +
+    '訪問介護サービス内容: ' + orUnset(v('serviceContent')) + '\n' +
+    '訪問頻度・時間帯: ' + orUnset(v('frequency'));
+}
+
+// ===== Generate =====
+async function onGenerateClick() {
+  const apiKey = (localStorage.getItem(STORAGE_KEY) || apiKeyInput.value || '').trim();
+  if (!apiKey) {
+    setStatus(generateStatus, '⚠ APIキーを入力してください', 'error');
+    return;
+  }
+
+  generateBtn.disabled = true;
+  setStatus(generateStatus, '');
+  loadingArea.classList.remove('hidden');
+  resultArea.classList.add('hidden');
+  loadingArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  const userInput = buildUserInput();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(ANTHROPIC_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 4096,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userInput }]
+      }),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error('http_' + response.status);
+    }
+
+    const data = await response.json();
+    const draft = (data.content && data.content[0] && data.content[0].text) || '(整形結果が取得できませんでした)';
+
+    resultText.value = draft;
+    loadingArea.classList.add('hidden');
+    resultArea.classList.remove('hidden');
+    setStatus(generateStatus, '✓ ドラフトを生成しました。内容を必ず確認・修正してください', 'success');
+    resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    clearTimeout(timeoutId);
+    loadingArea.classList.add('hidden');
+
+    if (err.name === 'AbortError') {
+      setStatus(generateStatus, '⚠ 応答がタイムアウトしました。もう一度お試しください。', 'error');
+    } else {
+      setStatus(generateStatus, '⚠ エラーが発生しました。APIキーをご確認ください。', 'error');
+    }
+  } finally {
+    validateForm();
+  }
+}
+
+// ===== Result actions =====
+async function copyResult() {
+  try {
+    await navigator.clipboard.writeText(resultText.value);
+    setStatus(resultStatus, '✓ コピーしました!', 'success');
+    setTimeout(() => setStatus(resultStatus, ''), 2000);
+  } catch (e) {
+    try {
+      resultText.select();
+      document.execCommand('copy');
+      setStatus(resultStatus, '✓ コピーしました(手動選択)', 'success');
+      setTimeout(() => setStatus(resultStatus, ''), 2000);
+    } catch (e2) {
+      setStatus(resultStatus, '⚠ コピー失敗。長押しで手動コピーしてください', 'error');
+    }
+  }
+}
+
+function resetResult() {
+  resultText.value = '';
+  resultArea.classList.add('hidden');
+  setStatus(generateStatus, '');
+  setStatus(resultStatus, '');
+  generateBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
